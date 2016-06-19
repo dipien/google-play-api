@@ -1,0 +1,194 @@
+apply plugin: 'groovy'
+apply plugin: 'signing'
+apply plugin: 'java-gradle-plugin'
+apply plugin: "com.gradle.plugin-publish"
+
+ext.projectName = 'Jdroid Google Play Publisher Gradle Plugin'
+description = 'Gradle Plugin to publish android APKs and listings on Google Play'
+ext.packaging = 'jar'
+
+ext.jdroidVersion = "0.9.5"
+
+Boolean isSnapshot = getBooleanProp('SNAPSHOT', true)
+
+ext.VERSION_MAJOR = 0
+ext.VERSION_MINOR = 1
+ext.VERSION_PATCH = 0
+ext.VERSION_CLASSIFIER = isSnapshot ? "SNAPSHOT" : null
+
+project.version = "${ext.VERSION_MAJOR}.${ext.VERSION_MINOR}.${ext.VERSION_PATCH}"
+if (ext.VERSION_CLASSIFIER != null && !ext.VERSION_CLASSIFIER.isEmpty()) {
+	project.version = project.version + "-" + ext.VERSION_CLASSIFIER
+}
+
+buildscript {
+	repositories {
+		mavenCentral()
+		jcenter()
+		maven {
+			url "https://plugins.gradle.org/m2/"
+		}
+	}
+	dependencies {
+		// https://plugins.gradle.org/plugin/com.gradle.plugin-publish
+		classpath "com.gradle.publish:plugin-publish-plugin:0.9.4"
+	}
+}
+
+repositories {
+	mavenCentral()
+	jcenter()
+	maven {
+		url "https://oss.sonatype.org/content/repositories/snapshots/"
+	}
+	String extraMavenRepo = project.getProp('EXTRA_MAVEN_REPO')
+	if (extraMavenRepo != null) {
+		maven {
+			url extraMavenRepo
+		}
+	}
+}
+
+dependencies {
+    compile localGroovy()
+
+	compile 'com.jdroidframework:jdroid-java:' + jdroidVersion
+
+	compile 'com.google.apis:google-api-services-androidpublisher:v2-rev30-1.22.0'
+}
+
+task javadocJar(type: Jar) {
+	classifier = 'javadoc'
+	from javadoc
+}
+
+task sourcesJar(type: Jar) {
+	classifier = 'sources'
+	from sourceSets.main.allSource
+}
+
+artifacts {
+	archives javadocJar, sourcesJar
+}
+
+
+if (JavaVersion.current().isJava8Compatible()) {
+	tasks.withType(Javadoc) {
+		options.addStringOption('Xdoclint:none', '-quiet')
+	}
+}
+
+group = 'com.jdroidframework'
+
+ext.packaging = null
+
+subprojects {
+
+	apply plugin: 'maven'
+	apply plugin: 'signing'
+
+	ext.projectName = null
+
+	group = rootProject.group
+
+	Boolean localUpload = getBooleanProp('LOCAL_UPLOAD', true)
+	def localMavenRepo = getProp('LOCAL_MAVEN_REPO')
+
+	if (localUpload && localMavenRepo == null) {
+		project.logger.warn("LOCAL_MAVEN_REPO property is not defined. Skipping uploadArchives configuration")
+	} else {
+		afterEvaluate {
+			uploadArchives {
+				repositories {
+					mavenDeployer {
+
+						beforeDeployment { MavenDeployment deployment ->
+							signing.signPom(deployment)
+						}
+
+						if (localUpload) {
+							repository(url: project.uri(localMavenRepo))
+						} else {
+							repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+								authentication(userName: getRepositoryUsername(), password: getRepositoryPassword())
+							}
+							snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+								authentication(userName: getRepositoryUsername(), password: getRepositoryPassword())
+							}
+						}
+
+						pom.project {
+							name project.ext.projectName
+							description project.description
+							packaging project.packaging
+							url 'http://www.jdroidframework.com'
+							inceptionYear '2011'
+							organization {
+								name 'Jdroid'
+								url 'http://www.jdroidframework.com'
+							}
+							licenses {
+								license {
+									name 'The Apache License, Version 2.0'
+									url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+									distribution 'repo'
+								}
+							}
+							developers {
+								developer {
+									name 'Maxi Rosson'
+									email 'jdroidframework@gmail.com'
+									roles {
+										role 'architect'
+										role 'developer'
+									}
+								}
+							}
+							scm {
+								connection 'scm:git:git@github.com:maxirosson/jdroid-googleplay-publisher-plugin.git'
+								developerConnection 'scm:git:git@github.com:maxirosson/jdroid-googleplay-publisher-plugin.git'
+								url 'git@github.com:maxirosson/jdroid-googleplay-publisher-plugin.git'
+							}
+							issueManagement {
+								system 'GitHub'
+								url 'https://github.com/maxirosson/jdroid-googleplay-publisher-plugin/issues'
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	if (getBooleanProp('SIGNING_ENABLED', true)) {
+		signing {
+			required { !isSnapshot && gradle.taskGraph.hasTask("uploadArchives") }
+			sign configurations.archives
+		}
+	}
+}
+
+def getRepositoryUsername() {
+	return getProp('JDROID_NEXUS_USERNAME')
+}
+
+def getRepositoryPassword() {
+	getProp('JDROID_NEXUS_PASSWORD')
+}
+
+public def getProp(String propertyName) {
+	return project.hasProperty(propertyName) ? project.ext.get(propertyName) : System.getenv(propertyName)
+}
+
+public Boolean getBooleanProp(String propertyName, Boolean defaultValue) {
+	def value = getProp(propertyName)
+	if (value == null) {
+		return defaultValue
+	} else if (value == 'true') {
+		return true
+	} else if (value == 'false') {
+		return false
+	} else {
+		throw new GradleException('Invalid Boolean value: ' + value)
+	}
+}
