@@ -1,13 +1,9 @@
 package com.jdroid.android.googleplay.publisher;
 
-import com.google.api.client.repackaged.com.google.common.base.Strings;
-import com.jdroid.java.exception.UnexpectedException;
-import com.jdroid.java.utils.PropertiesUtils;
-
 public class AppContext {
 	
-	// Specify the package name of the app.
-	private String packageName;
+	// The application id of the app
+	private String applicationId;
 	
 	// Installed application: Leave this string empty and copy or edit resources/client_secrets.json. Service accounts:
 	// Enter the service account email and add your key.p12 file to the resources directory.
@@ -20,43 +16,9 @@ public class AppContext {
 	private String locales;
 	private String apkPath;
 	private TrackType trackType;
-	
-	public AppContext(String fileName) {
-		
-		PropertiesUtils.loadExternalProperties(fileName);
-		
-		packageName = PropertiesUtils.getStringProperty("package.name");
-		if (Strings.isNullOrEmpty(packageName)) {
-			throw new UnexpectedException("packageName cannot be null or empty!");
-		}
 
-
-		serviceAccountEmail = PropertiesUtils.getStringProperty("service.account.email");
-		if (Strings.isNullOrEmpty(serviceAccountEmail)) {
-			throw new UnexpectedException("serviceAccountEmail cannot be null or empty!");
-		}
-		
-		privateKeyFile = PropertiesUtils.getStringProperty("private.key.file");
-		if (Strings.isNullOrEmpty(privateKeyFile)) {
-			throw new UnexpectedException("privateKeyFile cannot be null or empty!");
-		}
-		
-		listingPath = PropertiesUtils.getStringProperty("listing.path");
-		if (Strings.isNullOrEmpty(listingPath)) {
-			throw new UnexpectedException("listingPath cannot be null or empty!");
-		}
-		
-		locales = PropertiesUtils.getStringProperty("locales");
-		if (Strings.isNullOrEmpty(locales)) {
-			throw new UnexpectedException("locales cannot be null or empty!");
-		}
-		
-		apkPath = PropertiesUtils.getStringProperty("apk.path");
-		trackType = TrackType.findByKey(PropertiesUtils.getStringProperty("track.type"));
-	}
-	
-	public String getPackageName() {
-		return packageName;
+	public String getApplicationId() {
+		return applicationId;
 	}
 	
 	public String getServiceAccountEmail() {
@@ -82,5 +44,32 @@ public class AppContext {
 	public TrackType getTrackType() {
 		return trackType;
 	}
-	
+
+	public void setApplicationId(String applicationId) {
+		this.applicationId = applicationId;
+	}
+
+	public void setServiceAccountEmail(String serviceAccountEmail) {
+		this.serviceAccountEmail = serviceAccountEmail;
+	}
+
+	public void setPrivateKeyFile(String privateKeyFile) {
+		this.privateKeyFile = privateKeyFile;
+	}
+
+	public void setListingPath(String listingPath) {
+		this.listingPath = listingPath;
+	}
+
+	public void setLocales(String locales) {
+		this.locales = locales;
+	}
+
+	public void setApkPath(String apkPath) {
+		this.apkPath = apkPath;
+	}
+
+	public void setTrackType(TrackType trackType) {
+		this.trackType = trackType;
+	}
 }

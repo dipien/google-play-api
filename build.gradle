@@ -1,10 +1,12 @@
 apply plugin: 'groovy'
 apply plugin: 'signing'
 apply plugin: 'java-gradle-plugin'
-apply plugin: "com.gradle.plugin-publish"
+apply plugin: 'com.gradle.plugin-publish'
+apply plugin: 'maven'
 
 ext.projectName = 'Jdroid Google Play Publisher Gradle Plugin'
 description = 'Gradle Plugin to publish android APKs and listings on Google Play'
+group = 'com.jdroidframework'
 ext.packaging = 'jar'
 
 ext.jdroidVersion = "0.9.5"
@@ -16,9 +18,9 @@ ext.VERSION_MINOR = 1
 ext.VERSION_PATCH = 0
 ext.VERSION_CLASSIFIER = isSnapshot ? "SNAPSHOT" : null
 
-project.version = "${ext.VERSION_MAJOR}.${ext.VERSION_MINOR}.${ext.VERSION_PATCH}"
+version = "${ext.VERSION_MAJOR}.${ext.VERSION_MINOR}.${ext.VERSION_PATCH}"
 if (ext.VERSION_CLASSIFIER != null && !ext.VERSION_CLASSIFIER.isEmpty()) {
-	project.version = project.version + "-" + ext.VERSION_CLASSIFIER
+	version = version + "-" + ext.VERSION_CLASSIFIER
 }
 
 buildscript {
@@ -55,6 +57,7 @@ dependencies {
 	compile 'com.jdroidframework:jdroid-java:' + jdroidVersion
 
 	compile 'com.google.apis:google-api-services-androidpublisher:v2-rev30-1.22.0'
+	compile 'com.google.api-client:google-api-client:1.19.0'
 }
 
 task javadocJar(type: Jar) {
@@ -78,93 +81,79 @@ if (JavaVersion.current().isJava8Compatible()) {
 	}
 }
 
-group = 'com.jdroidframework'
+Boolean localUpload = getBooleanProp('LOCAL_UPLOAD', true)
+def localMavenRepo = getProp('LOCAL_MAVEN_REPO')
 
-ext.packaging = null
+if (localUpload && localMavenRepo == null) {
+	project.logger.warn("LOCAL_MAVEN_REPO property is not defined. Skipping uploadArchives configuration")
+} else {
+	afterEvaluate {
+		uploadArchives {
+			repositories {
+				mavenDeployer {
 
-subprojects {
+					beforeDeployment { MavenDeployment deployment ->
+						signing.signPom(deployment)
+					}
 
-	apply plugin: 'maven'
-	apply plugin: 'signing'
-
-	ext.projectName = null
-
-	group = rootProject.group
-
-	Boolean localUpload = getBooleanProp('LOCAL_UPLOAD', true)
-	def localMavenRepo = getProp('LOCAL_MAVEN_REPO')
-
-	if (localUpload && localMavenRepo == null) {
-		project.logger.warn("LOCAL_MAVEN_REPO property is not defined. Skipping uploadArchives configuration")
-	} else {
-		afterEvaluate {
-			uploadArchives {
-				repositories {
-					mavenDeployer {
-
-						beforeDeployment { MavenDeployment deployment ->
-							signing.signPom(deployment)
+					if (localUpload) {
+						repository(url: project.uri(localMavenRepo))
+					} else {
+						repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+							authentication(userName: getRepositoryUsername(), password: getRepositoryPassword())
 						}
-
-						if (localUpload) {
-							repository(url: project.uri(localMavenRepo))
-						} else {
-							repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-								authentication(userName: getRepositoryUsername(), password: getRepositoryPassword())
-							}
-							snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-								authentication(userName: getRepositoryUsername(), password: getRepositoryPassword())
-							}
+						snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+							authentication(userName: getRepositoryUsername(), password: getRepositoryPassword())
 						}
+					}
 
-						pom.project {
-							name project.ext.projectName
-							description project.description
-							packaging project.packaging
+					pom.project {
+						name project.ext.projectName
+						description project.description
+						packaging project.packaging
+						url 'http://www.jdroidframework.com'
+						inceptionYear '2011'
+						organization {
+							name 'Jdroid'
 							url 'http://www.jdroidframework.com'
-							inceptionYear '2011'
-							organization {
-								name 'Jdroid'
-								url 'http://www.jdroidframework.com'
+						}
+						licenses {
+							license {
+								name 'The Apache License, Version 2.0'
+								url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+								distribution 'repo'
 							}
-							licenses {
-								license {
-									name 'The Apache License, Version 2.0'
-									url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-									distribution 'repo'
+						}
+						developers {
+							developer {
+								name 'Maxi Rosson'
+								email 'jdroidframework@gmail.com'
+								roles {
+									role 'architect'
+									role 'developer'
 								}
 							}
-							developers {
-								developer {
-									name 'Maxi Rosson'
-									email 'jdroidframework@gmail.com'
-									roles {
-										role 'architect'
-										role 'developer'
-									}
-								}
-							}
-							scm {
-								connection 'scm:git:git@github.com:maxirosson/jdroid-googleplay-publisher-plugin.git'
-								developerConnection 'scm:git:git@github.com:maxirosson/jdroid-googleplay-publisher-plugin.git'
-								url 'git@github.com:maxirosson/jdroid-googleplay-publisher-plugin.git'
-							}
-							issueManagement {
-								system 'GitHub'
-								url 'https://github.com/maxirosson/jdroid-googleplay-publisher-plugin/issues'
-							}
+						}
+						scm {
+							connection 'scm:git:git@github.com:maxirosson/jdroid-googleplay-publisher-plugin.git'
+							developerConnection 'scm:git:git@github.com:maxirosson/jdroid-googleplay-publisher-plugin.git'
+							url 'git@github.com:maxirosson/jdroid-googleplay-publisher-plugin.git'
+						}
+						issueManagement {
+							system 'GitHub'
+							url 'https://github.com/maxirosson/jdroid-googleplay-publisher-plugin/issues'
 						}
 					}
 				}
 			}
 		}
 	}
+}
 
-	if (getBooleanProp('SIGNING_ENABLED', true)) {
-		signing {
-			required { !isSnapshot && gradle.taskGraph.hasTask("uploadArchives") }
-			sign configurations.archives
-		}
+if (getBooleanProp('SIGNING_ENABLED', true)) {
+	signing {
+		required { !isSnapshot && gradle.taskGraph.hasTask("uploadArchives") }
+		sign configurations.archives
 	}
 }
 
@@ -173,7 +162,7 @@ def getRepositoryUsername() {
 }
 
 def getRepositoryPassword() {
-	getProp('JDROID_NEXUS_PASSWORD')
+	return getProp('JDROID_NEXUS_PASSWORD')
 }
 
 public def getProp(String propertyName) {

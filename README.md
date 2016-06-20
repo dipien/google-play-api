@@ -1,6 +1,8 @@
 # Jdroid Google Play Publisher Plugin
 Gradle Plugin to publish android APKs and listings on Google Play
 
+## Setup
+
 Add the following configuration to your `build.gradle`:
 
     apply plugin: 'com.jdroid.googleplay.publisher'
@@ -13,6 +15,16 @@ Add the following configuration to your `build.gradle`:
         classpath 'com.jdroidframework:jdroid-googleplay-publisher-plugin:0.1.0'
       }
     }
+
+## Usage
+
+### Publish listing task
+
+This task publish listings (feature/promo graphics, High resolution icon, screenshots, title, short and full descriptions) on Google Play
+
+### Task Execution
+
+    gradle googlePlayPublishListings
 
 ## Donations
 Help us to continue with this project:

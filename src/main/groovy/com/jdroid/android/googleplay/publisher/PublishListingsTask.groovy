@@ -2,22 +2,15 @@ package com.jdroid.android.googleplay.publisher
 
 import com.google.api.client.util.Lists
 import com.jdroid.java.utils.StringUtils
-import org.gradle.api.DefaultTask
-import org.gradle.api.tasks.TaskAction
 
-public class GooglePlayPublisherTask extends DefaultTask {
+public class PublishListingsTask extends AbstractTask {
 
-	public GooglePlayPublisherTask() {
+	public PublishListingsTask() {
 		description = "Publish listings (feature/promo graphics, High resolution icon, screenshots, title, short and full descriptions) on Google Play"
 	}
 
-	@TaskAction
-	public void doExecute() {
-
-		String configFile = project.jdroid.getProp('GOOGLE_PLAY_PUBLISHER_CONFIG_FILE')
-		AppContext appContext = new AppContext(configFile);
-
-		GooglePlayPublisher.listApks(appContext);
+	@Override
+	protected void onExecute(AppContext appContext) {
 
 		List<LocaleListing> localeListings = Lists.newArrayList();
 		for (String each : StringUtils.splitToCollectionWithCommaSeparator(appContext.getLocales())) {
@@ -30,6 +23,7 @@ public class GooglePlayPublisherTask extends DefaultTask {
 			localeListings.add(new LocaleListing(new Locale(language, country), appContext.getListingPath()));
 		}
 		GooglePlayPublisher.updateListings(appContext, localeListings);
+
 		// GooglePlayPublisher.updateApk(appContext, appContext.getApkPath(), appContext.getTrackType(),
 		// localeListings);
 	}

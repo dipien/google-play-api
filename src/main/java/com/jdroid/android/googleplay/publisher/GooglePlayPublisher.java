@@ -79,7 +79,7 @@ public class GooglePlayPublisher {
 			
 			// Set up and return API client.
 			return new AndroidPublisher.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential).setApplicationName(
-				appContext.getPackageName()).build();
+				appContext.getApplicationId()).build();
 		} catch (GeneralSecurityException e) {
 			throw new UnexpectedException(e);
 		} catch (IOException e) {
@@ -114,11 +114,11 @@ public class GooglePlayPublisher {
 			Edits edits = service.edits();
 			
 			// Create a new edit to make changes.
-			Insert editRequest = edits.insert(appContext.getPackageName(), null);
+			Insert editRequest = edits.insert(appContext.getApplicationId(), null);
 			AppEdit appEdit = editRequest.execute();
 			
 			// Get a list of apks.
-			ApksListResponse apksResponse = edits.apks().list(appContext.getPackageName(), appEdit.getId()).execute();
+			ApksListResponse apksResponse = edits.apks().list(appContext.getApplicationId(), appEdit.getId()).execute();
 			
 			// Print the apk info.
 			for (Apk apk : apksResponse.getApks()) {
@@ -137,7 +137,7 @@ public class GooglePlayPublisher {
 			Edits edits = service.edits();
 			
 			// Create an edit to update listing for application.
-			Insert editRequest = edits.insert(appContext.getPackageName(), null);
+			Insert editRequest = edits.insert(appContext.getApplicationId(), null);
 			AppEdit edit = editRequest.execute();
 			String editId = edit.getId();
 			System.out.println(String.format("Created edit with id: %s", editId));
@@ -149,56 +149,56 @@ public class GooglePlayPublisher {
 				listing.setFullDescription(each.getFullDescription());
 				listing.setShortDescription(each.getShortDescription());
 				
-				Edits.Listings.Update updateListingsRequest = edits.listings().update(appContext.getPackageName(),
+				Edits.Listings.Update updateListingsRequest = edits.listings().update(appContext.getApplicationId(),
 					editId, each.getLocale().toString(), listing);
 				Listing updatedListing = updateListingsRequest.execute();
 				System.out.println(String.format("Created new " + each.getLocale().toString() + " app listing with title: %s",
 					updatedListing.getTitle()));
 				
 				// Update images
-				Images.Upload uploadImageRequest = edits.images().upload(appContext.getPackageName(), editId,
+				Images.Upload uploadImageRequest = edits.images().upload(appContext.getApplicationId(), editId,
 					each.getLocale().toString(), ImageType.FEATURE_GRAPHIC.getKey(), each.getFeatureGraphic());
 				ImagesUploadResponse response = uploadImageRequest.execute();
 				System.out.println(String.format("Feature graphic %s has been updated.", response.getImage()));
 				
-				uploadImageRequest = edits.images().upload(appContext.getPackageName(), editId,
+				uploadImageRequest = edits.images().upload(appContext.getApplicationId(), editId,
 					each.getLocale().toString(), ImageType.PROMO_GRAPHIC.getKey(), each.getPromoGraphic());
 				response = uploadImageRequest.execute();
 				System.out.println(String.format("Promo graphic %s has been updated.", response.getImage()));
 				
-				uploadImageRequest = edits.images().upload(appContext.getPackageName(), editId,
+				uploadImageRequest = edits.images().upload(appContext.getApplicationId(), editId,
 					each.getLocale().toString(), ImageType.ICON.getKey(), each.getHighResolutionIcon());
 				response = uploadImageRequest.execute();
 				System.out.println(String.format("High resolution icon %s has been updated.", response.getImage()));
 				
-				Deleteall deleteallRequest = edits.images().deleteall(appContext.getPackageName(), editId,
+				Deleteall deleteallRequest = edits.images().deleteall(appContext.getApplicationId(), editId,
 					each.getLocale().toString(), ImageType.PHONE_SCREENSHOTS.getKey());
 				deleteallRequest.execute();
 				System.out.println("Phone screenshots has been deleted.");
 				for (AbstractInputStreamContent content : each.getPhoneScreenshots()) {
-					uploadImageRequest = edits.images().upload(appContext.getPackageName(), editId,
+					uploadImageRequest = edits.images().upload(appContext.getApplicationId(), editId,
 						each.getLocale().toString(), ImageType.PHONE_SCREENSHOTS.getKey(), content);
 					response = uploadImageRequest.execute();
 					System.out.println(String.format("Phone screenshot %s has been updated.", response.getImage()));
 				}
 				
-				deleteallRequest = edits.images().deleteall(appContext.getPackageName(), editId,
+				deleteallRequest = edits.images().deleteall(appContext.getApplicationId(), editId,
 					each.getLocale().toString(), ImageType.SEVEN_INCH_SCREENSHOTS.getKey());
 				deleteallRequest.execute();
 				System.out.println("Seven inch screenshots has been deleted.");
 				for (AbstractInputStreamContent content : each.getSevenInchScreenshots()) {
-					uploadImageRequest = edits.images().upload(appContext.getPackageName(), editId,
+					uploadImageRequest = edits.images().upload(appContext.getApplicationId(), editId,
 						each.getLocale().toString(), ImageType.SEVEN_INCH_SCREENSHOTS.getKey(), content);
 					response = uploadImageRequest.execute();
 					System.out.println(String.format("Seven inch screenshot %s has been updated.", response.getImage()));
 				}
 				
-				deleteallRequest = edits.images().deleteall(appContext.getPackageName(), editId,
+				deleteallRequest = edits.images().deleteall(appContext.getApplicationId(), editId,
 					each.getLocale().toString(), ImageType.TEN_INCH_SCREENSHOTS.getKey());
 				deleteallRequest.execute();
 				System.out.println("Ten inch screenshots has been deleted.");
 				for (AbstractInputStreamContent content : each.getTenInchScreenshots()) {
-					uploadImageRequest = edits.images().upload(appContext.getPackageName(), editId,
+					uploadImageRequest = edits.images().upload(appContext.getApplicationId(), editId,
 						each.getLocale().toString(), ImageType.TEN_INCH_SCREENSHOTS.getKey(), content);
 					response = uploadImageRequest.execute();
 					System.out.println(String.format("Ten inch screenshot %s has been updated.", response.getImage()));
@@ -229,7 +229,7 @@ public class GooglePlayPublisher {
 			Edits edits = service.edits();
 			
 			// Create a new edit to make changes.
-			Insert editRequest = edits.insert(appContext.getPackageName(), null);
+			Insert editRequest = edits.insert(appContext.getApplicationId(), null);
 			AppEdit edit = editRequest.execute();
 			String editId = edit.getId();
 			System.out.println(String.format("Created edit with id: %s", editId));
@@ -237,14 +237,14 @@ public class GooglePlayPublisher {
 			// Upload new apk to developer console
 			String apkPath = GooglePlayPublisher.class.getResource(apkFilePath).toURI().getPath();
 			AbstractInputStreamContent apkFile = new FileContent(MIME_TYPE_APK, new File(apkPath));
-			Upload uploadRequest = edits.apks().upload(appContext.getPackageName(), editId, apkFile);
+			Upload uploadRequest = edits.apks().upload(appContext.getApplicationId(), editId, apkFile);
 			Apk apk = uploadRequest.execute();
 			System.out.println(String.format("Version code %d has been uploaded", apk.getVersionCode()));
 			
 			// Assign apk to beta track.
 			List<Integer> apkVersionCodes = new ArrayList<>();
 			apkVersionCodes.add(apk.getVersionCode());
-			Edits.Tracks.Update updateTrackRequest = edits.tracks().update(appContext.getPackageName(), editId,
+			Edits.Tracks.Update updateTrackRequest = edits.tracks().update(appContext.getApplicationId(), editId,
 				trackType.getKey(), new Track().setVersionCodes(apkVersionCodes));
 			Track updatedTrack = updateTrackRequest.execute();
 			System.out.println(String.format("Track %s has been updated.", updatedTrack.getTrack()));
@@ -253,7 +253,7 @@ public class GooglePlayPublisher {
 				// Update recent changes field in apk listing.
 				ApkListing newApkListing = new ApkListing();
 				newApkListing.setRecentChanges(each.getRecentChanges());
-				Apklistings.Update updateRecentChangesRequest = edits.apklistings().update(appContext.getPackageName(),
+				Apklistings.Update updateRecentChangesRequest = edits.apklistings().update(appContext.getApplicationId(),
 					editId, apk.getVersionCode(), each.getLocale().toString(), newApkListing);
 				updateRecentChangesRequest.execute();
 				System.out.println("Recent changes has been updated.");
@@ -268,7 +268,7 @@ public class GooglePlayPublisher {
 	}
 	
 	private static void commitEdit(AppContext appContext, Edits edits, String editId) throws IOException {
-		Commit commitRequest = edits.commit(appContext.getPackageName(), editId);
+		Commit commitRequest = edits.commit(appContext.getApplicationId(), editId);
 		AppEdit appEdit = commitRequest.execute();
 		System.out.println(String.format("App edit with id %s has been comitted", appEdit.getId()));
 	}
