@@ -12,7 +12,7 @@ public abstract class AbstractTask extends DefaultTask {
 		appContext.setApplicationId(getProp('APPLICATION_ID'));
 		appContext.setServiceAccountEmail(getProp('SERVICE_ACCOUNT_EMAIL'));
 		appContext.setPrivateKeyFile(getProp('PRIVATE_KEY_FILE'));
-		appContext.setListingPath(getProp('LISTING_PATH'));
+		appContext.setListingPath(getStringProp('LISTING_PATH', project.rootDir.getAbsolutePath() + "/googleplay"));
 		appContext.setLocales(getProp('LOCALES'));
 		appContext.setApkPath(getProp('APK_PATH'));
 		appContext.setTrackType(TrackType.findByKey(getProp('TRACK_TYPE')));
@@ -20,7 +20,16 @@ public abstract class AbstractTask extends DefaultTask {
 		onExecute(appContext);
 	}
 
-	public def getProp(String propertyName) {
+	public String getStringProp(String propertyName, String defaultValue) {
+		def value = getProp(propertyName)
+		if (value == null) {
+			return defaultValue
+		} else {
+			return value.toString();
+		}
+	}
+
+	public String getProp(String propertyName) {
 		return project.hasProperty(propertyName) ? project.ext.get(propertyName) : System.getenv(propertyName)
 	}
 

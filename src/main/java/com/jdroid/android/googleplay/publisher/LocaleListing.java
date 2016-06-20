@@ -13,11 +13,11 @@ import java.util.Locale;
 public class LocaleListing {
 	
 	private Locale locale;
-	private String listingPath;
+	private String basePath;
 	
 	public LocaleListing(Locale locale, String listingPath) {
 		this.locale = locale;
-		this.listingPath = listingPath;
+		this.basePath = listingPath + java.io.File.separator + (locale != null ? locale.getLanguage() : "default") + java.io.File.separator;
 	}
 	
 	public Locale getLocale() {
@@ -67,9 +67,7 @@ public class LocaleListing {
 	private List<AbstractInputStreamContent> getScreenshots(String screenSize) {
 		List<AbstractInputStreamContent> abstractInputStreamContents = Lists.newArrayList();
 		for (int i = 1; i < 9; i++) {
-			File file = new File(listingPath + java.io.File.separator + locale.getLanguage() + java.io.File.separator
-					+ "screenshots" + java.io.File.separator + screenSize + java.io.File.separator + "screenshot" + i
-					+ ".png");
+			File file = new File(basePath + "screenshots" + java.io.File.separator + screenSize + java.io.File.separator + "screenshot" + i + ".png");
 			if (file.exists()) {
 				abstractInputStreamContents.add(new FileContent(MimeType.PNG, file));
 			}
@@ -78,14 +76,12 @@ public class LocaleListing {
 	}
 	
 	private String getDetailsContent(String item) {
-		File file = new File(listingPath + java.io.File.separator + locale.getLanguage() + java.io.File.separator
-				+ "details/" + item + ".txt");
-		return FileUtils.toString(file);
+		File file = new File(basePath+ "details" + java.io.File.separator + item + ".txt");
+		return file.exists() ? FileUtils.toString(file) : null;
 	}
 	
 	private AbstractInputStreamContent getAssetsContent(String item) {
-		File file = new File(listingPath + java.io.File.separator + locale.getLanguage() + java.io.File.separator
-				+ "assets/" + item + ".png");
-		return new FileContent(MimeType.PNG, file);
+		File file = new File(basePath + "assets" + java.io.File.separator + item + ".png");
+		return file.exists() ? new FileContent(MimeType.PNG, file) : null;
 	}
 }
