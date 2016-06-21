@@ -12,17 +12,17 @@ Create a project with the following structure:
     PROJECT_DIR/googleplay/{LOCALE_2}/...
     PROJECT_DIR/googleplay/default/...
     
-|Asset                |Required|Location                                                                       |
-| ------------------- | ------ | ----------------------------------------------------------------------------- |
-|Title                |true    |PROJECT_DIR/googleplay/{LOCALE}/details/title.txt                              |
-|Short Description    |true    |PROJECT_DIR/googleplay/{LOCALE}/details/shortDescription.txt                   |
-|Full Description     |true    |PROJECT_DIR/googleplay/{LOCALE}/details/fullDescription.txt                    |
-|Feature Graphic      |true    |PROJECT_DIR/googleplay/{LOCALE}/details/featureGraphic.png                     |
-|High Resolution Icon |true    |PROJECT_DIR/googleplay/{LOCALE}/details/highResolutionIcon.png                 |
-|Promo Graphic        |false   |PROJECT_DIR/googleplay/{LOCALE}/details/promoGraphic.png                       |
-|Phone Screenshots    |false   |PROJECT_DIR/googleplay/{LOCALE_1}/screenshots/phone/screenshot[1 ... 8].png    |
-|7-inch Screenshots   |false   |PROJECT_DIR/googleplay/{LOCALE_1}/screenshots/tablet7/screenshot[1 ... 8].png  |
-|10-inch Screenshots  |false   |PROJECT_DIR/googleplay/{LOCALE_1}/screenshots/tablet10/screenshot[1 ... 8].png |
+|Asset                |Required|Location                                                                     |
+| ------------------- | ------ | ----------------------------------------------------------------------------|
+|Title                |true    |PROJECT_DIR/googleplay/{LOCALE}/details/title.txt                            |
+|Short Description    |true    |PROJECT_DIR/googleplay/{LOCALE}/details/shortDescription.txt                 |
+|Full Description     |true    |PROJECT_DIR/googleplay/{LOCALE}/details/fullDescription.txt                  |
+|Feature Graphic      |true    |PROJECT_DIR/googleplay/{LOCALE}/details/featureGraphic.png                   |
+|High Resolution Icon |true    |PROJECT_DIR/googleplay/{LOCALE}/details/highResolutionIcon.png               |
+|Promo Graphic        |false   |PROJECT_DIR/googleplay/{LOCALE}/details/promoGraphic.png                     |
+|Phone Screenshots    |false   |PROJECT_DIR/googleplay/{LOCALE}/screenshots/phone/screenshot[1 ... 8].png    |
+|7-inch Screenshots   |false   |PROJECT_DIR/googleplay/{LOCALE}/screenshots/tablet7/screenshot[1 ... 8].png  |
+|10-inch Screenshots  |false   |PROJECT_DIR/googleplay/{LOCALE}/screenshots/tablet10/screenshot[1 ... 8].png |
 
 
 Add the following configuration to your `PROJECT_DIR/build.gradle`:
