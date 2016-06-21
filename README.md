@@ -3,7 +3,30 @@ Gradle Plugin to publish android APKs and listings on Google Play
 
 ## Setup
 
-Add the following configuration to your `build.gradle`:
+Create a project with the following structure:
+
+    PROJECT_NAME/build.gradle
+    PROJECT_NAME/googleplay/build.gradle
+    PROJECT_NAME/googleplay/{LOCALE_1}/...
+    PROJECT_NAME/googleplay/{LOCALE_2}/...
+    PROJECT_NAME/googleplay/default/...
+    
+|Asset                |Required|Location                                              |File Name      |
+| ------------------- | ------ | ---------------------------------------------------- | ------------- |
+|Title                |true    |PROJECT_NAME/googleplay/{LOCALE}/details/             |title.txt      |
+|Short Description    |true    |PROJECT_NAME/googleplay/{LOCALE}/details/             |shortDescription.txt      |
+|Full Description     |true    |PROJECT_NAME/googleplay/{LOCALE}/details/             |fullDescription.txt      |
+|Feature Graphic      |true    |PROJECT_NAME/googleplay/{LOCALE}/details/             |featureGraphic.png      |
+|High Resolution Icon |true    |PROJECT_NAME/googleplay/{LOCALE}/details/             |highResolutionIcon.png      |
+|Promo Graphic        |false   |PROJECT_NAME/googleplay/{LOCALE}/details/             |promoGraphic.png      |
+|Phone Screenshots    |false   |PROJECT_NAME/googleplay/{LOCALE_1}/screenshots/phone/ |screenshot1.png ... screenshot8.png|
+|7-inch Screenshots   |false   |PROJECT_NAME/googleplay/{LOCALE_1}/screenshots/tablet7/ |screenshot1.png ... screenshot8.png|
+|10-inch Screenshots   |false   |PROJECT_NAME/googleplay/{LOCALE_1}/screenshots/tablet10/ |screenshot1.png ... screenshot8.png|
+
+
+
+
+Add the following configuration to your root `build.gradle`:
 
     apply plugin: 'com.jdroid.googleplay.publisher'
 
@@ -17,7 +40,7 @@ Add the following configuration to your `build.gradle`:
     }
     
     ext.APPLICATION_ID = 'com.sample' // Replace by the application id of your app
-	ext.LOCALES = 'en-US,es-419' // Replace by a list of supported locales on Google Play
+    ext.LOCALES = 'en-US,es-419' // Replace by a list of supported locales on Google Play
 
 ## Configuration
 
