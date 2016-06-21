@@ -37,19 +37,15 @@ Path to the private key file (.p12 extension). This property is required
 
 ## Usage
 
-### List APKs task
+#### List APKs task
 
-List all the historical APKs uploaded
-
-### Task Execution
+List all the historical APKs uploaded.
 
     ./gradlew :googleplay:googlePlayListAPKs
     
-### Publish listing task
+#### Publish listing task
 
-Publish listings (feature/promo graphics, High resolution icon, screenshots, title, short and full descriptions) on Google Play
-
-### Task Execution
+Publish listings (feature/promo graphics, High resolution icon, screenshots, title, short and full descriptions) on Google Play.
 
     ./gradlew :googleplay:googlePlayPublishListings
 
