@@ -72,9 +72,9 @@ List all the historical APKs uploaded.
 
     ./gradlew :googleplay:googlePlayListAPKs
     
-#### Publish listing task
+#### Publish Listing task
 
-Publish listings (feature/promo graphics, High resolution icon, screenshots, title, short and full descriptions) on Google Play.
+Publish listings (feature/promo graphics, High resolution icon, screenshots, title, short and full descriptions) on Google Play. The listings are published for each locales defined on the LOCALES property. If some asset is not available for any locale, the assets inside the `default` directory will be used
 
     ./gradlew :googleplay:googlePlayPublishListings
 
