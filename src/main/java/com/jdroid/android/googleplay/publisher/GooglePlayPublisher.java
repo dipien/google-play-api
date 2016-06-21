@@ -164,6 +164,9 @@ public class GooglePlayPublisher {
 				if (title == null) {
 					title = defaultLocaleListing.getTitle();
 				}
+				if (title == null) {
+					throw new UnexpectedException("The listing title was not found for locale " + localeString);
+				}
 				listing.setTitle(title);
 				
 				// Full Description
@@ -171,12 +174,18 @@ public class GooglePlayPublisher {
 				if (fullDescription == null) {
 					fullDescription = defaultLocaleListing.getFullDescription();
 				}
+				if (fullDescription == null) {
+					throw new UnexpectedException("The listing full description was not found for locale " + localeString);
+				}
 				listing.setFullDescription(fullDescription);
 				
 				// Short Description
 				String shortDescription = each.getShortDescription();
 				if (shortDescription == null) {
 					shortDescription = defaultLocaleListing.getShortDescription();
+				}
+				if (shortDescription == null) {
+					throw new UnexpectedException("The listing short description was not found for locale " + localeString);
 				}
 				listing.setShortDescription(shortDescription);
 				
@@ -191,6 +200,9 @@ public class GooglePlayPublisher {
 				if (featureGraphic == null) {
 					featureGraphic = defaultLocaleListing.getFeatureGraphic();
 				}
+				if (featureGraphic == null) {
+					throw new UnexpectedException("Feature graphic was not found for locale " + localeString);
+				}
 				Images.Upload uploadImageRequest = edits.images().upload(appContext.getApplicationId(), editId,
 					localeString, ImageType.FEATURE_GRAPHIC.getKey(), featureGraphic);
 				ImagesUploadResponse response = uploadImageRequest.execute();
@@ -201,15 +213,22 @@ public class GooglePlayPublisher {
 				if (promoGraphic == null) {
 					promoGraphic = defaultLocaleListing.getPromoGraphic();
 				}
-				uploadImageRequest = edits.images().upload(appContext.getApplicationId(), editId,
-					localeString, ImageType.PROMO_GRAPHIC.getKey(), promoGraphic);
-				response = uploadImageRequest.execute();
-				System.out.println(String.format("Promo graphic %s has been updated.", response.getImage()));
+				if (promoGraphic != null) {
+					uploadImageRequest = edits.images().upload(appContext.getApplicationId(), editId,
+							localeString, ImageType.PROMO_GRAPHIC.getKey(), promoGraphic);
+					response = uploadImageRequest.execute();
+					System.out.println(String.format("Promo graphic %s has been updated.", response.getImage()));
+				} else {
+					System.out.println("*** Missing promo graphic for locale " + localeString + " ***");
+				}
 
 				// High Resolution Icon
 				AbstractInputStreamContent highResolutionIcon = each.getHighResolutionIcon();
 				if (highResolutionIcon == null) {
 					highResolutionIcon = defaultLocaleListing.getHighResolutionIcon();
+				}
+				if (highResolutionIcon == null) {
+					throw new UnexpectedException("The high resolution icon was not found for locale " + localeString);
 				}
 				uploadImageRequest = edits.images().upload(appContext.getApplicationId(), editId,
 					localeString, ImageType.ICON.getKey(), highResolutionIcon);
