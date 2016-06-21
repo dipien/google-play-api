@@ -15,16 +15,43 @@ Add the following configuration to your `build.gradle`:
         classpath 'com.jdroidframework:jdroid-googleplay-publisher-plugin:0.1.0'
       }
     }
+    
+    ext.APPLICATION_ID = 'com.sample' // Replace by the application id of your app
+	ext.LOCALES = 'en-US,es-419' // Replace by a list of supported locales on Google Play
+
+## Configuration
+
+You need to create a gradle.properties file on the root of the project with the following properties or send them as parameters when executing a task
+
+###### Service Account Email
+
+The service account email used to authenticate on Google Play. This property is required
+
+    SERVICE_ACCOUNT_EMAIL = xxx@developer.gserviceaccount.com
+    
+###### Private Key File
+
+Path to the private key file (.p12 extension). This property is required
+    
+    PRIVATE_KEY_FILE = /path/to/.p12/file
 
 ## Usage
 
-### Publish listing task
+### List APKs task
 
-This task publish listings (feature/promo graphics, High resolution icon, screenshots, title, short and full descriptions) on Google Play
+List all the historical APKs uploaded
 
 ### Task Execution
 
-    gradle googlePlayPublishListings
+    ./gradlew :googleplay:googlePlayListAPKs
+    
+### Publish listing task
+
+Publish listings (feature/promo graphics, High resolution icon, screenshots, title, short and full descriptions) on Google Play
+
+### Task Execution
+
+    ./gradlew :googleplay:googlePlayPublishListings
 
 ## Donations
 Help us to continue with this project:
