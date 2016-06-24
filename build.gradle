@@ -34,6 +34,8 @@ buildscript {
 	dependencies {
 		// https://plugins.gradle.org/plugin/com.gradle.plugin-publish
 		classpath "com.gradle.publish:plugin-publish-plugin:0.9.4"
+
+		classpath 'com.jdroidframework:jdroid-java-github-connector:0.9.0'
 	}
 }
 
@@ -185,6 +187,14 @@ public Boolean getBooleanProp(String propertyName, Boolean defaultValue) {
 task printVersion << {
 	println version
 }
+
+import com.jdroid.github.IRepositoryIdProvider;
+import com.jdroid.github.Milestone;
+import com.jdroid.github.Release;
+import com.jdroid.github.RepositoryId;
+import com.jdroid.github.client.GitHubClient;
+import com.jdroid.github.service.MilestoneService;
+import com.jdroid.github.service.ReleaseService;
 
 task closeGitHubMilestone << {
 
