@@ -14,7 +14,7 @@ ext.jdroidVersion = "0.9.5"
 Boolean isSnapshot = getBooleanProp('SNAPSHOT', true)
 
 ext.VERSION_MAJOR = 0
-ext.VERSION_MINOR = 1
+ext.VERSION_MINOR = 2
 ext.VERSION_PATCH = 0
 ext.VERSION_CLASSIFIER = isSnapshot ? "SNAPSHOT" : null
 
