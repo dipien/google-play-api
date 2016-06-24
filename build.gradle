@@ -167,6 +167,26 @@ def getRepositoryPassword() {
 	return getProp('JDROID_NEXUS_PASSWORD')
 }
 
+// Configuration to publish your plugin to the plugin portal
+pluginBundle {
+	website = 'http://www.jdroidframework.com/'
+	vcsUrl = 'https://github.com/maxirosson/jdroid-googleplay-publisher'
+
+	plugins {
+		GooglePlayPublisherPlugin {
+			id = 'com.jdroid.googleplay.publisher'
+			displayName = 'Jdroid Google Play Publisher Gradle Plugin'
+			description = 'Gradle Plugin to publish android APKs and listings on Google Play'
+			tags = ['jdroid', 'android', 'google play']
+		}
+	}
+
+	mavenCoordinates {
+		groupId = "com.jdroidframework"
+		artifactId = "jdroid-google-publisher-plugin"
+	}
+}
+
 public def getProp(String propertyName) {
 	return project.hasProperty(propertyName) ? project.ext.get(propertyName) : System.getenv(propertyName)
 }
