@@ -181,3 +181,63 @@ public Boolean getBooleanProp(String propertyName, Boolean defaultValue) {
 		throw new GradleException('Invalid Boolean value: ' + value)
 	}
 }
+
+task printVersion << {
+	println version
+}
+
+task closeGitHubMilestone << {
+
+	GitHubClient client = new com.jdroid.github.client.GitHubClient();
+	client.setSerializeNulls(false);
+	client.setOAuth2Token(getProp('GITHUB_OATH_TOKEN'));
+
+	IRepositoryIdProvider repositoryIdProvider = RepositoryId.create("maxirosson", "jdroid");
+
+	closeMilestone(client, repositoryIdProvider, "v${version}");
+}
+
+
+public void closeMilestone(GitHubClient client, IRepositoryIdProvider repositoryIdProvider, String milestoneTitle) throws IOException {
+
+	MilestoneService milestoneService = new MilestoneService(client);
+	for (Milestone each : milestoneService.getMilestones(repositoryIdProvider, "open")) {
+		if (each.getTitle().equals(milestoneTitle)) {
+
+			Milestone newMilestone = new Milestone();
+			newMilestone.setNumber(each.getNumber());
+			newMilestone.setTitle(each.getTitle());
+			newMilestone.setDescription(each.getDescription());
+			newMilestone.setDueOn(new Date());
+			newMilestone.setState("closed");
+			milestoneService.editMilestone(repositoryIdProvider, newMilestone);
+			break;
+		}
+	}
+}
+
+task createGitHubRelease << {
+	GitHubClient client = new GitHubClient();
+	client.setSerializeNulls(false);
+	client.setOAuth2Token(getProp('GITHUB_OATH_TOKEN'));
+
+	IRepositoryIdProvider repositoryIdProvider = RepositoryId.create("maxirosson", "jdroid");
+
+	def releaseNotesFile = project.file("./etc/releaseNotes.txt")
+
+	createRelease(client, repositoryIdProvider, "v${version}", releaseNotesFile.getText());
+}
+
+public void createRelease(GitHubClient client, IRepositoryIdProvider repositoryIdProvider, String name, String body) throws IOException {
+
+	Release release = new Release();
+	release.setBody(body);
+	release.setDraft(false);
+	release.setName(name);
+	release.setTagName(name);
+	release.setPrerelease(false);
+	release.setTargetCommitish("production");
+
+	ReleaseService releaseService = new ReleaseService(client);
+	releaseService.createRelease(repositoryIdProvider, release);
+}
