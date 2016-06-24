@@ -9,6 +9,7 @@ GIT_HUB_READ_ONLY_TOKEN=$3
 # Whether the source code and assemblies on the build directory should be cleaned or not
 CLEAN=false
 
+REPOSITORY_OWNER=maxirosson
 PROJECT_NAME=jdroid-googleplay-publisher-plugin
 
 PROJECT_DIRECTORY=$BUILD_DIRECTORY/$PROJECT_NAME
@@ -50,8 +51,8 @@ then
 
 	# Checkout the project
 	cd $SOURCE_DIRECTORY
-	echo Cloning git@github.com:maxirosson/$PROJECT_NAME.git
-	git clone git@github.com:maxirosson/$PROJECT_NAME.git $PROJECT_NAME
+	echo Cloning git@github.com:$REPOSITORY_OWNER/$PROJECT_NAME.git
+	git clone git@github.com:$REPOSITORY_OWNER/$PROJECT_NAME.git $PROJECT_NAME
 fi
 
 
@@ -71,17 +72,17 @@ VERSION=`./gradlew :printVersion -q --configure-on-demand -PSNAPSHOT=false`
 # Close Milestone on GitHub
 # ************************
 
-./gradlew :closeGitHubMilestone --configure-on-demand -PSNAPSHOT=false -PGITHUB_OATH_TOKEN=$GIT_HUB_TOKEN
+./gradlew :closeGitHubMilestone --configure-on-demand -PSNAPSHOT=false -PREPOSITORY_OWNER=$REPOSITORY_OWNER -PREPOSITORY_NAME=$PROJECT_NAME -PGITHUB_OATH_TOKEN=$GIT_HUB_TOKEN
 
-read -p "Verify that the milestone is closed on Milestones [https://github.com/maxirosson/$PROJECT_NAME/milestones] and press [Enter] key to continue..."
+read -p "Verify that the milestone is closed on Milestones [https://github.com/$REPOSITORY_OWNER/$PROJECT_NAME/milestones] and press [Enter] key to continue..."
 
 # ************************
 # Upload Release on GitHub
 # ************************
 
-./gradlew :createGitHubRelease --configure-on-demand -PSNAPSHOT=false -PGITHUB_OATH_TOKEN=$GIT_HUB_TOKEN
+./gradlew :createGitHubRelease --configure-on-demand -PSNAPSHOT=false -PREPOSITORY_OWNER=$REPOSITORY_OWNER -PREPOSITORY_NAME=$PROJECT_NAME -PGITHUB_OATH_TOKEN=$GIT_HUB_TOKEN
 
-read -p "Verify that the release is present on Releases [https://github.com/maxirosson/$PROJECT_NAME/releases] and press [Enter] key to continue..."
+read -p "Verify that the release is present on Releases [https://github.com/$REPOSITORY_OWNER/$PROJECT_NAME/releases] and press [Enter] key to continue..."
 
 # ************************
 # Generate Change Log
