@@ -4,12 +4,11 @@ public class AppContext {
 	
 	// The application id of the app
 	private String applicationId;
-	
-	// Installed application: Leave this string empty and copy or edit resources/client_secrets.json. Service accounts:
-	// Enter the service account email and add your key.p12 file to the resources directory.
+
+	// The service account email used to authenticate on Google Play
 	private String serviceAccountEmail;
 	
-	// Path to the private key file (only used for Service Account auth
+	// Path to the private key file extension (.p12 extension)
 	private String privateKeyFile;
 	
 	private String listingPath;

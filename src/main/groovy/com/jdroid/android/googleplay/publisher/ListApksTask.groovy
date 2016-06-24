@@ -3,7 +3,7 @@ package com.jdroid.android.googleplay.publisher
 public class ListApksTask extends AbstractTask {
 
 	public ListApksTask() {
-		description = "List all the APKs"
+		description = "List all the historical APKs uploaded"
 	}
 
 	@Override
