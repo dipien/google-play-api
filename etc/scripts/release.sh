@@ -5,6 +5,7 @@ set -e
 BUILD_DIRECTORY=$1
 GIT_HUB_TOKEN=$2
 GIT_HUB_READ_ONLY_TOKEN=$3
+GIT_HUB_EMAIL=$4
 
 # Whether the source code and assemblies on the build directory should be cleaned or not
 CLEAN=false
@@ -54,6 +55,7 @@ then
 	echo Cloning git@github.com:$REPOSITORY_OWNER/$PROJECT_NAME.git
 	git clone git@github.com:$REPOSITORY_OWNER/$PROJECT_NAME.git $PROJECT_NAME
 fi
+git config user.email $GIT_HUB_EMAIL
 
 
 # ************************
