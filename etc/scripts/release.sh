@@ -55,14 +55,13 @@ then
 	echo Cloning git@github.com:$REPOSITORY_OWNER/$PROJECT_NAME.git
 	git clone git@github.com:$REPOSITORY_OWNER/$PROJECT_NAME.git $PROJECT_NAME
 fi
+cd $PROJECT_HOME
 git config user.email $GIT_HUB_EMAIL
-
 
 # ************************
 # Synch production branch
 # ************************
 
-cd $PROJECT_HOME
 git add -A
 git stash
 git checkout production
