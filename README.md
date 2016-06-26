@@ -1,4 +1,4 @@
-# Jdroid Google Play Publisher Plugin
+# Google Play Publisher Plugin
 Gradle Plugin to publish android APKs and listings on Google Play
 
 ## Setup
