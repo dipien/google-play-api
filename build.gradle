@@ -1,6 +1,6 @@
 ext.VERSION_MAJOR = 0
-ext.VERSION_MINOR = 9
-ext.VERSION_PATCH = 3
+ext.VERSION_MINOR = 1
+ext.VERSION_PATCH = 1
 
 ext.JDROID_GITHUB_REPOSITORY_OWNER = 'maxirosson'
 ext.JDROID_GITHUB_REPOSITORY_NAME = 'jdroid-googleplay-publisher-plugin'
