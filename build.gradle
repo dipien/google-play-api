@@ -11,6 +11,7 @@ apply plugin: 'java-gradle-plugin'
 apply plugin: 'com.gradle.plugin-publish'
 
 description = 'Gradle Plugin to publish android APKs and listings on Google Play'
+ext.packaging = 'jar'
 
 buildscript {
 	repositories {
