@@ -1,10 +1,11 @@
 # Change Log
 
-## [v0.9.3](https://github.com/maxirosson/jdroid-googleplay-publisher-plugin/tree/v0.9.3) (2016-07-04)
-[Full Changelog](https://github.com/maxirosson/jdroid-googleplay-publisher-plugin/compare/vunspecified...v0.9.3)
+## [v0.1.1](https://github.com/maxirosson/jdroid-googleplay-publisher-plugin/tree/v0.1.1) (2016-07-04)
+[Full Changelog](https://github.com/maxirosson/jdroid-googleplay-publisher-plugin/compare/v0.1.0...v0.1.1)
 
-## [vunspecified](https://github.com/maxirosson/jdroid-googleplay-publisher-plugin/tree/vunspecified) (2016-07-04)
-[Full Changelog](https://github.com/maxirosson/jdroid-googleplay-publisher-plugin/compare/v0.1.0...vunspecified)
+**Implemented enhancements:**
+
+- Migrate release process to jdroid-internal [\#7](https://github.com/maxirosson/jdroid-googleplay-publisher-plugin/issues/7)
 
 ## [v0.1.0](https://github.com/maxirosson/jdroid-googleplay-publisher-plugin/tree/v0.1.0) (2016-06-24)
 **Implemented enhancements:**
