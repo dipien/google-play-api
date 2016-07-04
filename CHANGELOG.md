@@ -1,5 +1,12 @@
 # Change Log
 
+## [v0.1.1](https://github.com/maxirosson/jdroid-googleplay-publisher-plugin/tree/v0.1.1) (2016-07-04)
+[Full Changelog](https://github.com/maxirosson/jdroid-googleplay-publisher-plugin/compare/v0.1.0...v0.1.1)
+
+**Implemented enhancements:**
+
+- Migrate release process to jdroid-internal [\#7](https://github.com/maxirosson/jdroid-googleplay-publisher-plugin/issues/7)
+
 ## [v0.1.0](https://github.com/maxirosson/jdroid-googleplay-publisher-plugin/tree/v0.1.0) (2016-06-24)
 **Implemented enhancements:**
 

@@ -1,4 +1,0 @@
-**Implemented enhancements:**
-
-- Publish Listings task [\#2](https://github.com/maxirosson/jdroid-googleplay-publisher-plugin/issues/2)
-- List APKs task [\#1](https://github.com/maxirosson/jdroid-googleplay-publisher-plugin/issues/1)
