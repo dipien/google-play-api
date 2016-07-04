@@ -1,5 +1,8 @@
 # Change Log
 
+## [vunspecified](https://github.com/maxirosson/jdroid-googleplay-publisher-plugin/tree/vunspecified) (2016-07-04)
+[Full Changelog](https://github.com/maxirosson/jdroid-googleplay-publisher-plugin/compare/v0.1.0...vunspecified)
+
 ## [v0.1.0](https://github.com/maxirosson/jdroid-googleplay-publisher-plugin/tree/v0.1.0) (2016-06-24)
 **Implemented enhancements:**
 
