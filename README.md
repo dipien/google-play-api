@@ -25,14 +25,15 @@ Create a project with the following structure:
 |10-inch Screenshots  |false   |PROJECT_DIR/googleplay/{LOCALE}/screenshots/tablet10/screenshot[1 ... 8].png |
 
 
-Add the following configuration to your `PROJECT_DIR/build.gradle`:
+Add the following configuration to your `PROJECT_DIR/build.gradle`, replacing the X.Y.Z by the [latest version](https://github.com/maxirosson/jdroid-java-github/releases/latest)
+
 
     buildscript {
       repositories {
         mavenCentral()
       }
       dependencies {
-        classpath 'com.jdroidframework:jdroid-googleplay-publisher-plugin:0.1.0'
+        classpath 'com.jdroidframework:jdroid-googleplay-publisher-plugin:X.Y.Z'
       }
     }
     
@@ -46,7 +47,6 @@ Add the following configuration to your `PROJECT_DIR/googleplay/build.gradle`:
 Add the following configuration to your `PROJECT_DIR/settings.gradle`:
     
     include ':googleplay'
-
 
 ## Configuration
 
