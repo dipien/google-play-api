@@ -76,7 +76,7 @@ public class LocaleListing {
 	}
 	
 	private String getDetailsContent(String item) {
-		File file = new File(basePath+ "details" + java.io.File.separator + item + ".txt");
+		File file = new File(basePath + "details" + java.io.File.separator + item + ".txt");
 		return file.exists() ? FileUtils.toString(file) : null;
 	}
 	

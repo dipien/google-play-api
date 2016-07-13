@@ -16,6 +16,12 @@ public class AppContext {
 	private String apkPath;
 	private TrackType trackType;
 
+	// Validations
+	private Boolean promoGraphicRequired;
+	private Boolean phoneScreenshotsRequired;
+	private Boolean sevenInchScreenshotsRequired;
+	private Boolean tenInchScreenshotsRequired;
+
 	public String getApplicationId() {
 		return applicationId;
 	}
@@ -70,5 +76,37 @@ public class AppContext {
 
 	public void setTrackType(TrackType trackType) {
 		this.trackType = trackType;
+	}
+
+	public void setPromoGraphicRequired(Boolean promoGraphicRequired) {
+		this.promoGraphicRequired = promoGraphicRequired;
+	}
+
+	public Boolean isPromoGraphicRequired() {
+		return promoGraphicRequired;
+	}
+
+	public Boolean isPhoneScreenshotsRequired() {
+		return phoneScreenshotsRequired;
+	}
+
+	public void setPhoneScreenshotsRequired(Boolean phoneScreenshotsRequired) {
+		this.phoneScreenshotsRequired = phoneScreenshotsRequired;
+	}
+
+	public Boolean isSevenInchScreenshotsRequired() {
+		return sevenInchScreenshotsRequired;
+	}
+
+	public void setSevenInchScreenshotsRequired(Boolean sevenInchScreenshotsRequired) {
+		this.sevenInchScreenshotsRequired = sevenInchScreenshotsRequired;
+	}
+
+	public Boolean isTenInchScreenshotsRequired() {
+		return tenInchScreenshotsRequired;
+	}
+
+	public void setTenInchScreenshotsRequired(Boolean tenInchScreenshotsRequired) {
+		this.tenInchScreenshotsRequired = tenInchScreenshotsRequired;
 	}
 }

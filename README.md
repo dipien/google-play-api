@@ -85,6 +85,12 @@ Publish listings (feature/promo graphics, High resolution icon, screenshots, tit
 
     ./gradlew :googleplay:googlePlayPublishListings
 
+#### Verify Content Task
+
+Verify that the content to upload to Google Play is valid.
+
+    ./gradlew :googleplay:googlePlayVerifyContent
+
 ## Donations
 Help us to continue with this project:
 

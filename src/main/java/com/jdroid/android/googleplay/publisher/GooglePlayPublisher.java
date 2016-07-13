@@ -35,7 +35,6 @@ import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Helper class to initialize the publisher APIs client library.
@@ -114,11 +113,12 @@ public class GooglePlayPublisher {
 	/**
 	 * Lists all the apks for a given app.
 	 * 
-	 * @param appContext
+	 * @param app
 	 */
-	public static void listApks(AppContext appContext) {
+	public static void listApks(App app) {
 		try {
-			
+
+			AppContext appContext = app.getAppContext();
 			// Create the API service.
 			AndroidPublisher service = init(appContext);
 			Edits edits = service.edits();
@@ -139,9 +139,11 @@ public class GooglePlayPublisher {
 		}
 	}
 	
-	public static void updateListings(AppContext appContext, List<LocaleListing> localeListings, LocaleListing defaultLocaleListing) {
+	public static void updateListings(App app) {
 		try {
-			
+
+			AppContext appContext = app.getAppContext();
+
 			// Create the API service.
 			AndroidPublisher service = init(appContext);
 			Edits edits = service.edits();
@@ -153,137 +155,80 @@ public class GooglePlayPublisher {
 			System.out.println(String.format("Created edit with id: %s", editId));
 			
 			// Update listing for each locale of the application.
-			for (LocaleListing each : localeListings) {
-				
+			for (LocaleListing each : app.getLocaleListings()) {
+
 				String localeString = each.getLocale().toString();
-				
+
 				Listing listing = new Listing();
-				
-				// Title
-				String title = each.getTitle();
-				if (title == null) {
-					title = defaultLocaleListing.getTitle();
-				}
-				if (title == null) {
-					throw new UnexpectedException("The listing title was not found for locale " + localeString);
-				}
-				listing.setTitle(title);
-				
-				// Full Description
-				String fullDescription = each.getFullDescription();
-				if (fullDescription == null) {
-					fullDescription = defaultLocaleListing.getFullDescription();
-				}
-				if (fullDescription == null) {
-					throw new UnexpectedException("The listing full description was not found for locale " + localeString);
-				}
-				listing.setFullDescription(fullDescription);
-				
-				// Short Description
-				String shortDescription = each.getShortDescription();
-				if (shortDescription == null) {
-					shortDescription = defaultLocaleListing.getShortDescription();
-				}
-				if (shortDescription == null) {
-					throw new UnexpectedException("The listing short description was not found for locale " + localeString);
-				}
-				listing.setShortDescription(shortDescription);
-				
+				listing.setTitle(app.getTitle(each));
+				listing.setFullDescription(app.getFullDescription(each));
+				listing.setShortDescription(app.getShortDescription(each));
 				Edits.Listings.Update updateListingsRequest = edits.listings().update(appContext.getApplicationId(),
-					editId, localeString, listing);
+						editId, localeString, listing);
 				Listing updatedListing = updateListingsRequest.execute();
 				System.out.println(String.format("Created new " + localeString + " app listing with title: %s",
-					updatedListing.getTitle()));
-				
+						updatedListing.getTitle()));
+
 				// Feature Graphic
-				AbstractInputStreamContent featureGraphic = each.getFeatureGraphic();
-				if (featureGraphic == null) {
-					featureGraphic = defaultLocaleListing.getFeatureGraphic();
-				}
-				if (featureGraphic == null) {
-					throw new UnexpectedException("Feature graphic was not found for locale " + localeString);
-				}
+				AbstractInputStreamContent featureGraphic = app.getFeatureGraphic(each);
 				Images.Upload uploadImageRequest = edits.images().upload(appContext.getApplicationId(), editId,
-					localeString, ImageType.FEATURE_GRAPHIC.getKey(), featureGraphic);
+						localeString, ImageType.FEATURE_GRAPHIC.getKey(), featureGraphic);
 				ImagesUploadResponse response = uploadImageRequest.execute();
 				System.out.println(String.format("Feature graphic %s has been updated.", response.getImage()));
-				
+
 				// Promo Graphic
-				AbstractInputStreamContent promoGraphic = each.getPromoGraphic();
-				if (promoGraphic == null) {
-					promoGraphic = defaultLocaleListing.getPromoGraphic();
-				}
+				AbstractInputStreamContent promoGraphic = app.getPromoGraphic(each);
 				if (promoGraphic != null) {
 					uploadImageRequest = edits.images().upload(appContext.getApplicationId(), editId,
 							localeString, ImageType.PROMO_GRAPHIC.getKey(), promoGraphic);
 					response = uploadImageRequest.execute();
 					System.out.println(String.format("Promo graphic %s has been updated.", response.getImage()));
-				} else {
-					System.out.println("*** Missing promo graphic for locale " + localeString + " ***");
 				}
 
 				// High Resolution Icon
-				AbstractInputStreamContent highResolutionIcon = each.getHighResolutionIcon();
-				if (highResolutionIcon == null) {
-					highResolutionIcon = defaultLocaleListing.getHighResolutionIcon();
-				}
-				if (highResolutionIcon == null) {
-					throw new UnexpectedException("The high resolution icon was not found for locale " + localeString);
-				}
+				AbstractInputStreamContent highResolutionIcon = app.getHighResolutionIcon(each);
 				uploadImageRequest = edits.images().upload(appContext.getApplicationId(), editId,
-					localeString, ImageType.ICON.getKey(), highResolutionIcon);
+						localeString, ImageType.ICON.getKey(), highResolutionIcon);
 				response = uploadImageRequest.execute();
 				System.out.println(String.format("High resolution icon %s has been updated.", response.getImage()));
 
 				// Phone Screenshots
 				Deleteall deleteallRequest = edits.images().deleteall(appContext.getApplicationId(), editId,
-					localeString, ImageType.PHONE_SCREENSHOTS.getKey());
+						localeString, ImageType.PHONE_SCREENSHOTS.getKey());
 				deleteallRequest.execute();
 				System.out.println("Phone screenshots has been deleted.");
-				List<AbstractInputStreamContent> phoneScreenshots = each.getPhoneScreenshots();
-				if (phoneScreenshots.isEmpty()) {
-					phoneScreenshots = defaultLocaleListing.getPhoneScreenshots();
-				}
-				for (AbstractInputStreamContent content : phoneScreenshots) {
+				for (AbstractInputStreamContent content : app.getPhoneScreenshots(each)) {
 					uploadImageRequest = edits.images().upload(appContext.getApplicationId(), editId,
-						localeString, ImageType.PHONE_SCREENSHOTS.getKey(), content);
+							localeString, ImageType.PHONE_SCREENSHOTS.getKey(), content);
 					response = uploadImageRequest.execute();
 					System.out.println(String.format("Phone screenshot %s has been updated.", response.getImage()));
 				}
 
 				// 7-inch Screenshots
 				deleteallRequest = edits.images().deleteall(appContext.getApplicationId(), editId,
-					localeString, ImageType.SEVEN_INCH_SCREENSHOTS.getKey());
+						localeString, ImageType.SEVEN_INCH_SCREENSHOTS.getKey());
 				deleteallRequest.execute();
 				System.out.println("Seven inch screenshots has been deleted.");
-				List<AbstractInputStreamContent> sevenInchScreenshots = each.getSevenInchScreenshots();
-				if (sevenInchScreenshots.isEmpty()) {
-					sevenInchScreenshots = defaultLocaleListing.getSevenInchScreenshots();
-				}
-				for (AbstractInputStreamContent content : sevenInchScreenshots) {
+				for (AbstractInputStreamContent content : app.getSevenInchScreenshots(each)) {
 					uploadImageRequest = edits.images().upload(appContext.getApplicationId(), editId,
-						localeString, ImageType.SEVEN_INCH_SCREENSHOTS.getKey(), content);
+							localeString, ImageType.SEVEN_INCH_SCREENSHOTS.getKey(), content);
 					response = uploadImageRequest.execute();
 					System.out.println(String.format("Seven inch screenshot %s has been updated.", response.getImage()));
 				}
 
 				// 10-inch Screenshots
 				deleteallRequest = edits.images().deleteall(appContext.getApplicationId(), editId,
-					localeString, ImageType.TEN_INCH_SCREENSHOTS.getKey());
+						localeString, ImageType.TEN_INCH_SCREENSHOTS.getKey());
 				deleteallRequest.execute();
 				System.out.println("Ten inch screenshots has been deleted.");
-				List<AbstractInputStreamContent> tenInchScreenshots = each.getTenInchScreenshots();
-				if (tenInchScreenshots.isEmpty()) {
-					tenInchScreenshots = defaultLocaleListing.getTenInchScreenshots();
-				}
-				for (AbstractInputStreamContent content : tenInchScreenshots) {
+				for (AbstractInputStreamContent content : app.getTenInchScreenshots(each)) {
 					uploadImageRequest = edits.images().upload(appContext.getApplicationId(), editId,
-						localeString, ImageType.TEN_INCH_SCREENSHOTS.getKey(), content);
+							localeString, ImageType.TEN_INCH_SCREENSHOTS.getKey(), content);
 					response = uploadImageRequest.execute();
 					System.out.println(String.format("Ten inch screenshot %s has been updated.", response.getImage()));
 				}
 			}
-			
+
 			commitEdit(appContext, edits, editId);
 			
 		} catch (IOException ex) {
