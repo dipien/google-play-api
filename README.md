@@ -26,8 +26,8 @@ Create a project with the following structure:
 |Full Description     |true    |PROJECT_DIR/googleplay/{LOCALE}/details/fullDescription.txt                  |
 |Feature Graphic      |true    |PROJECT_DIR/googleplay/{LOCALE}/details/featureGraphic.png                   |
 |High Resolution Icon |true    |PROJECT_DIR/googleplay/{LOCALE}/details/highResolutionIcon.png               |
-|Promo Graphic        |false   |PROJECT_DIR/googleplay/{LOCALE}/details/promoGraphic.png                     |
-|Phone Screenshots    |false   |PROJECT_DIR/googleplay/{LOCALE}/screenshots/phone/screenshot[1 ... 8].png    |
+|Promo Graphic        |true    |PROJECT_DIR/googleplay/{LOCALE}/details/promoGraphic.png                     |
+|Phone Screenshots    |true    |PROJECT_DIR/googleplay/{LOCALE}/screenshots/phone/screenshot[1 ... 8].png    |
 |7-inch Screenshots   |false   |PROJECT_DIR/googleplay/{LOCALE}/screenshots/tablet7/screenshot[1 ... 8].png  |
 |10-inch Screenshots  |false   |PROJECT_DIR/googleplay/{LOCALE}/screenshots/tablet10/screenshot[1 ... 8].png |
 
@@ -46,6 +46,11 @@ Add the following configuration to your `PROJECT_DIR/build.gradle`, replacing X.
     
     ext.APPLICATION_ID = 'com.sample' // Replace by the application id of your app
     ext.LOCALES = 'en-US,es-419' // Replace by a list of supported locales on Google Play
+    ext.PROMO_GRAPHIC_REQUIRED = false // Override required validation for the promo graphic
+    ext.PHONE_SCREENSHOTS_REQUIRED = false // Override required validation for the phone screenshots
+    ext.7_INCH_SCREENSHOTS_REQUIRED = true // Override required validation for the 7 inch screenshots
+    ext.10_INCH_SCREENSHOTS_REQUIRED = true // Override required validation for the 10 inch screenshots
+
     
 Add the following configuration to your `PROJECT_DIR/googleplay/build.gradle`:
 
