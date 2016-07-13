@@ -32,7 +32,7 @@ Create a project with the following structure:
 |10-inch Screenshots  |false   |PROJECT_DIR/googleplay/{LOCALE}/screenshots/tablet10/screenshot[1 ... 8].png |
 
 
-Add the following configuration to your `PROJECT_DIR/build.gradle`, replacing X.Y.Z by the [latest version](https://github.com/maxirosson/jdroid-java-github/releases/latest)
+Add the following configuration to your `PROJECT_DIR/build.gradle`, replacing X.Y.Z by the [latest version](https://github.com/maxirosson/jdroid-googleplay-publisher-plugin/releases/latest)
 
 
     buildscript {
