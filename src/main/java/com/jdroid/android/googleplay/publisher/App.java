@@ -62,7 +62,7 @@ public class App {
 	}
 
 	public AbstractInputStreamContent getPromoGraphic(LocaleListing localeListing) {
-		AbstractInputStreamContent promoGraphic = localeListing.getFeatureGraphic();
+		AbstractInputStreamContent promoGraphic = localeListing.getPromoGraphic();
 		if (promoGraphic == null) {
 			promoGraphic = defaultLocaleListing.getPromoGraphic();
 		}
