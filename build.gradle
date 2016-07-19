@@ -33,7 +33,7 @@ buildscript {
 		classpath "com.gradle.publish:plugin-publish-plugin:0.9.4"
 
 		classpath 'com.jdroidframework:jdroid-component-builder:0.1.0'
-		classpath 'com.jdroidframework:jdroid-gradle-plugin:0.9.6-SNAPSHOT'
+		classpath 'com.jdroidframework:jdroid-gradle-plugin:0.9.6'
 	}
 }
 
@@ -45,7 +45,7 @@ repositories {
 }
 
 dependencies {
-	compile 'com.jdroidframework:jdroid-java:0.9.5'
+	compile 'com.jdroidframework:jdroid-java:0.9.6'
 
 	compile 'com.google.apis:google-api-services-androidpublisher:v2-rev30-1.22.0'
 	compile 'com.google.api-client:google-api-client:1.19.0'
