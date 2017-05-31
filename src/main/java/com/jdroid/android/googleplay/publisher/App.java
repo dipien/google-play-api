@@ -1,9 +1,12 @@
 package com.jdroid.android.googleplay.publisher;
 
 import com.google.api.client.http.AbstractInputStreamContent;
+import com.google.api.client.util.Lists;
 import com.jdroid.java.exception.UnexpectedException;
+import com.jdroid.java.utils.StringUtils;
 
 import java.util.List;
+import java.util.Locale;
 
 public class App {
 
@@ -11,10 +14,20 @@ public class App {
 	private List<LocaleListing> localeListings;
 	private LocaleListing defaultLocaleListing;
 
-	public App(AppContext appContext, List<LocaleListing> localeListings, LocaleListing defaultLocaleListing) {
+	public App(AppContext appContext) {
 		this.appContext = appContext;
-		this.localeListings = localeListings;
-		this.defaultLocaleListing = defaultLocaleListing;
+		
+		this.localeListings = Lists.newArrayList();
+		for (String each : StringUtils.splitToCollectionWithCommaSeparator(appContext.getLocales())) {
+			String[] split = each.split("-");
+			String language = split[0];
+			String country = "";
+			if (split.length > 1) {
+				country = split[1];
+			}
+			localeListings.add(new LocaleListing(new Locale(language, country), appContext.getListingPath()));
+		}
+		this.defaultLocaleListing = new LocaleListing(null, appContext.getListingPath());
 	}
 
 	public String getTitle(LocaleListing localeListing) {
@@ -23,7 +36,7 @@ public class App {
 			title = defaultLocaleListing.getTitle();
 		}
 		if (title == null) {
-			throw new UnexpectedException("The listing title was not found for locale " + localeListing.getLocale().toString());
+			throw new UnexpectedException("The title.txt was not found for locale " + localeListing.getLocale().toLanguageTag());
 		}
 		return title;
 	}
@@ -34,7 +47,7 @@ public class App {
 			fullDescription = defaultLocaleListing.getFullDescription();
 		}
 		if (fullDescription == null) {
-			throw new UnexpectedException("The listing full description was not found for locale " + localeListing.getLocale().toString());
+			throw new UnexpectedException("The full_description.txt was not found for locale " + localeListing.getLocale().toLanguageTag());
 		}
 		return fullDescription;
 	}
@@ -45,9 +58,20 @@ public class App {
 			shortDescription = defaultLocaleListing.getShortDescription();
 		}
 		if (shortDescription == null) {
-			throw new UnexpectedException("The listing short description was not found for locale " + localeListing.getLocale().toString());
+			throw new UnexpectedException("The short_description.txt was not found for locale " + localeListing.getLocale().toLanguageTag());
 		}
 		return shortDescription;
+	}
+	
+	public String getVideo(LocaleListing localeListing) {
+		String video = localeListing.getVideo();
+		if (video == null) {
+			video = defaultLocaleListing.getVideo();
+		}
+		if (video == null && appContext.isVideoRequired()) {
+			throw new UnexpectedException("The video.txt was not found for locale " + localeListing.getLocale().toLanguageTag());
+		}
+		return video;
 	}
 
 	public AbstractInputStreamContent getFeatureGraphic(LocaleListing localeListing) {
@@ -56,7 +80,7 @@ public class App {
 			featureGraphic = defaultLocaleListing.getFeatureGraphic();
 		}
 		if (featureGraphic == null) {
-			throw new UnexpectedException("Feature graphic was not found for locale " + localeListing.getLocale().toString());
+			throw new UnexpectedException("images/featureGraphic.png was not found for locale " + localeListing.getLocale().toLanguageTag());
 		}
 		return featureGraphic;
 	}
@@ -67,7 +91,7 @@ public class App {
 			promoGraphic = defaultLocaleListing.getPromoGraphic();
 		}
 		if (promoGraphic == null && appContext.isPromoGraphicRequired()) {
-			throw new UnexpectedException("Promo graphic was not found for locale " + localeListing.getLocale().toString());
+			throw new UnexpectedException("images/promoGraphic.png was not found for locale " + localeListing.getLocale().toLanguageTag());
 		}
 		return promoGraphic;
 	}
@@ -78,7 +102,7 @@ public class App {
 			highResolutionIcon = defaultLocaleListing.getHighResolutionIcon();
 		}
 		if (highResolutionIcon == null) {
-			throw new UnexpectedException("The high resolution icon was not found for locale " + localeListing.getLocale().toString());
+			throw new UnexpectedException("images/icon.png was not found for locale " + localeListing.getLocale().toLanguageTag());
 		}
 		return highResolutionIcon;
 	}
@@ -89,7 +113,7 @@ public class App {
 			phoneScreenshots = defaultLocaleListing.getPhoneScreenshots();
 		}
 		if (phoneScreenshots.isEmpty() && appContext.isPhoneScreenshotsRequired()) {
-			throw new UnexpectedException("Phone screenshots were not found for locale " + localeListing.getLocale().toString());
+			throw new UnexpectedException("Phone screenshots were not found for locale " + localeListing.getLocale().toLanguageTag());
 		}
 		return phoneScreenshots;
 	}
@@ -100,7 +124,7 @@ public class App {
 			sevenInchScreenshots = defaultLocaleListing.getSevenInchScreenshots();
 		}
 		if (sevenInchScreenshots.isEmpty() && appContext.isSevenInchScreenshotsRequired()) {
-			throw new UnexpectedException("7 Inch screenshots were not found for locale " + localeListing.getLocale().toString());
+			throw new UnexpectedException("7 Inch screenshots were not found for locale " + localeListing.getLocale().toLanguageTag());
 		}
 		return sevenInchScreenshots;
 	}
@@ -111,7 +135,7 @@ public class App {
 			tenInchScreenshots = defaultLocaleListing.getTenInchScreenshots();
 		}
 		if (tenInchScreenshots.isEmpty() && appContext.isTenInchScreenshotsRequired()) {
-			throw new UnexpectedException("10 Inch screenshots were not found for locale " + localeListing.getLocale().toString());
+			throw new UnexpectedException("10 Inch screenshots were not found for locale " + localeListing.getLocale().toLanguageTag());
 		}
 		return tenInchScreenshots;
 	}

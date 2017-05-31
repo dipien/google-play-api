@@ -5,6 +5,8 @@ ext.VERSION_PATCH = 0
 ext.JDROID_GITHUB_REPOSITORY_OWNER = 'maxirosson'
 ext.JDROID_GITHUB_REPOSITORY_NAME = 'jdroid-googleplay-publisher-plugin'
 
+ext.PROJECT_NAME = 'Jdroid Google Play Publisher Plugin'
+
 apply plugin: 'com.jdroid.gradle.plugin'
 apply plugin: 'com.jdroid.component.builder'
 apply plugin: 'com.gradle.plugin-publish'
@@ -32,8 +34,8 @@ buildscript {
 		// https://plugins.gradle.org/plugin/com.gradle.plugin-publish
 		classpath "com.gradle.publish:plugin-publish-plugin:0.9.4"
 
-		classpath 'com.jdroidframework:jdroid-component-builder:0.1.0'
-		classpath 'com.jdroidframework:jdroid-gradle-plugin:0.9.6'
+		classpath 'com.jdroidframework:jdroid-component-builder:0.3.0-SNAPSHOT'
+		classpath 'com.jdroidframework:jdroid-gradle-project-plugin:0.14.0'
 	}
 }
 
@@ -45,9 +47,9 @@ repositories {
 }
 
 dependencies {
-	compile 'com.jdroidframework:jdroid-java:0.9.6'
+	compile 'com.jdroidframework:jdroid-java-core:0.13.0'
 
-	compile 'com.google.apis:google-api-services-androidpublisher:v2-rev30-1.22.0'
+	compile 'com.google.apis:google-api-services-androidpublisher:v2-rev44-1.22.0'
 	compile 'com.google.api-client:google-api-client:1.19.0'
 }
 

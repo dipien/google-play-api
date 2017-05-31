@@ -29,7 +29,9 @@ import com.jdroid.java.exception.UnexpectedException;
 import com.jdroid.java.utils.StringUtils;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
@@ -90,24 +92,13 @@ public class GooglePlayPublisher {
 	private static Credential authorizeWithServiceAccount(AppContext appContext) throws GeneralSecurityException,
 			IOException {
 
-		if (StringUtils.isEmpty(appContext.getServiceAccountEmail())) {
-			throw new UnexpectedException("The service account email is required");
+		if (StringUtils.isEmpty(appContext.getPrivateKeyJsonFile())) {
+			throw new UnexpectedException("The private key json file is required");
 		}
-
-		if (StringUtils.isEmpty(appContext.getPrivateKeyFile())) {
-			throw new UnexpectedException("The private key file is required");
-		}
-
-		System.out.println(String.format("Authorizing using Service Account: %s", appContext.getServiceAccountEmail()));
 		
-		// Build service account credential.
-		GoogleCredential.Builder builder = new GoogleCredential.Builder();
-		builder.setTransport(HTTP_TRANSPORT);
-		builder.setJsonFactory(JSON_FACTORY);
-		builder.setServiceAccountId(appContext.getServiceAccountEmail());
-		builder.setServiceAccountScopes(Collections.singleton(AndroidPublisherScopes.ANDROIDPUBLISHER));
-		builder.setServiceAccountPrivateKeyFromP12File(new File(appContext.getPrivateKeyFile()));
-		return builder.build();
+		InputStream serviceAccountStream = new FileInputStream(appContext.getPrivateKeyJsonFile());
+		GoogleCredential credential = GoogleCredential.fromStream(serviceAccountStream, HTTP_TRANSPORT, JSON_FACTORY);
+		return credential.createScoped(Collections.singleton(AndroidPublisherScopes.ANDROIDPUBLISHER));
 	}
 	
 	/**
@@ -139,6 +130,23 @@ public class GooglePlayPublisher {
 		}
 	}
 	
+	public static void verifyMetadata(App app) {
+		System.out.println(("Verifying the content to upload to Google Play on " + app.getAppContext().getListingPath() + "/googleplay"));
+		
+		for (LocaleListing each : app.getLocaleListings()) {
+			app.getTitle(each);
+			app.getFullDescription(each);
+			app.getShortDescription(each);
+			app.getFullDescription(each);
+			app.getFeatureGraphic(each);
+			app.getPromoGraphic(each);
+			app.getHighResolutionIcon(each);
+			app.getPhoneScreenshots(each);
+			app.getSevenInchScreenshots(each);
+			app.getTenInchScreenshots(each);
+		}
+	}
+	
 	public static void updateListings(App app) {
 		try {
 
@@ -163,6 +171,7 @@ public class GooglePlayPublisher {
 				listing.setTitle(app.getTitle(each));
 				listing.setFullDescription(app.getFullDescription(each));
 				listing.setShortDescription(app.getShortDescription(each));
+				listing.setVideo(app.getVideo(each));
 				Edits.Listings.Update updateListingsRequest = edits.listings().update(appContext.getApplicationId(),
 						editId, localeString, listing);
 				Listing updatedListing = updateListingsRequest.execute();

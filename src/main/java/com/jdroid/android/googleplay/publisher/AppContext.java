@@ -5,33 +5,23 @@ public class AppContext {
 	// The application id of the app
 	private String applicationId;
 
-	// The service account email used to authenticate on Google Play
-	private String serviceAccountEmail;
-	
-	// Path to the private key file extension (.p12 extension)
-	private String privateKeyFile;
+	// Path to the private key json file
+	private String privateKeyJsonFile;
 	
 	private String listingPath;
 	private String locales;
 	private String apkPath;
 	private TrackType trackType;
-
+	
 	// Validations
-	private Boolean promoGraphicRequired;
-	private Boolean phoneScreenshotsRequired;
-	private Boolean sevenInchScreenshotsRequired;
-	private Boolean tenInchScreenshotsRequired;
+	private Boolean videoRequired = false;
+	private Boolean promoGraphicRequired = true;
+	private Boolean phoneScreenshotsRequired = true;
+	private Boolean sevenInchScreenshotsRequired = false;
+	private Boolean tenInchScreenshotsRequired = false;
 
 	public String getApplicationId() {
 		return applicationId;
-	}
-	
-	public String getServiceAccountEmail() {
-		return serviceAccountEmail;
-	}
-	
-	public String getPrivateKeyFile() {
-		return privateKeyFile;
 	}
 	
 	public String getListingPath() {
@@ -54,14 +44,6 @@ public class AppContext {
 		this.applicationId = applicationId;
 	}
 
-	public void setServiceAccountEmail(String serviceAccountEmail) {
-		this.serviceAccountEmail = serviceAccountEmail;
-	}
-
-	public void setPrivateKeyFile(String privateKeyFile) {
-		this.privateKeyFile = privateKeyFile;
-	}
-
 	public void setListingPath(String listingPath) {
 		this.listingPath = listingPath;
 	}
@@ -77,9 +59,21 @@ public class AppContext {
 	public void setTrackType(TrackType trackType) {
 		this.trackType = trackType;
 	}
-
+	
+	public Boolean isVideoRequired() {
+		return videoRequired;
+	}
+	
+	public void setVideoRequired(Boolean videoRequired) {
+		if (videoRequired != null) {
+			this.videoRequired = videoRequired;
+		}
+	}
+	
 	public void setPromoGraphicRequired(Boolean promoGraphicRequired) {
-		this.promoGraphicRequired = promoGraphicRequired;
+		if (promoGraphicRequired != null) {
+			this.promoGraphicRequired = promoGraphicRequired;
+		}
 	}
 
 	public Boolean isPromoGraphicRequired() {
@@ -91,7 +85,9 @@ public class AppContext {
 	}
 
 	public void setPhoneScreenshotsRequired(Boolean phoneScreenshotsRequired) {
-		this.phoneScreenshotsRequired = phoneScreenshotsRequired;
+		if (phoneScreenshotsRequired != null) {
+			this.phoneScreenshotsRequired = phoneScreenshotsRequired;
+		}
 	}
 
 	public Boolean isSevenInchScreenshotsRequired() {
@@ -99,7 +95,9 @@ public class AppContext {
 	}
 
 	public void setSevenInchScreenshotsRequired(Boolean sevenInchScreenshotsRequired) {
-		this.sevenInchScreenshotsRequired = sevenInchScreenshotsRequired;
+		if (sevenInchScreenshotsRequired != null) {
+			this.sevenInchScreenshotsRequired = sevenInchScreenshotsRequired;
+		}
 	}
 
 	public Boolean isTenInchScreenshotsRequired() {
@@ -107,6 +105,16 @@ public class AppContext {
 	}
 
 	public void setTenInchScreenshotsRequired(Boolean tenInchScreenshotsRequired) {
-		this.tenInchScreenshotsRequired = tenInchScreenshotsRequired;
+		if (tenInchScreenshotsRequired != null) {
+			this.tenInchScreenshotsRequired = tenInchScreenshotsRequired;
+		}
+	}
+	
+	public String getPrivateKeyJsonFile() {
+		return privateKeyJsonFile;
+	}
+	
+	public void setPrivateKeyJsonFile(String privateKeyJsonFile) {
+		this.privateKeyJsonFile = privateKeyJsonFile;
 	}
 }
