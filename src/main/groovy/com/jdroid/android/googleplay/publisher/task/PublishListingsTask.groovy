@@ -12,8 +12,5 @@ public class PublishListingsTask extends AbstractTask {
 	@Override
 	protected void onExecute(App app) {
 		GooglePlayPublisher.updateListings(app);
-
-		// GooglePlayPublisher.updateApk(appContext, appContext.getApkPath(), appContext.getTrackType(),
-		// localeListings);
 	}
 }

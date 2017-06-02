@@ -10,8 +10,10 @@ public class AppContext {
 	
 	private String listingPath;
 	private String locales;
+	
 	private String apkPath;
 	private TrackType trackType;
+	private Double userFraction;
 	
 	// Validations
 	private Boolean videoRequired = false;
@@ -36,10 +38,6 @@ public class AppContext {
 		return apkPath;
 	}
 	
-	public TrackType getTrackType() {
-		return trackType;
-	}
-
 	public void setApplicationId(String applicationId) {
 		this.applicationId = applicationId;
 	}
@@ -56,10 +54,6 @@ public class AppContext {
 		this.apkPath = apkPath;
 	}
 
-	public void setTrackType(TrackType trackType) {
-		this.trackType = trackType;
-	}
-	
 	public Boolean isVideoRequired() {
 		return videoRequired;
 	}
@@ -116,5 +110,21 @@ public class AppContext {
 	
 	public void setPrivateKeyJsonFile(String privateKeyJsonFile) {
 		this.privateKeyJsonFile = privateKeyJsonFile;
+	}
+	
+	public TrackType getTrackType() {
+		return trackType;
+	}
+	
+	public void setTrackType(TrackType trackType) {
+		this.trackType = trackType;
+	}
+	
+	public Double getUserFraction() {
+		return userFraction;
+	}
+	
+	public void setUserFraction(Double userFraction) {
+		this.userFraction = userFraction;
 	}
 }

@@ -115,11 +115,11 @@ public class GooglePlayPublisher {
 			Edits edits = service.edits();
 			
 			// Create a new edit to make changes.
-			Insert editRequest = edits.insert(appContext.getApplicationId(), null);
+			Insert editRequest = edits.insert(app.getApplicationId(), null);
 			AppEdit appEdit = editRequest.execute();
 			
 			// Get a list of apks.
-			ApksListResponse apksResponse = edits.apks().list(appContext.getApplicationId(), appEdit.getId()).execute();
+			ApksListResponse apksResponse = edits.apks().list(app.getApplicationId(), appEdit.getId()).execute();
 			
 			// Print the apk info.
 			for (Apk apk : apksResponse.getApks()) {
@@ -157,7 +157,7 @@ public class GooglePlayPublisher {
 			Edits edits = service.edits();
 			
 			// Create an edit to update listing for application.
-			Insert editRequest = edits.insert(appContext.getApplicationId(), null);
+			Insert editRequest = edits.insert(app.getApplicationId(), null);
 			AppEdit edit = editRequest.execute();
 			String editId = edit.getId();
 			System.out.println(String.format("Created edit with id: %s", editId));
@@ -172,7 +172,7 @@ public class GooglePlayPublisher {
 				listing.setFullDescription(app.getFullDescription(each));
 				listing.setShortDescription(app.getShortDescription(each));
 				listing.setVideo(app.getVideo(each));
-				Edits.Listings.Update updateListingsRequest = edits.listings().update(appContext.getApplicationId(),
+				Edits.Listings.Update updateListingsRequest = edits.listings().update(app.getApplicationId(),
 						editId, localeString, listing);
 				Listing updatedListing = updateListingsRequest.execute();
 				System.out.println(String.format("Created new " + localeString + " app listing with title: %s",
@@ -180,7 +180,7 @@ public class GooglePlayPublisher {
 
 				// Feature Graphic
 				AbstractInputStreamContent featureGraphic = app.getFeatureGraphic(each);
-				Images.Upload uploadImageRequest = edits.images().upload(appContext.getApplicationId(), editId,
+				Images.Upload uploadImageRequest = edits.images().upload(app.getApplicationId(), editId,
 						localeString, ImageType.FEATURE_GRAPHIC.getKey(), featureGraphic);
 				ImagesUploadResponse response = uploadImageRequest.execute();
 				System.out.println(String.format("Feature graphic %s has been updated.", response.getImage()));
@@ -188,7 +188,7 @@ public class GooglePlayPublisher {
 				// Promo Graphic
 				AbstractInputStreamContent promoGraphic = app.getPromoGraphic(each);
 				if (promoGraphic != null) {
-					uploadImageRequest = edits.images().upload(appContext.getApplicationId(), editId,
+					uploadImageRequest = edits.images().upload(app.getApplicationId(), editId,
 							localeString, ImageType.PROMO_GRAPHIC.getKey(), promoGraphic);
 					response = uploadImageRequest.execute();
 					System.out.println(String.format("Promo graphic %s has been updated.", response.getImage()));
@@ -196,112 +196,122 @@ public class GooglePlayPublisher {
 
 				// High Resolution Icon
 				AbstractInputStreamContent highResolutionIcon = app.getHighResolutionIcon(each);
-				uploadImageRequest = edits.images().upload(appContext.getApplicationId(), editId,
+				uploadImageRequest = edits.images().upload(app.getApplicationId(), editId,
 						localeString, ImageType.ICON.getKey(), highResolutionIcon);
 				response = uploadImageRequest.execute();
 				System.out.println(String.format("High resolution icon %s has been updated.", response.getImage()));
 
 				// Phone Screenshots
-				Deleteall deleteallRequest = edits.images().deleteall(appContext.getApplicationId(), editId,
+				Deleteall deleteallRequest = edits.images().deleteall(app.getApplicationId(), editId,
 						localeString, ImageType.PHONE_SCREENSHOTS.getKey());
 				deleteallRequest.execute();
 				System.out.println("Phone screenshots has been deleted.");
 				for (AbstractInputStreamContent content : app.getPhoneScreenshots(each)) {
-					uploadImageRequest = edits.images().upload(appContext.getApplicationId(), editId,
+					uploadImageRequest = edits.images().upload(app.getApplicationId(), editId,
 							localeString, ImageType.PHONE_SCREENSHOTS.getKey(), content);
 					response = uploadImageRequest.execute();
 					System.out.println(String.format("Phone screenshot %s has been updated.", response.getImage()));
 				}
 
 				// 7-inch Screenshots
-				deleteallRequest = edits.images().deleteall(appContext.getApplicationId(), editId,
+				deleteallRequest = edits.images().deleteall(app.getApplicationId(), editId,
 						localeString, ImageType.SEVEN_INCH_SCREENSHOTS.getKey());
 				deleteallRequest.execute();
 				System.out.println("Seven inch screenshots has been deleted.");
 				for (AbstractInputStreamContent content : app.getSevenInchScreenshots(each)) {
-					uploadImageRequest = edits.images().upload(appContext.getApplicationId(), editId,
+					uploadImageRequest = edits.images().upload(app.getApplicationId(), editId,
 							localeString, ImageType.SEVEN_INCH_SCREENSHOTS.getKey(), content);
 					response = uploadImageRequest.execute();
 					System.out.println(String.format("Seven inch screenshot %s has been updated.", response.getImage()));
 				}
 
 				// 10-inch Screenshots
-				deleteallRequest = edits.images().deleteall(appContext.getApplicationId(), editId,
+				deleteallRequest = edits.images().deleteall(app.getApplicationId(), editId,
 						localeString, ImageType.TEN_INCH_SCREENSHOTS.getKey());
 				deleteallRequest.execute();
 				System.out.println("Ten inch screenshots has been deleted.");
 				for (AbstractInputStreamContent content : app.getTenInchScreenshots(each)) {
-					uploadImageRequest = edits.images().upload(appContext.getApplicationId(), editId,
+					uploadImageRequest = edits.images().upload(app.getApplicationId(), editId,
 							localeString, ImageType.TEN_INCH_SCREENSHOTS.getKey(), content);
 					response = uploadImageRequest.execute();
 					System.out.println(String.format("Ten inch screenshot %s has been updated.", response.getImage()));
 				}
 			}
 
-			commitEdit(appContext, edits, editId);
+			commitEdit(app, edits, editId);
 			
 		} catch (IOException ex) {
 			throw new UnexpectedException("Exception was thrown while updating listing", ex);
 		}
 	}
 	
-	public static void updateApk(AppContext appContext, String apkFilePath, TrackType trackType,
-			List<LocaleListing> localeListings) {
+	public static void updateApk(App app) {
 		try {
 			
-			if (Strings.isNullOrEmpty(apkFilePath)) {
+			if (Strings.isNullOrEmpty(app.getAppContext().getApkPath())) {
 				throw new UnexpectedException("apkPath cannot be null or empty!");
 			}
 			
-			if (trackType == null) {
+			if (app.getAppContext().getTrackType() == null) {
 				throw new UnexpectedException("trackType cannot be null or empty!");
 			}
 			
+			if (app.getAppContext().getTrackType().equals(TrackType.ROLLOUT) && app.getAppContext().getUserFraction() == null) {
+				throw new UnexpectedException("userFraction cannot be null or empty!");
+			}
+			
 			// Create the API service.
-			AndroidPublisher service = init(appContext);
+			AndroidPublisher service = init(app.getAppContext());
 			Edits edits = service.edits();
 			
 			// Create a new edit to make changes.
-		 	Insert editRequest = edits.insert(appContext.getApplicationId(), null);
+		 	Insert editRequest = edits.insert(app.getApplicationId(), null);
 			AppEdit edit = editRequest.execute();
 			String editId = edit.getId();
 			System.out.println(String.format("Created edit with id: %s", editId));
 			
 			// Upload new apk to developer console
-			String apkPath = GooglePlayPublisher.class.getResource(apkFilePath).toURI().getPath();
+			String apkPath = GooglePlayPublisher.class.getResource(app.getAppContext().getApkPath()).toURI().getPath();
 			AbstractInputStreamContent apkFile = new FileContent(MIME_TYPE_APK, new File(apkPath));
-			Upload uploadRequest = edits.apks().upload(appContext.getApplicationId(), editId, apkFile);
+			Upload uploadRequest = edits.apks().upload(app.getApplicationId(), editId, apkFile);
 			Apk apk = uploadRequest.execute();
 			System.out.println(String.format("Version code %d has been uploaded", apk.getVersionCode()));
 			
-			// Assign apk to beta track.
+			// Assign apk to track.
 			List<Integer> apkVersionCodes = new ArrayList<>();
 			apkVersionCodes.add(apk.getVersionCode());
-			Edits.Tracks.Update updateTrackRequest = edits.tracks().update(appContext.getApplicationId(), editId,
-				trackType.getKey(), new Track().setVersionCodes(apkVersionCodes));
+			
+			Track track = new Track();
+			track.setTrack(app.getAppContext().getTrackType().getKey());
+			track.setVersionCodes(apkVersionCodes);
+			track.setUserFraction(app.getAppContext().getUserFraction());
+			
+			Edits.Tracks.Update updateTrackRequest = edits.tracks().update(app.getApplicationId(), editId, track.getTrack(), track);
 			Track updatedTrack = updateTrackRequest.execute();
 			System.out.println(String.format("Track %s has been updated.", updatedTrack.getTrack()));
 			
-			for (LocaleListing each : localeListings) {
-				// Update recent changes field in apk listing.
-				ApkListing newApkListing = new ApkListing();
-				newApkListing.setRecentChanges(each.getRecentChanges());
-				Apklistings.Update updateRecentChangesRequest = edits.apklistings().update(appContext.getApplicationId(),
-					editId, apk.getVersionCode(), each.getLocale().toString(), newApkListing);
-				updateRecentChangesRequest.execute();
-				System.out.println("Recent changes has been updated.");
+			for (LocaleListing each : app.getLocaleListings()) {
+				if (StringUtils.isNotBlank(each.getRecentChanges())) {
+					// Update recent changes field in apk listing.
+					ApkListing newApkListing = new ApkListing();
+					newApkListing.setRecentChanges(each.getRecentChanges());
+					Apklistings.Update updateRecentChangesRequest = edits.apklistings().update(app.getApplicationId(),
+							editId, apk.getVersionCode(), each.getLocale().toString(), newApkListing);
+					updateRecentChangesRequest.execute();
+					System.out.println("Recent changes has been updated.");
+				}
 			}
 			
 			// Commit changes for edit.
-			commitEdit(appContext, edits, editId);
+			commitEdit(app, edits, editId);
 			
 		} catch (IOException | URISyntaxException ex) {
 			throw new UnexpectedException("Exception was thrown while uploading apk and updating recent changes", ex);
 		}
 	}
 	
-	private static void commitEdit(AppContext appContext, Edits edits, String editId) throws IOException {
-		Commit commitRequest = edits.commit(appContext.getApplicationId(), editId);
+	private static void commitEdit(App app, Edits edits, String editId) throws IOException {
+		Commit commitRequest = edits.commit(app.getApplicationId(), editId);
 		AppEdit appEdit = commitRequest.execute();
 		System.out.println(String.format("App edit with id %s has been comitted", appEdit.getId()));
 	}

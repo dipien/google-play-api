@@ -147,6 +147,10 @@ public class App {
 	public LocaleListing getDefaultLocaleListing() {
 		return defaultLocaleListing;
 	}
+	
+	public String getApplicationId() {
+		return appContext.getApplicationId();
+	}
 
 	public AppContext getAppContext() {
 		return appContext;

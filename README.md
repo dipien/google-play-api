@@ -27,14 +27,89 @@ Setup up your Google Developers Service Account
 1. Choose **Release Manager** from the **Role** dropdown
 1. Click **Add user** to close the dialog
 
+Add the following configuration to your `build.gradle`, replacing X.Y.Z by the [latest version](https://github.com/maxirosson/jdroid-googleplay-publisher-plugin/releases/latest)
 
 
-Create a gradle project with the following structure:
+    buildscript {
+      repositories {
+        jcenter()
+      }
+      dependencies {
+        classpath 'com.jdroidframework:jdroid-googleplay-publisher-plugin:X.Y.Z'
+      }
+    }
+    
+    apply plugin: 'com.jdroid.googleplay.publisher'
+    
+You need to define the following gradle properties:
 
-    build.gradle
-    googleplay/{LOCALE_1}/...
-    googleplay/{LOCALE_2}/...
-    googleplay/default/...
+###### Private Key Json File
+
+Path to the private key json file. This property is required
+    
+    PRIVATE_KEY_JSON_FILE = /path/to/json/file
+    
+###### Application Id
+
+The application id of your app. This property is required
+    
+    APPLICATION_ID = 'com.sample'
+
+###### Locales
+
+List of supported locales on Google Play. This property is required
+    
+    LOCALES = 'en-US,es-419'
+
+## Usage
+
+#### Verify Metadata Task
+
+Verify that the metadata to upload to Google Play is valid.
+
+    ./gradlew googlePlayVerifyMetadata
+    
+###### Video Required
+
+If the video url is required. The default value is **false**
+
+    VIDEO_REQUIRED = true
+    
+###### Promo Graphic Required
+
+If the promo graphic is required. The default value is **true**
+
+    PROMO_GRAPHIC_REQUIRED = false
+    
+###### Phone Screenshots Required
+
+If the phone screenshots are required. The default value is **true**
+
+    PHONE_SCREENSHOTS_REQUIRED = false
+    
+###### 7 inches Screenshots Required
+
+If the 7 inches screenshots are required. The default value is **false**
+
+    7_INCH_SCREENSHOTS_REQUIRED = true
+    
+###### 10 inches Screenshots Required
+
+If the 10 inches screenshots are required. The default value is **false**
+
+    10_INCH_SCREENSHOTS_REQUIRED = true
+
+#### Publish Listings task
+
+Publish listings (feature/promo graphics, High resolution icon, screenshots, title, short description, full description and video url) on Google Play. The listings are published for each locales defined on the **LOCALES** property. If some asset is not available for any locale, the resources inside the **default** directory will be used
+
+    ./gradlew googlePlayPublishListings
+    
+Create the following directories:
+
+    {LISTING_PATH}/googleplay/{LOCALE_1}/...
+    {LISTING_PATH}/googleplay/{LOCALE_2}/...
+    {LISTING_PATH}/googleplay/default/...
     
 |Asset                |Required|Location                                                                     |
 | ------------------- | ------ | ----------------------------------------------------------------------------|
@@ -48,57 +123,43 @@ Create a gradle project with the following structure:
 |Phone Screenshots    |true    |googleplay/{LOCALE}/phoneScreenshots/screenshot[1 ... 8].png     |
 |7-inch Screenshots   |false   |googleplay/{LOCALE}/sevenInchScreenshots/screenshot[1 ... 8].png |
 |10-inch Screenshots  |false   |googleplay/{LOCALE}/tenInchScreenshots/screenshot[1 ... 8].png   |
-
-
-Add the following configuration to your `build.gradle`, replacing X.Y.Z by the [latest version](https://github.com/maxirosson/jdroid-googleplay-publisher-plugin/releases/latest)
-
-
-    buildscript {
-      repositories {
-        jcenter()
-      }
-      dependencies {
-        classpath 'com.jdroidframework:jdroid-googleplay-publisher-plugin:X.Y.Z'
-      }
-    }
     
-    ext.APPLICATION_ID = 'com.sample' // Replace by the application id of your app
-    ext.LOCALES = 'en-US,es-419' // Replace by a list of supported locales on Google Play
-    ext.VIDEO_REQUIRED = false // Override required validation for the vide url
-    ext.PROMO_GRAPHIC_REQUIRED = false // Override required validation for the promo graphic
-    ext.PHONE_SCREENSHOTS_REQUIRED = false // Override required validation for the phone screenshots
-    ext.7_INCH_SCREENSHOTS_REQUIRED = true // Override required validation for the 7 inch screenshots
-    ext.10_INCH_SCREENSHOTS_REQUIRED = true // Override required validation for the 10 inch screenshots
 
-    apply plugin: 'com.jdroid.googleplay.publisher'
+###### Listing path
+
+The path where all the listings directories will be located. The default value is the path of the gradle project where the plugin is applied
+
+    LISTING_PATH = /path/to/the/listings
     
-You need to create a gradle.properties file on the root of the project with the following properties or send them as parameters when executing a task
-
-###### Private Key Json File
-
-Path to the private key json file. This property is required
-    
-    PRIVATE_KEY_JSON_FILE = /path/to/json/file
-
-## Usage
-
 #### List APKs task
 
 List all the historical APKs uploaded.
 
     ./gradlew googlePlayListAPKs
     
-#### Publish Listings task
+#### Publish APKs Task
 
-Publish listings (feature/promo graphics, High resolution icon, screenshots, title, short description, full description and video url) on Google Play. The listings are published for each locales defined on the **LOCALES** property. If some asset is not available for any locale, the resources inside the **default** directory will be used
+Upload new APKs for your app and assign them to different release tracks.
 
-    ./gradlew googlePlayPublishListings
+    ./gradlew googlePlayPublishAPKs
+    
+###### APK path
 
-#### Verify Metadata Task
+The path to the APK to upload
 
-Verify that the metadata to upload to Google Play is valid.
+    APK_PATH = /path/to/apk/file.apk
 
-    ./gradlew googlePlayVerifyMetadata
+###### Track
+
+The release track that you're assigning APKs to. Acceptable values are: **alpha**, **beta**, **rollout** or **production**
+
+    TRACK = alpha
+    
+###### User Fraction
+
+Portion of the users who should get the staged rollout version of the APK. Only specified if **TRACK** is **rollout**  
+    
+    USER_FRACTION = 0.5
 
 ## Donations
 Help us to continue with this project:
