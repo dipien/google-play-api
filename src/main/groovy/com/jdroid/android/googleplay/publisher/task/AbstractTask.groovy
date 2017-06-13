@@ -46,7 +46,7 @@ public abstract class AbstractTask extends DefaultTask {
 		}
 	}
 
-	public String getDoubleProp(String propertyName) {
+	public Double getDoubleProp(String propertyName) {
 		return TypeUtils.getDouble(getProp(propertyName));
 	}
 

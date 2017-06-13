@@ -3,14 +3,14 @@ package com.jdroid.android.googleplay.publisher.task
 import com.jdroid.android.googleplay.publisher.App
 import com.jdroid.android.googleplay.publisher.GooglePlayPublisher
 
-public class PublishApksTask extends AbstractTask {
+public class PromoteFromAlphaToBetaTask extends AbstractTask {
 
-	public PublishApksTask() {
-		description = "Publish APK to Google Play"
+	public PromoteFromAlphaToBetaTask() {
+		description = "Promote a current alpha to beta"
 	}
 
 	@Override
 	protected void onExecute(App app) {
-		 GooglePlayPublisher.publishApk(app);
+		 GooglePlayPublisher.promoteFromAlphaToBeta(app);
 	}
 }

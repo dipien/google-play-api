@@ -157,9 +157,68 @@ The release track that you're assigning APKs to. Acceptable values are: **alpha*
     
 ###### User Fraction
 
-Portion of the users who should get the staged rollout version of the APK. Only specified if **TRACK** is **rollout**  
+Portion of the users who should get the staged rollout version of the APK. 
+The maximum rollout fraction is 0.5 (50% of users). Only used if **TRACK** is **rollout**. Default value: 0.005 (0.5%)  
     
-    USER_FRACTION = 0.5
+    USER_FRACTION = 0.1
+    
+#### Promote from Alpha to Beta
+
+Promote a current alpha to beta
+
+    googlePlayPromoteFromAlphaToBeta
+    
+#### Promote from Alpha to Rollout
+
+Promote a current alpha to staged rollout
+
+    googlePlayPromoteFromAlphaToRollout
+    
+###### User Fraction
+
+Portion of the users who should get the staged rollout version of the APK. 
+The maximum rollout fraction is 0.5 (50% of users). Default value: 0.005 (0.5%)
+    
+    USER_FRACTION = 0.2
+    
+#### Promote from Alpha to Beta
+
+Promote a current alpha to beta
+
+    googlePlayPromoteFromAlphaToBeta
+    
+#### Promote from Beta to Rollout
+
+Promote a current beta to rollout
+
+    googlePlayPromoteFromBetaToRollout
+
+###### User Fraction
+
+Portion of the users who should get the staged rollout version of the APK. 
+The maximum rollout fraction is 0.5 (50% of users). Default value: 0.005 (0.5%)
+    
+    USER_FRACTION = 0.2
+    
+#### Increase Staged Rollout
+
+Increase the fraction of users who should get the current staged rollout APK
+
+    googlePlayIncreaseStagedRollout
+
+###### User Fraction
+
+Portion of the users who should get the staged rollout version of the APK. 
+The maximum rollout fraction is 0.5 (50% of users).
+    
+    USER_FRACTION = 0.2
+    
+#### Promote from Rollout to Production
+
+Promote a current staged rollout to production
+
+    googlePlayPromoteFromRolloutToProduction
+
 
 ## Donations
 Help us to continue with this project:
