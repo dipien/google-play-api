@@ -3,9 +3,9 @@ package com.jdroid.android.googleplay.publisher.task
 import com.jdroid.android.googleplay.publisher.App
 import com.jdroid.android.googleplay.publisher.GooglePlayPublisher
 
-public class PublishApksTask extends AbstractTask {
+public class PublishApkTask extends AbstractTask {
 
-	public PublishApksTask() {
+	public PublishApkTask() {
 		description = "Publish APK to Google Play"
 	}
 

@@ -53,6 +53,7 @@ public class GooglePlayPublisher {
 	
 	/** Global instance of the JSON factory. */
 	private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
+	public static final double DEFAULT_USER_FRACTION = 0.005;
 	
 	/** Global instance of the HTTP transport. */
 	private static HttpTransport HTTP_TRANSPORT;
@@ -297,10 +298,12 @@ public class GooglePlayPublisher {
 				Track track = getTrack(app, edits, editId);
 				if (track.getVersionCodes().isEmpty()) {
 					if (app.getAppContext().getUserFraction() == null) {
-						app.getAppContext().setUserFraction(0.005);
+						app.getAppContext().setUserFraction(DEFAULT_USER_FRACTION);
 					}
 				} else {
-					app.getAppContext().setUserFraction(null);
+					if (app.getAppContext().getUserFraction() == null) {
+						app.getAppContext().setUserFraction(track.getUserFraction());
+					}
 				}
 			}
 			
@@ -454,7 +457,7 @@ public class GooglePlayPublisher {
 		try {
 			
 			if (app.getAppContext().getUserFraction() == null) {
-				app.getAppContext().setUserFraction(0.005);
+				app.getAppContext().setUserFraction(DEFAULT_USER_FRACTION);
 			}
 			
 			// Create the API service.
@@ -499,7 +502,7 @@ public class GooglePlayPublisher {
 		try {
 			
 			if (app.getAppContext().getUserFraction() == null) {
-				app.getAppContext().setUserFraction(0.005);
+				app.getAppContext().setUserFraction(DEFAULT_USER_FRACTION);
 			}
 			
 			// Create the API service.

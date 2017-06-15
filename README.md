@@ -137,11 +137,11 @@ List all the historical APKs uploaded.
 
     ./gradlew googlePlayListAPKs
     
-#### Publish APKs Task
+#### Publish APK Task
 
-Upload new APKs for your app and assign them to different release tracks.
+Upload new APK for your app and assign it to a release track.
 
-    ./gradlew googlePlayPublishAPKs
+    ./gradlew googlePlayPublishAPK
     
 ###### APK path
 
