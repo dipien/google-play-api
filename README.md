@@ -43,17 +43,22 @@ Add the following configuration to your `build.gradle`, replacing X.Y.Z by the [
     
 You need to define the following gradle properties:
 
-###### Private Key Json File
-
-Path to the private key json file. This property is required
-    
-    PRIVATE_KEY_JSON_FILE = /path/to/json/file
-    
 ###### Application Id
 
 The application id of your app. This property is required
     
     APPLICATION_ID = 'com.sample'
+    
+###### Private Key Json File Directory
+
+Path to the directory where the private key json file is located. This property is required.
+The private key json file path will generated as follows: **${PRIVATE_KEY_JSON_DIR}/${APPLICATION_ID}.json**
+
+For example:
+    
+    PRIVATE_KEY_JSON_FILE_DIR = /credentials/googleplay
+    APPLICATION_ID = 'com.sample'
+    // The private key json file should be at /credentials/googleplay/com.sample.json
 
 ###### Locales
 
@@ -63,7 +68,7 @@ List of supported locales on Google Play. This property is required
 
 ## Usage
 
-#### Verify Metadata Task
+#### Verify Metadata
 
 Verify that the metadata to upload to Google Play is valid.
 
@@ -99,17 +104,17 @@ If the 10 inches screenshots are required. The default value is **false**
 
     10_INCH_SCREENSHOTS_REQUIRED = true
 
-#### Publish Listings task
+#### Publish Metadata task
 
-Publish listings (feature/promo graphics, High resolution icon, screenshots, title, short description, full description and video url) on Google Play. The listings are published for each locales defined on the **LOCALES** property. If some asset is not available for any locale, the resources inside the **default** directory will be used
+Publish metadata (feature/promo graphics, High resolution icon, screenshots, title, short description, full description and video url) on Google Play. The listings are published for each locales defined on the **LOCALES** property. If some asset is not available for any locale, the resources inside the **default** directory will be used
 
-    ./gradlew googlePlayPublishListings
+    ./gradlew googlePlayPublishMetadata
     
 Create the following directories:
 
-    {LISTING_PATH}/googleplay/{LOCALE_1}/...
-    {LISTING_PATH}/googleplay/{LOCALE_2}/...
-    {LISTING_PATH}/googleplay/default/...
+    {METADATA_PATH}/googleplay/{LOCALE_1}/...
+    {METADATA_PATH}/googleplay/{LOCALE_2}/...
+    {METADATA_PATH}/googleplay/default/...
     
 |Asset                |Required|Location                                                                     |
 | ------------------- | ------ | ----------------------------------------------------------------------------|
@@ -129,15 +134,15 @@ Create the following directories:
 
 The path where all the listings directories will be located. The default value is the path of the gradle project where the plugin is applied
 
-    LISTING_PATH = /path/to/the/listings
+    METADATA_PATH = /path/to/the/metadata
     
-#### List APKs task
+#### List APKs
 
 List all the historical APKs uploaded.
 
     ./gradlew googlePlayListAPKs
     
-#### Publish APK Task
+#### Publish APK
 
 Upload new APK for your app and assign it to a release track.
 

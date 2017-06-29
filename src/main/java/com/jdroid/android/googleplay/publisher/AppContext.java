@@ -5,10 +5,10 @@ public class AppContext {
 	// The application id of the app
 	private String applicationId;
 
-	// Path to the private key json file
-	private String privateKeyJsonFile;
+	// Path to the private key json file parent directory
+	private String privateKeyJsonFileDir;
 	
-	private String listingPath;
+	private String metadataPath;
 	private String locales;
 	
 	private String apkPath;
@@ -26,8 +26,8 @@ public class AppContext {
 		return applicationId;
 	}
 	
-	public String getListingPath() {
-		return listingPath;
+	public String getMetadataPath() {
+		return metadataPath;
 	}
 	
 	public String getLocales() {
@@ -42,8 +42,8 @@ public class AppContext {
 		this.applicationId = applicationId;
 	}
 
-	public void setListingPath(String listingPath) {
-		this.listingPath = listingPath;
+	public void setMetadataPath(String metadataPath) {
+		this.metadataPath = metadataPath;
 	}
 
 	public void setLocales(String locales) {
@@ -104,12 +104,12 @@ public class AppContext {
 		}
 	}
 	
-	public String getPrivateKeyJsonFile() {
-		return privateKeyJsonFile;
+	public String getPrivateKeyJsonFileDirectory() {
+		return privateKeyJsonFileDir;
 	}
 	
-	public void setPrivateKeyJsonFile(String privateKeyJsonFile) {
-		this.privateKeyJsonFile = privateKeyJsonFile;
+	public void setPrivateKeyJsonFileDirectory(String privateKeyJsonFileDir) {
+		this.privateKeyJsonFileDir = privateKeyJsonFileDir;
 	}
 	
 	public TrackType getTrackType() {

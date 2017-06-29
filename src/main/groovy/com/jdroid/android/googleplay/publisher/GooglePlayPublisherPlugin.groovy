@@ -10,7 +10,7 @@ import com.jdroid.android.googleplay.publisher.task.PromoteFromAlphaToRolloutTas
 import com.jdroid.android.googleplay.publisher.task.PromoteFromBetaToRolloutTask
 import com.jdroid.android.googleplay.publisher.task.PromoteFromRolloutToProductionTask
 import com.jdroid.android.googleplay.publisher.task.PublishApkTask
-import com.jdroid.android.googleplay.publisher.task.PublishListingsTask
+import com.jdroid.android.googleplay.publisher.task.PublishMetadataTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
@@ -18,9 +18,9 @@ public class GooglePlayPublisherPlugin implements Plugin<Project> {
 
 	@Override
 	void apply(Project project) {
-		project.task('googlePlayPublishListings', type: PublishListingsTask)
-		project.task('googlePlayListAPKs', type: ListApksTask)
 		project.task('googlePlayVerifyMetadata', type: MetadataVerificationTask)
+		project.task('googlePlayPublishMetadata', type: PublishMetadataTask)
+		project.task('googlePlayListAPKs', type: ListApksTask)
 		project.task('googlePlayPublishAPK', type: PublishApkTask)
 		project.task('googlePlayPromoteFromAlphaToBeta', type: PromoteFromAlphaToBetaTask)
 		project.task('googlePlayPromoteFromAlphaToRollout', type: PromoteFromAlphaToRolloutTask)

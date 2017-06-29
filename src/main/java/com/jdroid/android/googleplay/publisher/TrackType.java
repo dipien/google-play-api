@@ -4,8 +4,8 @@ public enum TrackType {
 	
 	ALPHA("alpha"),
 	BETA("beta"),
-	PRODUCTION("production"),
-	ROLLOUT("rollout");
+	ROLLOUT("rollout"),
+	PRODUCTION("production");
 	
 	private String key;
 	

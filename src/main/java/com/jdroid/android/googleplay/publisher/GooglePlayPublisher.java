@@ -94,11 +94,12 @@ public class GooglePlayPublisher {
 	private static Credential authorizeWithServiceAccount(AppContext appContext) throws GeneralSecurityException,
 			IOException {
 
-		if (StringUtils.isEmpty(appContext.getPrivateKeyJsonFile())) {
-			throw new UnexpectedException("The private key json file is required");
+		if (StringUtils.isEmpty(appContext.getPrivateKeyJsonFileDirectory())) {
+			throw new UnexpectedException("The private key json file directory is required");
 		}
 		
-		InputStream serviceAccountStream = new FileInputStream(appContext.getPrivateKeyJsonFile());
+		String privateKeyJsonFile = appContext.getPrivateKeyJsonFileDirectory() + java.io.File.separator + appContext.getApplicationId() + ".json";
+		InputStream serviceAccountStream = new FileInputStream(privateKeyJsonFile);
 		GoogleCredential credential = GoogleCredential.fromStream(serviceAccountStream, HTTP_TRANSPORT, JSON_FACTORY);
 		return credential.createScoped(Collections.singleton(AndroidPublisherScopes.ANDROIDPUBLISHER));
 	}
@@ -133,7 +134,7 @@ public class GooglePlayPublisher {
 	}
 	
 	public static void verifyMetadata(App app) {
-		System.out.println(("Verifying the content to upload to Google Play on " + app.getAppContext().getListingPath() + "/googleplay"));
+		System.out.println(("Verifying the content to upload to Google Play on " + app.getAppContext().getMetadataPath() + "/googleplay"));
 		
 		for (LocaleListing each : app.getLocaleListings()) {
 			app.getTitle(each);
@@ -149,7 +150,7 @@ public class GooglePlayPublisher {
 		}
 	}
 	
-	public static void updateListings(App app) {
+	public static void publishMetadata(App app) {
 		try {
 
 			AppContext appContext = app.getAppContext();

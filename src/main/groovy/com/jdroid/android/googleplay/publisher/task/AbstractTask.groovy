@@ -13,10 +13,10 @@ public abstract class AbstractTask extends DefaultTask {
 	public void doExecute() {
 		AppContext appContext = new AppContext();
 		appContext.setApplicationId(getStringProp('APPLICATION_ID'));
-		appContext.setPrivateKeyJsonFile(getStringProp('PRIVATE_KEY_JSON_FILE'));
+		appContext.setPrivateKeyJsonFileDirectory(getStringProp('PRIVATE_KEY_JSON_FILE_DIR'));
 		appContext.setLocales(getStringProp('LOCALES'));
 
-		appContext.setListingPath(getStringProp('LISTING_PATH', project.getProjectDir().getAbsolutePath()));
+		appContext.setMetadataPath(getStringProp('METADATA_PATH', project.getProjectDir().getAbsolutePath()));
 
 		appContext.setVideoRequired(getBooleanProp('VIDEO_REQUIRED'));
 		appContext.setPromoGraphicRequired(getBooleanProp('PROMO_GRAPHIC_REQUIRED'));

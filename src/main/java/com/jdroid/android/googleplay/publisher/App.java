@@ -25,9 +25,9 @@ public class App {
 			if (split.length > 1) {
 				country = split[1];
 			}
-			localeListings.add(new LocaleListing(new Locale(language, country), appContext.getListingPath()));
+			localeListings.add(new LocaleListing(new Locale(language, country), appContext.getMetadataPath()));
 		}
-		this.defaultLocaleListing = new LocaleListing(null, appContext.getListingPath());
+		this.defaultLocaleListing = new LocaleListing(null, appContext.getMetadataPath());
 	}
 
 	public String getTitle(LocaleListing localeListing) {
