@@ -203,6 +203,15 @@ public class GooglePlayPublisher {
 						localeString, ImageType.ICON.getKey(), highResolutionIcon);
 				response = uploadImageRequest.execute();
 				System.out.println(String.format("High resolution icon %s has been updated.", response.getImage()));
+				
+				// High Resolution Icon
+				AbstractInputStreamContent tvBanner = app.getTvBanner(each);
+				if (tvBanner != null) {
+					uploadImageRequest = edits.images().upload(app.getApplicationId(), editId,
+							localeString, ImageType.TV_BANNER.getKey(), tvBanner);
+					response = uploadImageRequest.execute();
+					System.out.println(String.format("Tv banner %s has been updated.", response.getImage()));
+				}
 
 				// Phone Screenshots
 				Deleteall deleteallRequest = edits.images().deleteall(app.getApplicationId(), editId,
@@ -238,6 +247,30 @@ public class GooglePlayPublisher {
 							localeString, ImageType.TEN_INCH_SCREENSHOTS.getKey(), content);
 					response = uploadImageRequest.execute();
 					System.out.println(String.format("Ten inch screenshot %s has been updated.", response.getImage()));
+				}
+				
+				// Tv Screenshots
+				deleteallRequest = edits.images().deleteall(app.getApplicationId(), editId,
+						localeString, ImageType.TV_SCREENSHOTS.getKey());
+				deleteallRequest.execute();
+				System.out.println("Tv screenshots has been deleted.");
+				for (AbstractInputStreamContent content : app.getTvScreenshots(each)) {
+					uploadImageRequest = edits.images().upload(app.getApplicationId(), editId,
+							localeString, ImageType.TV_SCREENSHOTS.getKey(), content);
+					response = uploadImageRequest.execute();
+					System.out.println(String.format("Tv screenshot %s has been updated.", response.getImage()));
+				}
+				
+				// Wear Screenshots
+				deleteallRequest = edits.images().deleteall(app.getApplicationId(), editId,
+						localeString, ImageType.WEAR_SCREENSHOTS.getKey());
+				deleteallRequest.execute();
+				System.out.println("Wear screenshots has been deleted.");
+				for (AbstractInputStreamContent content : app.getWearScreenshots(each)) {
+					uploadImageRequest = edits.images().upload(app.getApplicationId(), editId,
+							localeString, ImageType.WEAR_SCREENSHOTS.getKey(), content);
+					response = uploadImageRequest.execute();
+					System.out.println(String.format("Wear screenshot %s has been updated.", response.getImage()));
 				}
 			}
 
@@ -322,10 +355,12 @@ public class GooglePlayPublisher {
 			System.out.println(String.format("Track %s has been updated.", updatedTrack.getTrack()));
 			
 			for (LocaleListing each : app.getLocaleListings()) {
-				if (StringUtils.isNotBlank(each.getRecentChanges())) {
+				String changelog = app.getChangelog(each, apk.getVersionCode());
+				if (StringUtils.isNotBlank(changelog)) {
 					// Update recent changes field in apk listing.
 					ApkListing newApkListing = new ApkListing();
-					newApkListing.setRecentChanges(each.getRecentChanges());
+					newApkListing.setLanguage(each.getLocale().toString());
+					newApkListing.setRecentChanges(changelog);
 					Apklistings.Update updateRecentChangesRequest = edits.apklistings().update(app.getApplicationId(),
 							editId, apk.getVersionCode(), each.getLocale().toString(), newApkListing);
 					updateRecentChangesRequest.execute();

@@ -40,8 +40,14 @@ public class LocaleListing {
 		return getDetailsContent("video");
 	}
 	
-	public String getRecentChanges() {
-		return getDetailsContent("recentChanges");
+	public String getChangelog(Integer versionCode) {
+		File file = new File(basePath + "changelogs" + java.io.File.separator + versionCode + ".txt");
+		return file.exists() ? FileUtils.toString(file) : getDefaultChangelog();
+	}
+	
+	public String getDefaultChangelog() {
+		File file = new File(basePath + "changelogs" + java.io.File.separator + "default_change_log.txt");
+		return file.exists() ? FileUtils.toString(file) : null;
 	}
 	
 	public AbstractInputStreamContent getFeatureGraphic() {
@@ -64,8 +70,20 @@ public class LocaleListing {
 		return getScreenshots("sevenInchScreenshots");
 	}
 	
+	public AbstractInputStreamContent getTvBanner() {
+		return getImagesContent("tvBanner");
+	}
+	
 	public List<AbstractInputStreamContent> getTenInchScreenshots() {
 		return getScreenshots("tenInchScreenshots");
+	}
+	
+	public List<AbstractInputStreamContent> getTvScreenshots() {
+		return getScreenshots("tvScreenshots");
+	}
+	
+	public List<AbstractInputStreamContent> getWearScreenshots() {
+		return getScreenshots("wearScreenshots");
 	}
 	
 	private List<AbstractInputStreamContent> getScreenshots(String screenSize) {

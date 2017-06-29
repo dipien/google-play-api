@@ -21,6 +21,9 @@ public class AppContext {
 	private Boolean phoneScreenshotsRequired = true;
 	private Boolean sevenInchScreenshotsRequired = false;
 	private Boolean tenInchScreenshotsRequired = false;
+	private Boolean wearScreenshotsRequired = false;
+	private Boolean tvScreenshotsRequired = false;
+	private Boolean tvBannerRequired = false;
 
 	public String getApplicationId() {
 		return applicationId;
@@ -101,6 +104,36 @@ public class AppContext {
 	public void setTenInchScreenshotsRequired(Boolean tenInchScreenshotsRequired) {
 		if (tenInchScreenshotsRequired != null) {
 			this.tenInchScreenshotsRequired = tenInchScreenshotsRequired;
+		}
+	}
+	
+	public Boolean isWearScreenshotsRequired() {
+		return wearScreenshotsRequired;
+	}
+	
+	public void setWearScreenshotsRequired(Boolean wearScreenshotsRequired) {
+		if (wearScreenshotsRequired != null) {
+			this.wearScreenshotsRequired = wearScreenshotsRequired;
+		}
+	}
+	
+	public Boolean isTvScreenshotsRequired() {
+		return tvScreenshotsRequired;
+	}
+	
+	public void setTvScreenshotsRequired(Boolean tvScreenshotsRequired) {
+		if (tvScreenshotsRequired != null) {
+			this.tvScreenshotsRequired = tvScreenshotsRequired;
+		}
+	}
+	
+	public Boolean isTvBannerRequired() {
+		return tvBannerRequired;
+	}
+	
+	public void setTvBannerRequired(Boolean tvBannerRequired) {
+		if (tvBannerRequired != null) {
+			this.tvBannerRequired = tvBannerRequired;
 		}
 	}
 	

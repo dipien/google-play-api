@@ -8,8 +8,9 @@ public enum ImageType {
 	PROMO_GRAPHIC("promoGraphic"),
 	SEVEN_INCH_SCREENSHOTS("sevenInchScreenshots"),
 	TEN_INCH_SCREENSHOTS("tenInchScreenshots"),
+	TV_SCREENSHOTS("tvScreenshots"),
 	TV_BANNER("tvBanner"),
-	TV_SCREENSHOTS("tvScreenshots");
+	WEAR_SCREENSHOTS("wearScreenshots");
 	
 	private String key;
 	

@@ -85,6 +85,12 @@ If the video url is required. The default value is **false**
 If the promo graphic is required. The default value is **true**
 
     PROMO_GRAPHIC_REQUIRED = false
+
+###### Tv Banner Required
+
+If the tv banner is required. The default value is **false**
+
+    TV_BANNER_REQUIRED = true
     
 ###### Phone Screenshots Required
 
@@ -103,6 +109,18 @@ If the 7 inches screenshots are required. The default value is **false**
 If the 10 inches screenshots are required. The default value is **false**
 
     10_INCH_SCREENSHOTS_REQUIRED = true
+    
+###### Tv Screenshots Required
+
+If the tv screenshots are required. The default value is **false**
+
+    TV_SCREENSHOTS_REQUIRED = true
+    
+###### Wear Screenshots Required
+
+If the wear screenshots are required. The default value is **false**
+
+    WEAR_SCREENSHOTS_REQUIRED = true
 
 #### Publish Metadata task
 
@@ -116,18 +134,21 @@ Create the following directories:
     {METADATA_PATH}/googleplay/{LOCALE_2}/...
     {METADATA_PATH}/googleplay/default/...
     
-|Asset                |Required|Location                                                                     |
-| ------------------- | ------ | ----------------------------------------------------------------------------|
+|Asset                |Required|Location                                                         |
+| ------------------- | ------ | ----------------------------------------------------------------|
 |Title                |true    |googleplay/{LOCALE}/title.txt                                    |
 |Short Description    |true    |googleplay/{LOCALE}/short_description.txt                        |
 |Full Description     |true    |googleplay/{LOCALE}/full_description.txt                         |
 |Video                |false   |googleplay/{LOCALE}/video.txt                                    |
 |Feature Graphic      |true    |googleplay/{LOCALE}/images/featureGraphic.png                    |
 |High Resolution Icon |true    |googleplay/{LOCALE}/images/highResolutionIcon.png                |
+|Tv Banner            |false   |googleplay/{LOCALE}/images/tvBanner.png                          |
 |Promo Graphic        |true    |googleplay/{LOCALE}/images/promoGraphic.png                      |
 |Phone Screenshots    |true    |googleplay/{LOCALE}/phoneScreenshots/screenshot[1 ... 8].png     |
 |7-inch Screenshots   |false   |googleplay/{LOCALE}/sevenInchScreenshots/screenshot[1 ... 8].png |
 |10-inch Screenshots  |false   |googleplay/{LOCALE}/tenInchScreenshots/screenshot[1 ... 8].png   |
+|Tv Screenshots       |false   |googleplay/{LOCALE}/tvScreenshots/screenshot[1 ... 8].png        |
+|Wear Screenshots     |false   |googleplay/{LOCALE}/wearScreenshots/screenshot[1 ... 8].png      |
     
 
 ###### Listing path
@@ -166,6 +187,13 @@ Portion of the users who should get the staged rollout version of the APK.
 The maximum rollout fraction is 0.5 (50% of users). Only used if **TRACK** is **rollout**. Default value: 0.005 (0.5%)  
     
     USER_FRACTION = 0.1
+    
+###### Release Notes
+
+Create the following files with the release notes:
+
+    {METADATA_PATH}/googleplay/{LOCALE_1}/changelogs/{VERSION_CODE}.txt
+    {METADATA_PATH}/googleplay/{LOCALE_2}/changelogs/{VERSION_CODE}.txt
     
 #### Promote from Alpha to Beta
 

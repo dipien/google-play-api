@@ -107,6 +107,17 @@ public class App {
 		return highResolutionIcon;
 	}
 
+	public AbstractInputStreamContent getTvBanner(LocaleListing localeListing) {
+		AbstractInputStreamContent tvBanner = localeListing.getTvBanner();
+		if (tvBanner == null) {
+			tvBanner = defaultLocaleListing.getTvBanner();
+		}
+		if (tvBanner == null) {
+			throw new UnexpectedException("images/tvBanner.png was not found for locale " + localeListing.getLocale().toLanguageTag());
+		}
+		return tvBanner;
+	}
+
 	public List<AbstractInputStreamContent> getPhoneScreenshots(LocaleListing localeListing) {
 		List<AbstractInputStreamContent> phoneScreenshots = localeListing.getPhoneScreenshots();
 		if (phoneScreenshots.isEmpty()) {
@@ -139,7 +150,37 @@ public class App {
 		}
 		return tenInchScreenshots;
 	}
-
+	
+	public List<AbstractInputStreamContent> getWearScreenshots(LocaleListing localeListing) {
+		List<AbstractInputStreamContent> wearScreenshots = localeListing.getWearScreenshots();
+		if (wearScreenshots.isEmpty()) {
+			wearScreenshots = defaultLocaleListing.getWearScreenshots();
+		}
+		if (wearScreenshots.isEmpty() && appContext.isWearScreenshotsRequired()) {
+			throw new UnexpectedException("Wear screenshots were not found for locale " + localeListing.getLocale().toLanguageTag());
+		}
+		return wearScreenshots;
+	}
+	
+	public List<AbstractInputStreamContent> getTvScreenshots(LocaleListing localeListing) {
+		List<AbstractInputStreamContent> tvScreenshots = localeListing.getTvScreenshots();
+		if (tvScreenshots.isEmpty()) {
+			tvScreenshots = defaultLocaleListing.getTvScreenshots();
+		}
+		if (tvScreenshots.isEmpty() && appContext.isTvScreenshotsRequired()) {
+			throw new UnexpectedException("Tv screenshots were not found for locale " + localeListing.getLocale().toLanguageTag());
+		}
+		return tvScreenshots;
+	}
+	
+	public String getChangelog(LocaleListing localeListing, Integer versionCode) {
+		String changelog = localeListing.getChangelog(versionCode);
+		if (changelog == null) {
+			changelog = defaultLocaleListing.getChangelog(versionCode);
+		}
+		return changelog;
+	}
+	
 	public List<LocaleListing> getLocaleListings() {
 		return localeListings;
 	}

@@ -21,8 +21,11 @@ public abstract class AbstractTask extends DefaultTask {
 		appContext.setVideoRequired(getBooleanProp('VIDEO_REQUIRED'));
 		appContext.setPromoGraphicRequired(getBooleanProp('PROMO_GRAPHIC_REQUIRED'));
 		appContext.setPhoneScreenshotsRequired(getBooleanProp('PHONE_SCREENSHOTS_REQUIRED'));
+		appContext.setTvBannerRequired(getBooleanProp('TV_BANNER_REQUIRED'));
 		appContext.setSevenInchScreenshotsRequired(getBooleanProp('7_INCH_SCREENSHOTS_REQUIRED'));
 		appContext.setTenInchScreenshotsRequired(getBooleanProp('10_INCH_SCREENSHOTS_REQUIRED'));
+		appContext.setTvScreenshotsRequired(getBooleanProp('TV_SCREENSHOTS_REQUIRED'));
+		appContext.setWearScreenshotsRequired(getBooleanProp('WEAR_SCREENSHOTS_REQUIRED'));
 
 		appContext.setApkPath(getStringProp('APK_PATH'));
 		appContext.setTrackType(TrackType.findByKey(getStringProp('TRACK')));
