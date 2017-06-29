@@ -1,5 +1,17 @@
 # Change Log
 
+## [v0.2.0](https://github.com/maxirosson/jdroid-googleplay-publisher-plugin/tree/v0.2.0) (2017-06-29)
+[Full Changelog](https://github.com/maxirosson/jdroid-googleplay-publisher-plugin/compare/v0.1.1...v0.2.0)
+
+**Implemented enhancements:**
+
+- Promote APK from rollout to production Task [\#9](https://github.com/maxirosson/jdroid-googleplay-publisher-plugin/issues/9)
+- Content Verification Task [\#8](https://github.com/maxirosson/jdroid-googleplay-publisher-plugin/issues/8)
+- Increment staged rollout percentage Task [\#6](https://github.com/maxirosson/jdroid-googleplay-publisher-plugin/issues/6)
+- Promote APK from beta testing to stage rollout Task [\#5](https://github.com/maxirosson/jdroid-googleplay-publisher-plugin/issues/5)
+- Promote APK from alpha to beta testing Task [\#4](https://github.com/maxirosson/jdroid-googleplay-publisher-plugin/issues/4)
+- Upload APK to Google Play Task [\#3](https://github.com/maxirosson/jdroid-googleplay-publisher-plugin/issues/3)
+
 ## [v0.1.1](https://github.com/maxirosson/jdroid-googleplay-publisher-plugin/tree/v0.1.1) (2016-07-04)
 [Full Changelog](https://github.com/maxirosson/jdroid-googleplay-publisher-plugin/compare/v0.1.0...v0.1.1)
 
