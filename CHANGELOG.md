@@ -1,5 +1,15 @@
 # Change Log
 
+## [v0.3.0](https://github.com/maxirosson/jdroid-googleplay-publisher-plugin/tree/v0.3.0) (2017-06-29)
+[Full Changelog](https://github.com/maxirosson/jdroid-googleplay-publisher-plugin/compare/v0.2.0...v0.3.0)
+
+**Implemented enhancements:**
+
+- Support for Wear Screenshots [\#13](https://github.com/maxirosson/jdroid-googleplay-publisher-plugin/issues/13)
+- Support for TV Screenshots [\#12](https://github.com/maxirosson/jdroid-googleplay-publisher-plugin/issues/12)
+- Support for TV Banner [\#11](https://github.com/maxirosson/jdroid-googleplay-publisher-plugin/issues/11)
+- Support to publish APK release notes [\#10](https://github.com/maxirosson/jdroid-googleplay-publisher-plugin/issues/10)
+
 ## [v0.2.0](https://github.com/maxirosson/jdroid-googleplay-publisher-plugin/tree/v0.2.0) (2017-06-29)
 [Full Changelog](https://github.com/maxirosson/jdroid-googleplay-publisher-plugin/compare/v0.1.1...v0.2.0)
 
