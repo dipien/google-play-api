@@ -105,11 +105,11 @@ public class GooglePlayPublisher {
 	}
 	
 	/**
-	 * Lists all the apks for a given app.
-	 * 
+	 * Retrieve all the apks for a given app.
+	 *
 	 * @param app
 	 */
-	public static void listApks(App app) {
+	public static List<Apk> getApks(App app) {
 		try {
 
 			AppContext appContext = app.getAppContext();
@@ -124,10 +124,7 @@ public class GooglePlayPublisher {
 			// Get a list of apks.
 			ApksListResponse apksResponse = edits.apks().list(app.getApplicationId(), appEdit.getId()).execute();
 			
-			// Print the apk info.
-			for (Apk apk : apksResponse.getApks()) {
-				System.out.println(String.format("Version Code: %d - Binary sha1: %s", apk.getVersionCode(), apk.getBinary().getSha1()));
-			}
+			return apksResponse.getApks();
 		} catch (IOException ex) {
 			throw new UnexpectedException("Exception was thrown while updating listing", ex);
 		}
@@ -143,10 +140,14 @@ public class GooglePlayPublisher {
 			app.getFullDescription(each);
 			app.getFeatureGraphic(each);
 			app.getPromoGraphic(each);
+			app.getVideo(each);
 			app.getHighResolutionIcon(each);
 			app.getPhoneScreenshots(each);
 			app.getSevenInchScreenshots(each);
 			app.getTenInchScreenshots(each);
+			app.getTvBanner(each);
+			app.getTvScreenshots(each);
+			app.getWearScreenshots(each);
 		}
 	}
 	

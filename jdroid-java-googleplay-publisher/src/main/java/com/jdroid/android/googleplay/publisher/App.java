@@ -112,7 +112,7 @@ public class App {
 		if (tvBanner == null) {
 			tvBanner = defaultLocaleListing.getTvBanner();
 		}
-		if (tvBanner == null) {
+		if (tvBanner == null && appContext.isTvBannerRequired()) {
 			throw new UnexpectedException("images/tvBanner.png was not found for locale " + localeListing.getLocale().toLanguageTag());
 		}
 		return tvBanner;

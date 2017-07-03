@@ -1,0 +1,17 @@
+ext.PROJECT_NAME = 'Jdroid Google Play Publisher Library'
+description = 'Java Connector for Google Play API'
+ext.ARTIFACT_ID = 'jdroid-java-googleplay-publisher'
+
+apply plugin: 'com.jdroid.gradle.plugin'
+
+buildscript {
+	dependencies {
+		classpath 'com.jdroidframework:jdroid-gradle-project-plugin:' + JDROID_GRADLE_PLUGIN_VERSION
+	}
+}
+
+dependencies {
+	compile 'com.jdroidframework:jdroid-java-core:' + JDROID_JAVA_VERSION
+	compile 'com.google.apis:google-api-services-androidpublisher:v2-rev44-1.22.0'
+	compile 'com.google.api-client:google-api-client:1.19.0'
+}

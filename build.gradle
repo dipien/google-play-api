@@ -5,70 +5,49 @@ ext.VERSION_PATCH = 0
 ext.JDROID_GITHUB_REPOSITORY_OWNER = 'maxirosson'
 ext.JDROID_GITHUB_REPOSITORY_NAME = 'jdroid-googleplay-publisher-plugin'
 
-ext.PROJECT_NAME = 'Jdroid Google Play Publisher Plugin'
+ext.JDROID_GRADLE_PLUGIN_VERSION = '0.15.0'
+ext.JDROID_JAVA_VERSION = '0.13.0'
 
-apply plugin: 'com.jdroid.gradle.plugin'
+apply plugin: 'com.jdroid.root'
 apply plugin: 'com.jdroid.component.builder'
-apply plugin: 'com.gradle.plugin-publish'
-
-description = 'Gradle Plugin to publish android APKs and listings on Google Play'
 
 buildscript {
 	repositories {
-		mavenCentral()
 		jcenter()
-		maven {
-			url "https://plugins.gradle.org/m2/"
-		}
-		maven {
-			url "https://oss.sonatype.org/content/repositories/snapshots/"
-		}
+		maven { url "https://maven.google.com" }
 		String localMavenRepo = project.hasProperty('LOCAL_MAVEN_REPO') ? project.ext.get('LOCAL_MAVEN_REPO') : System.getenv('LOCAL_MAVEN_REPO')
 		if (localMavenRepo != null) {
-			maven {
-				url localMavenRepo
-			}
+			maven { url localMavenRepo }
 		}
+		maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
 	}
 	dependencies {
-		// https://plugins.gradle.org/plugin/com.gradle.plugin-publish
-		classpath "com.gradle.publish:plugin-publish-plugin:0.9.4"
-
 		classpath 'com.jdroidframework:jdroid-component-builder:0.3.0-SNAPSHOT'
-		classpath 'com.jdroidframework:jdroid-gradle-project-plugin:0.15.0'
+		classpath 'com.jdroidframework:jdroid-gradle-root-plugin:0.14.0'
 	}
 }
 
-repositories {
-	mavenCentral()
-	maven {
-		url "https://oss.sonatype.org/content/repositories/snapshots/"
-	}
-}
-
-dependencies {
-	compile 'com.jdroidframework:jdroid-java-core:0.13.0'
-
-	compile 'com.google.apis:google-api-services-androidpublisher:v2-rev44-1.22.0'
-	compile 'com.google.api-client:google-api-client:1.19.0'
-}
-
-// Configuration to publish your plugin to the plugin portal
-pluginBundle {
-	website = 'http://www.jdroidframework.com/'
-	vcsUrl = 'https://github.com/maxirosson/jdroid-googleplay-publisher'
-
-	plugins {
-		GooglePlayPublisherPlugin {
-			id = 'com.jdroid.googleplay.publisher'
-			displayName = 'Jdroid Google Play Publisher Gradle Plugin'
-			description = 'Gradle Plugin to publish android APKs and listings on Google Play'
-			tags = ['jdroid', 'android', 'google play']
+subprojects {
+	buildscript {
+		repositories {
+			jcenter()
+			maven { url "https://plugins.gradle.org/m2/" }
+			String localMavenRepo = project.hasProperty('LOCAL_MAVEN_REPO') ? project.ext.get('LOCAL_MAVEN_REPO') : System.getenv('LOCAL_MAVEN_REPO')
+			if (localMavenRepo != null) {
+				maven {
+					url localMavenRepo
+				}
+			}
+			maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
 		}
 	}
 
-	mavenCoordinates {
-		groupId = "com.jdroidframework"
-		artifactId = "jdroid-google-publisher-plugin"
+	repositories {
+		jcenter()
+		String localMavenRepo = project.hasProperty('LOCAL_MAVEN_REPO') ? project.ext.get('LOCAL_MAVEN_REPO') : System.getenv('LOCAL_MAVEN_REPO')
+		if (localMavenRepo != null) {
+			maven { url localMavenRepo }
+		}
+		maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
 	}
 }
