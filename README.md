@@ -41,7 +41,7 @@ Add the following configuration to your `build.gradle`, replacing X.Y.Z by the [
     
     apply plugin: 'com.jdroid.googleplay.publisher'
     
-You need to define the following gradle properties:
+Define the following gradle properties:
 
 ###### Application Id
 
@@ -130,26 +130,32 @@ Publish metadata (feature/promo graphics, High resolution icon, screenshots, tit
     
 Create the following directories:
 
-    {METADATA_PATH}/googleplay/{LOCALE_1}/...
-    {METADATA_PATH}/googleplay/{LOCALE_2}/...
-    {METADATA_PATH}/googleplay/default/...
+    {METADATA_PATH}/googleplay/{LOCALE_1}/
+    {METADATA_PATH}/googleplay/{LOCALE_2}/
+    {METADATA_PATH}/googleplay/default/
     
-|Asset                |Required|Location                                                         |
-| ------------------- | ------ | ----------------------------------------------------------------|
-|Title                |true    |googleplay/{LOCALE}/title.txt                                    |
-|Short Description    |true    |googleplay/{LOCALE}/short_description.txt                        |
-|Full Description     |true    |googleplay/{LOCALE}/full_description.txt                         |
-|Video                |false   |googleplay/{LOCALE}/video.txt                                    |
-|Feature Graphic      |true    |googleplay/{LOCALE}/images/featureGraphic.png                    |
-|High Resolution Icon |true    |googleplay/{LOCALE}/images/highResolutionIcon.png                |
-|Tv Banner            |false   |googleplay/{LOCALE}/images/tvBanner.png                          |
-|Promo Graphic        |true    |googleplay/{LOCALE}/images/promoGraphic.png                      |
-|Phone Screenshots    |true    |googleplay/{LOCALE}/phoneScreenshots/screenshot[1 ... 8].png     |
-|7-inch Screenshots   |false   |googleplay/{LOCALE}/sevenInchScreenshots/screenshot[1 ... 8].png |
-|10-inch Screenshots  |false   |googleplay/{LOCALE}/tenInchScreenshots/screenshot[1 ... 8].png   |
-|Tv Screenshots       |false   |googleplay/{LOCALE}/tvScreenshots/screenshot[1 ... 8].png        |
-|Wear Screenshots     |false   |googleplay/{LOCALE}/wearScreenshots/screenshot[1 ... 8].png      |
+ 
+The **{METADATA_PATH}/googleplay/default/** directory is optional. It is only used when a asset is not found on it's locale directory. 
+You can use it to host your shared assets between locales and avoid to duplicate it.
+
+Add your assets to each locale or default directory:
     
+|Asset                |Required|Location                                     |
+| ------------------- | ------ | --------------------------------------------|
+|Title                |true    |title.txt                                    |
+|Short Description    |true    |short_description.txt                        |
+|Full Description     |true    |full_description.txt                         |
+|Video                |false   |video.txt                                    |
+|Feature Graphic      |true    |images/featureGraphic.png                    |
+|High Resolution Icon |true    |images/highResolutionIcon.png                |
+|Tv Banner            |false   |images/tvBanner.png                          |
+|Promo Graphic        |true    |images/promoGraphic.png                      |
+|Phone Screenshots    |true    |phoneScreenshots/screenshot[1 ... 8].png     |
+|7-inch Screenshots   |false   |sevenInchScreenshots/screenshot[1 ... 8].png |
+|10-inch Screenshots  |false   |tenInchScreenshots/screenshot[1 ... 8].png   |
+|Tv Screenshots       |false   |tvScreenshots/screenshot[1 ... 8].png        |
+|Wear Screenshots     |false   |wearScreenshots/screenshot[1 ... 8].png      |
+
 
 ###### Listing path
 

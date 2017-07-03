@@ -35,7 +35,7 @@ buildscript {
 		classpath "com.gradle.publish:plugin-publish-plugin:0.9.4"
 
 		classpath 'com.jdroidframework:jdroid-component-builder:0.3.0-SNAPSHOT'
-		classpath 'com.jdroidframework:jdroid-gradle-project-plugin:0.14.0'
+		classpath 'com.jdroidframework:jdroid-gradle-project-plugin:0.15.0'
 	}
 }
 
