@@ -1,5 +1,17 @@
 # Change Log
 
+## [v0.4.0](https://github.com/maxirosson/jdroid-googleplay-publisher/tree/v0.4.0) (2017-07-03)
+[Full Changelog](https://github.com/maxirosson/jdroid-googleplay-publisher/compare/v0.3.0...v0.4.0)
+
+**Fixed bugs:**
+
+- Video url should be optional by default [\#14](https://github.com/maxirosson/jdroid-googleplay-publisher/issues/14)
+
+**Closed issues:**
+
+- Renamed plugin to jdroid-gradle-googleplay-publisher-plugin [\#16](https://github.com/maxirosson/jdroid-googleplay-publisher/issues/16)
+- New jdroid-java-googleplay-publisher library [\#15](https://github.com/maxirosson/jdroid-googleplay-publisher/issues/15)
+
 ## [v0.3.0](https://github.com/maxirosson/jdroid-googleplay-publisher/tree/v0.3.0) (2017-06-29)
 [Full Changelog](https://github.com/maxirosson/jdroid-googleplay-publisher/compare/v0.2.0...v0.3.0)
 
