@@ -3,7 +3,7 @@ ext.VERSION_MINOR = 4
 ext.VERSION_PATCH = 0
 
 ext.JDROID_GITHUB_REPOSITORY_OWNER = 'maxirosson'
-ext.JDROID_GITHUB_REPOSITORY_NAME = 'jdroid-googleplay-publisher-plugin'
+ext.JDROID_GITHUB_REPOSITORY_NAME = 'jdroid-googleplay-publisher'
 
 ext.JDROID_GRADLE_PLUGIN_VERSION = '0.15.0'
 ext.JDROID_JAVA_VERSION = '0.13.0'
