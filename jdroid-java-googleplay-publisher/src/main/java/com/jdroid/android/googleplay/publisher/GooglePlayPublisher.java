@@ -134,6 +134,7 @@ public class GooglePlayPublisher {
 		System.out.println(("Verifying the content to upload to Google Play on " + app.getAppContext().getMetadataPath() + "/googleplay"));
 		
 		for (LocaleListing each : app.getLocaleListings()) {
+			System.out.println(("Verifying locale " + each.getLanguageTag()));
 			app.getTitle(each);
 			app.getFullDescription(each);
 			app.getShortDescription(each);
@@ -169,7 +170,7 @@ public class GooglePlayPublisher {
 			// Update listing for each locale of the application.
 			for (LocaleListing each : app.getLocaleListings()) {
 
-				String localeString = each.getLocale().toString();
+				String localeString = each.getLanguageTag();
 
 				Listing listing = new Listing();
 				listing.setTitle(app.getTitle(each));
@@ -360,10 +361,10 @@ public class GooglePlayPublisher {
 				if (StringUtils.isNotBlank(changelog)) {
 					// Update recent changes field in apk listing.
 					ApkListing newApkListing = new ApkListing();
-					newApkListing.setLanguage(each.getLocale().toString());
+					newApkListing.setLanguage(each.getLanguageTag());
 					newApkListing.setRecentChanges(changelog);
 					Apklistings.Update updateRecentChangesRequest = edits.apklistings().update(app.getApplicationId(),
-							editId, apk.getVersionCode(), each.getLocale().toString(), newApkListing);
+							editId, apk.getVersionCode(), each.getLanguageTag(), newApkListing);
 					updateRecentChangesRequest.execute();
 					System.out.println("Recent changes has been updated.");
 				}

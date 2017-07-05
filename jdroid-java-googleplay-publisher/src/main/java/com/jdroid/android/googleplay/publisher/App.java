@@ -36,7 +36,7 @@ public class App {
 			title = defaultLocaleListing.getTitle();
 		}
 		if (title == null) {
-			throw new UnexpectedException("The title.txt was not found for locale " + localeListing.getLocale().toLanguageTag());
+			throw new UnexpectedException("The title.txt was not found for locale " + localeListing.getLanguageTag());
 		}
 		return title;
 	}
@@ -47,7 +47,7 @@ public class App {
 			fullDescription = defaultLocaleListing.getFullDescription();
 		}
 		if (fullDescription == null) {
-			throw new UnexpectedException("The full_description.txt was not found for locale " + localeListing.getLocale().toLanguageTag());
+			throw new UnexpectedException("The full_description.txt was not found for locale " + localeListing.getLanguageTag());
 		}
 		return fullDescription;
 	}
@@ -58,7 +58,7 @@ public class App {
 			shortDescription = defaultLocaleListing.getShortDescription();
 		}
 		if (shortDescription == null) {
-			throw new UnexpectedException("The short_description.txt was not found for locale " + localeListing.getLocale().toLanguageTag());
+			throw new UnexpectedException("The short_description.txt was not found for locale " + localeListing.getLanguageTag());
 		}
 		return shortDescription;
 	}
@@ -69,7 +69,7 @@ public class App {
 			video = defaultLocaleListing.getVideo();
 		}
 		if (video == null && appContext.isVideoRequired()) {
-			throw new UnexpectedException("The video.txt was not found for locale " + localeListing.getLocale().toLanguageTag());
+			throw new UnexpectedException("The video.txt was not found for locale " + localeListing.getLanguageTag());
 		}
 		return video;
 	}
@@ -80,7 +80,7 @@ public class App {
 			featureGraphic = defaultLocaleListing.getFeatureGraphic();
 		}
 		if (featureGraphic == null) {
-			throw new UnexpectedException("images/featureGraphic.png was not found for locale " + localeListing.getLocale().toLanguageTag());
+			throw new UnexpectedException("images/featureGraphic.png was not found for locale " + localeListing.getLanguageTag());
 		}
 		return featureGraphic;
 	}
@@ -91,7 +91,7 @@ public class App {
 			promoGraphic = defaultLocaleListing.getPromoGraphic();
 		}
 		if (promoGraphic == null && appContext.isPromoGraphicRequired()) {
-			throw new UnexpectedException("images/promoGraphic.png was not found for locale " + localeListing.getLocale().toLanguageTag());
+			throw new UnexpectedException("images/promoGraphic.png was not found for locale " + localeListing.getLanguageTag());
 		}
 		return promoGraphic;
 	}
@@ -102,7 +102,7 @@ public class App {
 			highResolutionIcon = defaultLocaleListing.getHighResolutionIcon();
 		}
 		if (highResolutionIcon == null) {
-			throw new UnexpectedException("images/icon.png was not found for locale " + localeListing.getLocale().toLanguageTag());
+			throw new UnexpectedException("images/icon.png was not found for locale " + localeListing.getLanguageTag());
 		}
 		return highResolutionIcon;
 	}
@@ -113,7 +113,7 @@ public class App {
 			tvBanner = defaultLocaleListing.getTvBanner();
 		}
 		if (tvBanner == null && appContext.isTvBannerRequired()) {
-			throw new UnexpectedException("images/tvBanner.png was not found for locale " + localeListing.getLocale().toLanguageTag());
+			throw new UnexpectedException("images/tvBanner.png was not found for locale " + localeListing.getLanguageTag());
 		}
 		return tvBanner;
 	}
@@ -124,7 +124,7 @@ public class App {
 			phoneScreenshots = defaultLocaleListing.getPhoneScreenshots();
 		}
 		if (phoneScreenshots.isEmpty() && appContext.isPhoneScreenshotsRequired()) {
-			throw new UnexpectedException("Phone screenshots were not found for locale " + localeListing.getLocale().toLanguageTag());
+			throw new UnexpectedException("Phone screenshots were not found for locale " + localeListing.getLanguageTag());
 		}
 		return phoneScreenshots;
 	}
@@ -135,7 +135,7 @@ public class App {
 			sevenInchScreenshots = defaultLocaleListing.getSevenInchScreenshots();
 		}
 		if (sevenInchScreenshots.isEmpty() && appContext.isSevenInchScreenshotsRequired()) {
-			throw new UnexpectedException("7 Inch screenshots were not found for locale " + localeListing.getLocale().toLanguageTag());
+			throw new UnexpectedException("7 Inch screenshots were not found for locale " + localeListing.getLanguageTag());
 		}
 		return sevenInchScreenshots;
 	}
@@ -146,7 +146,7 @@ public class App {
 			tenInchScreenshots = defaultLocaleListing.getTenInchScreenshots();
 		}
 		if (tenInchScreenshots.isEmpty() && appContext.isTenInchScreenshotsRequired()) {
-			throw new UnexpectedException("10 Inch screenshots were not found for locale " + localeListing.getLocale().toLanguageTag());
+			throw new UnexpectedException("10 Inch screenshots were not found for locale " + localeListing.getLanguageTag());
 		}
 		return tenInchScreenshots;
 	}
@@ -157,7 +157,7 @@ public class App {
 			wearScreenshots = defaultLocaleListing.getWearScreenshots();
 		}
 		if (wearScreenshots.isEmpty() && appContext.isWearScreenshotsRequired()) {
-			throw new UnexpectedException("Wear screenshots were not found for locale " + localeListing.getLocale().toLanguageTag());
+			throw new UnexpectedException("Wear screenshots were not found for locale " + localeListing.getLanguageTag());
 		}
 		return wearScreenshots;
 	}
@@ -168,7 +168,7 @@ public class App {
 			tvScreenshots = defaultLocaleListing.getTvScreenshots();
 		}
 		if (tvScreenshots.isEmpty() && appContext.isTvScreenshotsRequired()) {
-			throw new UnexpectedException("Tv screenshots were not found for locale " + localeListing.getLocale().toLanguageTag());
+			throw new UnexpectedException("Tv screenshots were not found for locale " + localeListing.getLanguageTag());
 		}
 		return tvScreenshots;
 	}

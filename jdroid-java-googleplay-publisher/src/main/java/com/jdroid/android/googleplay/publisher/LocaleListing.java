@@ -20,8 +20,8 @@ public class LocaleListing {
 		this.basePath =  listingPath + java.io.File.separator + "googleplay" + java.io.File.separator + (locale != null ? locale.toLanguageTag() : "default") + java.io.File.separator;
 	}
 	
-	public Locale getLocale() {
-		return locale;
+	public String getLanguageTag() {
+		return locale.toLanguageTag();
 	}
 	
 	public String getTitle() {
