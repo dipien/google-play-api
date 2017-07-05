@@ -4,9 +4,9 @@ Gradle Plugin to publish android APKs and listings on Google Play
 ## Continuous Integration
 |Branch|Status|
 | ------------- | ------------- |
-|Master|[![Build Status](https://travis-ci.org/maxirosson/jdroid-googleplay-publisher-plugin.svg?branch=master)](https://travis-ci.org/maxirosson/jdroid-googleplay-publisher-plugin)|
-|Staging|[![Build Status](https://api.travis-ci.org/maxirosson/jdroid-googleplay-publisher-plugin.svg?branch=staging)](https://travis-ci.org/maxirosson/jdroid-googleplay-publisher-plugin)|
-|Production|[![Build Status](https://api.travis-ci.org/maxirosson/jdroid-googleplay-publisher-plugin.svg?branch=production)](https://travis-ci.org/maxirosson/jdroid-googleplay-publisher-plugin)|
+|Master|[![Build Status](https://travis-ci.org/maxirosson/jdroid-googleplay-publisher.svg?branch=master)](https://travis-ci.org/maxirosson/jdroid-googleplay-publisher)|
+|Staging|[![Build Status](https://api.travis-ci.org/maxirosson/jdroid-googleplay-publisher.svg?branch=staging)](https://travis-ci.org/maxirosson/jdroid-googleplay-publisher)|
+|Production|[![Build Status](https://api.travis-ci.org/maxirosson/jdroid-googleplay-publisher.svg?branch=production)](https://travis-ci.org/maxirosson/jdroid-googleplay-publisher)|
 
 ## Setup
 
