@@ -308,53 +308,59 @@ public class GooglePlayPublisher {
 			AbstractInputStreamContent apkFile = new FileContent(MIME_TYPE_APK, new File(app.getAppContext().getApkPath()));
 			Upload uploadRequest = edits.apks().upload(app.getApplicationId(), editId, apkFile);
 			Apk apk = uploadRequest.execute();
-			System.out.println(String.format("Version code %d has been uploaded", apk.getVersionCode()));
 			
-			// Remove any previous alpha or beta
-			if (app.getAppContext().getTrackType().equals(TrackType.ALPHA) || app.getAppContext().getTrackType().equals(TrackType.BETA)) {
-				Track track = getTrack(app, edits, editId);
-				if (track != null && !track.getVersionCodes().isEmpty()) {
-					Boolean replaceTrack = true;
-					for (Integer versionCode : track.getVersionCodes()) {
-						if (apk.getVersionCode() <= versionCode) {
-							replaceTrack = false;
-							break;
+			Track track = getTrack(app, edits, editId);
+			if (track != null && track.getVersionCodes().contains(apk.getVersionCode())) {
+				System.out.println("Skipping APK [" + apk.getVersionCode() + "] upload to track " + track.getTrack() + " because it already exists.");
+			} else {
+				
+				System.out.println(String.format("Version code %d has been uploaded", apk.getVersionCode()));
+				
+				// Remove any previous alpha or beta
+				if (app.getAppContext().getTrackType().equals(TrackType.ALPHA) || app.getAppContext().getTrackType().equals(TrackType.BETA)) {
+					if (track != null && !track.getVersionCodes().isEmpty()) {
+						Boolean replaceTrack = true;
+						for (Integer versionCode : track.getVersionCodes()) {
+							if (apk.getVersionCode() <= versionCode) {
+								replaceTrack = false;
+								break;
+							}
+						}
+						
+						if (replaceTrack) {
+							Track removeTrack = new Track();
+							removeTrack.setTrack(app.getAppContext().getTrackType().getKey());
+							Edits.Tracks.Update removeTrackRequest = edits.tracks().update(app.getApplicationId(), editId, track.getTrack(), removeTrack);
+							removeTrackRequest.execute();
+							System.out.println(String.format("Track %s has been removed.", removeTrack.getTrack()));
 						}
 					}
-					
-					if (replaceTrack) {
-						Track removeTrack = new Track();
-						removeTrack.setTrack(app.getAppContext().getTrackType().getKey());
-						Edits.Tracks.Update removeTrackRequest = edits.tracks().update(app.getApplicationId(), editId, track.getTrack(), removeTrack);
-						removeTrackRequest.execute();
-						System.out.println(String.format("Track %s has been removed.", removeTrack.getTrack()));
+				} else if (app.getAppContext().getTrackType().equals(TrackType.ROLLOUT)) {
+					if (track == null || track.getVersionCodes().isEmpty()) {
+						if (app.getAppContext().getUserFraction() == null) {
+							app.getAppContext().setUserFraction(DEFAULT_USER_FRACTION);
+						}
+					} else {
+						if (app.getAppContext().getUserFraction() == null) {
+							app.getAppContext().setUserFraction(track.getUserFraction());
+						}
 					}
 				}
-			} else if (app.getAppContext().getTrackType().equals(TrackType.ROLLOUT)) {
-				Track track = getTrack(app, edits, editId);
-				if (track == null || track.getVersionCodes().isEmpty()) {
-					if (app.getAppContext().getUserFraction() == null) {
-						app.getAppContext().setUserFraction(DEFAULT_USER_FRACTION);
-					}
-				} else {
-					if (app.getAppContext().getUserFraction() == null) {
-						app.getAppContext().setUserFraction(track.getUserFraction());
-					}
-				}
+				
+				// Assign apk to track.
+				List<Integer> apkVersionCodes = new ArrayList<>();
+				apkVersionCodes.add(apk.getVersionCode());
+				
+				track = new Track();
+				track.setTrack(app.getAppContext().getTrackType().getKey());
+				track.setVersionCodes(apkVersionCodes);
+				track.setUserFraction(app.getAppContext().getUserFraction());
+				
+				Edits.Tracks.Update updateTrackRequest = edits.tracks().update(app.getApplicationId(), editId, track.getTrack(), track);
+				Track updatedTrack = updateTrackRequest.execute();
+				System.out.println(String.format("Track %s has been updated.", updatedTrack.getTrack()));
 			}
 			
-			// Assign apk to track.
-			List<Integer> apkVersionCodes = new ArrayList<>();
-			apkVersionCodes.add(apk.getVersionCode());
-			
-			Track track = new Track();
-			track.setTrack(app.getAppContext().getTrackType().getKey());
-			track.setVersionCodes(apkVersionCodes);
-			track.setUserFraction(app.getAppContext().getUserFraction());
-			
-			Edits.Tracks.Update updateTrackRequest = edits.tracks().update(app.getApplicationId(), editId, track.getTrack(), track);
-			Track updatedTrack = updateTrackRequest.execute();
-			System.out.println(String.format("Track %s has been updated.", updatedTrack.getTrack()));
 			
 			for (LocaleListing each : app.getLocaleListings()) {
 				String changelog = app.getChangelog(each, apk.getVersionCode());
