@@ -374,7 +374,7 @@ public class GooglePlayPublisher {
 			// Commit changes for edit.
 			commitEdit(app, edits, editId);
 		} catch (GoogleJsonResponseException ex) {
-			if (!app.getAppContext().failOnApkUpgradeVersionConflict() && ex.getDetails().getCode() == 403 && ex.getDetails().getMessage().contains("apkUpgradeVersionConflict")) {
+			if (!app.getAppContext().failOnApkUpgradeVersionConflict() && ex.getDetails().getCode() == 403 && ex.getDetails().getMessage().equals("APK specifies a version code that has already been used.")) {
 				System.out.println("WARNING | apkUpgradeVersionConflict: APK specifies a version code that has already been used.");
 			} else {
 				throw new UnexpectedException("Exception was thrown while uploading apk and updating recent changes", ex);

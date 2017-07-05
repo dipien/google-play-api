@@ -201,6 +201,12 @@ Create the following files with the release notes:
     {METADATA_PATH}/googleplay/{LOCALE_1}/changelogs/{VERSION_CODE}.txt
     {METADATA_PATH}/googleplay/{LOCALE_2}/changelogs/{VERSION_CODE}.txt
     
+###### Fail on APK upgrade version conflict
+
+Whether the task should fail if the uploaded APK specifies a version code that has already been used. Default value: **true**
+    
+    FAIL_ON_APK_UPGRADE_VERSION_CONFLICT = false
+    
 #### Promote from Alpha to Beta
 
 Promote a current alpha to beta
