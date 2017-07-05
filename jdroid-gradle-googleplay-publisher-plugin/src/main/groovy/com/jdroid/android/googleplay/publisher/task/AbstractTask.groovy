@@ -31,6 +31,8 @@ public abstract class AbstractTask extends DefaultTask {
 		appContext.setTrackType(TrackType.findByKey(getStringProp('TRACK')));
 		appContext.setUserFraction(getDoubleProp('USER_FRACTION'));
 
+		appContext.setFailOnApkUpgradeVersionConflict(getBooleanProp('FAIL_ON_APK_UPGRADE_VERSION_CONFLICT'));
+
 		onExecute(new App(appContext));
 	}
 

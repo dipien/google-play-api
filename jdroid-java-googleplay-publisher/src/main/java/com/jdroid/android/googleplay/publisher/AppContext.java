@@ -24,6 +24,8 @@ public class AppContext {
 	private Boolean wearScreenshotsRequired = false;
 	private Boolean tvScreenshotsRequired = false;
 	private Boolean tvBannerRequired = false;
+	
+	private Boolean failOnApkUpgradeVersionConflict = true;
 
 	public String getApplicationId() {
 		return applicationId;
@@ -159,5 +161,15 @@ public class AppContext {
 	
 	public void setUserFraction(Double userFraction) {
 		this.userFraction = userFraction;
+	}
+	
+	public Boolean failOnApkUpgradeVersionConflict() {
+		return failOnApkUpgradeVersionConflict;
+	}
+	
+	public void setFailOnApkUpgradeVersionConflict(Boolean failOnApkUpgradeVersionConflict) {
+		if (failOnApkUpgradeVersionConflict != null) {
+			this.failOnApkUpgradeVersionConflict = failOnApkUpgradeVersionConflict;
+		}
 	}
 }
