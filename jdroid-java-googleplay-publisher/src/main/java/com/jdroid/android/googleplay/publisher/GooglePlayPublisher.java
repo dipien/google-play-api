@@ -313,7 +313,7 @@ public class GooglePlayPublisher {
 			// Remove any previous alpha or beta
 			if (app.getAppContext().getTrackType().equals(TrackType.ALPHA) || app.getAppContext().getTrackType().equals(TrackType.BETA)) {
 				Track track = getTrack(app, edits, editId);
-				if (!track.getVersionCodes().isEmpty()) {
+				if (track != null && !track.getVersionCodes().isEmpty()) {
 					Boolean replaceTrack = true;
 					for (Integer versionCode : track.getVersionCodes()) {
 						if (apk.getVersionCode() <= versionCode) {
@@ -332,7 +332,7 @@ public class GooglePlayPublisher {
 				}
 			} else if (app.getAppContext().getTrackType().equals(TrackType.ROLLOUT)) {
 				Track track = getTrack(app, edits, editId);
-				if (track.getVersionCodes().isEmpty()) {
+				if (track == null || track.getVersionCodes().isEmpty()) {
 					if (app.getAppContext().getUserFraction() == null) {
 						app.getAppContext().setUserFraction(DEFAULT_USER_FRACTION);
 					}
@@ -379,8 +379,14 @@ public class GooglePlayPublisher {
 	}
 	
 	private static Track getTrack(App app, Edits edits, String editId) throws IOException {
-		Edits.Tracks.Get getTrackRequest = edits.tracks().get(app.getApplicationId(), editId, app.getAppContext().getTrackType().getKey());
-		return getTrackRequest.execute();
+		Edits.Tracks.List getTracksRequest = edits.tracks().list(app.getApplicationId(), editId);
+		TracksListResponse tracksListResponse = getTracksRequest.execute();
+		for (Track track : tracksListResponse.getTracks()) {
+			if (track.getTrack().equals(app.getAppContext().getTrackType().getKey())) {
+				return track;
+			}
+		}
+		return null;
 	}
 	
 	public static void cleanTrack(App app) {
@@ -403,17 +409,16 @@ public class GooglePlayPublisher {
 			Track track = getTrack(app, edits, editId);
 			
 			// Remove any previous alpha or beta
-			if (!track.getVersionCodes().isEmpty()) {
+			if (track != null && !track.getVersionCodes().isEmpty()) {
 				Track removeTrack = new Track();
 				removeTrack.setTrack(app.getAppContext().getTrackType().getKey());
 				Edits.Tracks.Update removeTrackRequest = edits.tracks().update(app.getApplicationId(), editId, track.getTrack(), removeTrack);
 				removeTrackRequest.execute();
 				System.out.println(String.format("Track %s has been removed.", removeTrack.getTrack()));
+				
+				// Commit changes for edit.
+				commitEdit(app, edits, editId);
 			}
-			
-			// Commit changes for edit.
-			commitEdit(app, edits, editId);
-			
 		} catch (IOException ex) {
 			throw new UnexpectedException("Exception was thrown while removing APKs from tracks", ex);
 		}
