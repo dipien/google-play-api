@@ -1,5 +1,12 @@
 # Change Log
 
+## [v0.4.1](https://github.com/maxirosson/jdroid-googleplay-publisher/tree/v0.4.1) (2017-07-05)
+[Full Changelog](https://github.com/maxirosson/jdroid-googleplay-publisher/compare/v0.4.0...v0.4.1)
+
+**Fixed bugs:**
+
+- Fix the used language code format [\#17](https://github.com/maxirosson/jdroid-googleplay-publisher/issues/17)
+
 ## [v0.4.0](https://github.com/maxirosson/jdroid-googleplay-publisher/tree/v0.4.0) (2017-07-03)
 [Full Changelog](https://github.com/maxirosson/jdroid-googleplay-publisher/compare/v0.3.0...v0.4.0)
 
