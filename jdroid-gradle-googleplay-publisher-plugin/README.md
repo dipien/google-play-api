@@ -1,6 +1,8 @@
 # Google Play Publisher Gradle Plugin
 Gradle Plugin to publish android APKs and listings on Google Play
 
+## Setup
+
 Add the following configuration to your `build.gradle`, replacing X.Y.Z by the [latest version](https://github.com/maxirosson/jdroid-googleplay-publisher/releases/latest)
 
 
