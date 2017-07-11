@@ -25,7 +25,7 @@ Create an **AppContext** instance:
     appContext.setLocales(locales);
     
     // Path to the directory where the private key json file is located. This property is required.
-    // The private key json file path will generated as follows: **${PRIVATE_KEY_JSON_DIR}/${APPLICATION_ID}.json**
+    // The private key json file path will generated as follows: ${PRIVATE_KEY_JSON_DIR}/${APPLICATION_ID}.json
     // In this sample, the private key json file should be at /credentials/googleplay/com.sample.json
     appContext.setPrivateKeyJsonFileDirectory("/credentials/googleplay");
     
@@ -35,28 +35,28 @@ Create an **AppContext** instance:
 
 Verify that the metadata to upload to Google Play is valid.
 
-    // If the video url is required. The default value is **false**
+    // If the video url is required. The default value is false
     appContext.setVideoRequired(true);
     
-    // If the promo graphic is required. The default value is **true**
+    // If the promo graphic is required. The default value is true
     appContext.setPromoGraphicRequired(false);
     
-    // If the tv banner is required. The default value is **false**
+    // If the tv banner is required. The default value is false
     appContext.setTvBannerRequired(true);
     
-    // If the phone screenshots are required. The default value is **true**
+    // If the phone screenshots are required. The default value is true
     appContext.setPhoneScreenshotsRequired(false);
     
-    // If the 7 inches screenshots are required. The default value is **false**
+    // If the 7 inches screenshots are required. The default value is false
     appContext.setSevenInchScreenshotsRequired(true);
     
-    // If the 10 inches screenshots are required. The default value is **false**
+    // If the 10 inches screenshots are required. The default value is false
     appContext.setTenInchScreenshotsRequired(true);
     
-    // If the tv screenshots are required. The default value is **false**
+    // If the tv screenshots are required. The default value is false
     appContext.setTvScreenshotsRequired(true);
     
-    // If the wear screenshots are required. The default value is **false**
+    // If the wear screenshots are required. The default value is false
     appContext.setWearScreenshotsRequired(true);
     
     GooglePlayPublisher.verifyMetadata(new App(appContext));
@@ -113,14 +113,14 @@ Upload new APK for your app and assign it to a release track.
     appContext.setApkPath("/path/to/apk/file.apk");
     
     // The release track that you're assigning APKs to. 
-    // Acceptable values are: **TrackType.ALPHA**, **TrackType.BETA**, **TrackType.ROLLOUT** or **TrackType.PRODUCTION**
+    // Acceptable values are: TrackType.ALPHA, TrackType.BETA, TrackType.ROLLOUT or TrackType.PRODUCTION
     appContext.setTrackType(TrackType.ALPHA);
     
     // Portion of the users who should get the staged rollout version of the APK. 
-    // The maximum rollout fraction is 0.5 (50% of users). Only used if **trackType** is **TrackType.ROLLOUT**. Default value: 0.005 (0.5%)  
+    // The maximum rollout fraction is 0.5 (50% of users). Only used if trackType is TrackType.ROLLOUT. Default value: 0.005 (0.5%)  
     appContext.setUserFraction(0.1);
     
-    // Whether the task should fail if the uploaded APK specifies a version code that has already been used. Default value: **true**
+    // Whether the task should fail if the uploaded APK specifies a version code that has already been used. Default value: true
     appContext.setFailOnApkUpgradeVersionConflict(false);
 
     GooglePlayPublisher.publishApk(new App(appContext));
@@ -184,7 +184,7 @@ Promote a current staged rollout to production
 
 Remove all the APKs assigned to a track
 
-    // The release track that you're cleaning. Acceptable values are: **TrackType.ALPHA**, **TrackType.BETA**
+    // The release track that you're cleaning. Acceptable values are: TrackType.ALPHA, TrackType.BETA
     appContext.setTrackType(TrackType.ALPHA)
     
     GooglePlayPublisher.cleanTrack(new App(appContext));
