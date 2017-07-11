@@ -1,5 +1,12 @@
 # Change Log
 
+## [v0.4.2](https://github.com/maxirosson/jdroid-googleplay-publisher/tree/v0.4.2) (2017-07-11)
+[Full Changelog](https://github.com/maxirosson/jdroid-googleplay-publisher/compare/v0.4.1...v0.4.2)
+
+**Implemented enhancements:**
+
+- Change locales to a list [\#18](https://github.com/maxirosson/jdroid-googleplay-publisher/issues/18)
+
 ## [v0.4.1](https://github.com/maxirosson/jdroid-googleplay-publisher/tree/v0.4.1) (2017-07-05)
 [Full Changelog](https://github.com/maxirosson/jdroid-googleplay-publisher/compare/v0.4.0...v0.4.1)
 

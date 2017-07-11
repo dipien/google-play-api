@@ -1,5 +1,5 @@
 ext.PROJECT_NAME = 'Jdroid Google Play Publisher Plugin'
-description = 'Gradle Plugin to publish android APKs and listings on Google Play'
+description = 'Gradle Plugin for Google Play API'
 ext.ARTIFACT_ID = 'jdroid-gradle-googleplay-publisher-plugin'
 
 apply plugin: 'com.jdroid.gradle.plugin'

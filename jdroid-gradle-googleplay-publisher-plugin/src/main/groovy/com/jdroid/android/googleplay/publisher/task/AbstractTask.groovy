@@ -14,7 +14,7 @@ public abstract class AbstractTask extends DefaultTask {
 		AppContext appContext = new AppContext();
 		appContext.setApplicationId(getStringProp('APPLICATION_ID'));
 		appContext.setPrivateKeyJsonFileDirectory(getStringProp('PRIVATE_KEY_JSON_FILE_DIR'));
-		appContext.setLocales(getStringProp('LOCALES'));
+		appContext.setLocales(getStringListProp('LOCALES'));
 
 		appContext.setMetadataPath(getStringProp('METADATA_PATH', project.getProjectDir().getAbsolutePath()));
 
@@ -37,6 +37,15 @@ public abstract class AbstractTask extends DefaultTask {
 	}
 
 	protected abstract void onExecute(App app);
+
+	public List<String> getStringListProp(String propertyName, List<String> defaultValue) {
+		Object value = getProp(propertyName)
+		if (value == null) {
+			return defaultValue
+		} else {
+			return value instanceof List ? (List)value : StringUtils.splitToListWithCommaSeparator(value.toString());
+		}
+	}
 
 	public String getStringProp(String propertyName) {
 		return getStringProp(propertyName, null)
