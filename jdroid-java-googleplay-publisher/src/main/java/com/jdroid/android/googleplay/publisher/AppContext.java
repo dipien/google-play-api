@@ -1,5 +1,7 @@
 package com.jdroid.android.googleplay.publisher;
 
+import java.util.List;
+
 public class AppContext {
 	
 	// The application id of the app
@@ -9,7 +11,7 @@ public class AppContext {
 	private String privateKeyJsonFileDir;
 	
 	private String metadataPath;
-	private String locales;
+	private List<String> locales;
 	
 	private String apkPath;
 	private TrackType trackType;
@@ -35,7 +37,7 @@ public class AppContext {
 		return metadataPath;
 	}
 	
-	public String getLocales() {
+	public List<String> getLocales() {
 		return locales;
 	}
 	
@@ -51,7 +53,7 @@ public class AppContext {
 		this.metadataPath = metadataPath;
 	}
 
-	public void setLocales(String locales) {
+	public void setLocales(List<String> locales) {
 		this.locales = locales;
 	}
 

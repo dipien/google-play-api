@@ -8,7 +8,7 @@ import com.jdroid.android.googleplay.publisher.GooglePlayPublisher
 public class ListTracksTask extends AbstractTask {
 
 	public ListTracksTask() {
-		description = "List all the tracks"
+		description = "List all the assigned APKs for each release track"
 	}
 
 	@Override

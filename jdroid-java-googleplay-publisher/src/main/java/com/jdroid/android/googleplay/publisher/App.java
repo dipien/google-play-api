@@ -3,7 +3,6 @@ package com.jdroid.android.googleplay.publisher;
 import com.google.api.client.http.AbstractInputStreamContent;
 import com.google.api.client.util.Lists;
 import com.jdroid.java.exception.UnexpectedException;
-import com.jdroid.java.utils.StringUtils;
 
 import java.util.List;
 import java.util.Locale;
@@ -18,7 +17,7 @@ public class App {
 		this.appContext = appContext;
 		
 		this.localeListings = Lists.newArrayList();
-		for (String each : StringUtils.splitToCollectionWithCommaSeparator(appContext.getLocales())) {
+		for (String each : appContext.getLocales()) {
 			String[] split = each.split("-");
 			String language = split[0];
 			String country = "";
