@@ -489,7 +489,7 @@ public class GooglePlayPublisher {
 			// Remove APKs from alpha track
 			Track alphaTrackToRemove = new Track();
 			alphaTrackToRemove.setTrack(TrackType.ALPHA.getKey());
-			alphaTrackToRemove.setVersionCodes(Lists.newArrayList());
+			alphaTrackToRemove.setVersionCodes(Lists.<Integer>newArrayList());
 			updateTrackRequest = edits.tracks().update(app.getApplicationId(), editId, alphaTrackToRemove.getTrack(), alphaTrackToRemove);
 			updateTrackRequest.execute();
 			System.out.println(String.format("Track %s has been updated.", alphaTrackToRemove.getTrack()));
@@ -534,7 +534,7 @@ public class GooglePlayPublisher {
 			// Remove APKs from beta track
 			Track betaTrackToRemove = new Track();
 			betaTrackToRemove.setTrack(TrackType.BETA.getKey());
-			betaTrackToRemove.setVersionCodes(Lists.newArrayList());
+			betaTrackToRemove.setVersionCodes(Lists.<Integer>newArrayList());
 			updateTrackRequest = edits.tracks().update(app.getApplicationId(), editId, betaTrackToRemove.getTrack(), betaTrackToRemove);
 			updateTrackRequest.execute();
 			System.out.println(String.format("Track %s has been updated.", betaTrackToRemove.getTrack()));
@@ -579,7 +579,7 @@ public class GooglePlayPublisher {
 			// Remove APKs from alpha track
 			Track alphaTrackToRemove = new Track();
 			alphaTrackToRemove.setTrack(TrackType.ALPHA.getKey());
-			alphaTrackToRemove.setVersionCodes(Lists.newArrayList());
+			alphaTrackToRemove.setVersionCodes(Lists.<Integer>newArrayList());
 			updateTrackRequest = edits.tracks().update(app.getApplicationId(), editId, alphaTrackToRemove.getTrack(), alphaTrackToRemove);
 			updateTrackRequest.execute();
 			System.out.println(String.format("Track %s has been updated.", alphaTrackToRemove.getTrack()));
@@ -618,7 +618,7 @@ public class GooglePlayPublisher {
 			// Remove APKs from rollout track
 			Track rolloutTrackToRemove = new Track();
 			rolloutTrackToRemove.setTrack(TrackType.ROLLOUT.getKey());
-			rolloutTrackToRemove.setVersionCodes(Lists.newArrayList());
+			rolloutTrackToRemove.setVersionCodes(Lists.<Integer>newArrayList());
 			updateTrackRequest = edits.tracks().update(app.getApplicationId(), editId, rolloutTrackToRemove.getTrack(), rolloutTrackToRemove);
 			updateTrackRequest.execute();
 			System.out.println(String.format("Track %s has been updated.", rolloutTrackToRemove.getTrack()));
