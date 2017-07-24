@@ -11,7 +11,7 @@ Add the following configuration to your `build.gradle`, replacing X.Y.Z by the [
         jcenter()
       }
       dependencies {
-        classpath 'com.jdroidframework:jdroid-googleplay-publisher-plugin:X.Y.Z'
+        classpath 'com.jdroidframework:jdroid-gradle-googleplay-publisher-plugin:X.Y.Z'
       }
     }
     
