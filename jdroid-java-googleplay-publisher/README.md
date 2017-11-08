@@ -10,7 +10,7 @@ Add the following configuration to your `build.gradle`, replacing X.Y.Z by the [
     }
     
     dependencies {
-       classpath 'com.jdroidframework:jdroid-java-googleplay-publisher:X.Y.Z'
+       implementation 'com.jdroidframework:jdroid-java-googleplay-publisher:X.Y.Z'
     }
     
 Create an **AppContext** instance:
