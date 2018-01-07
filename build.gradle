@@ -1,10 +1,9 @@
 version = '0.5.0'
 
-ext.JDROID_GITHUB_REPOSITORY_OWNER = 'maxirosson'
 ext.JDROID_GITHUB_REPOSITORY_NAME = 'jdroid-googleplay-publisher'
 
-ext.JDROID_GRADLE_PLUGIN_VERSION = '0.16.0'
-ext.JDROID_JAVA_VERSION = '0.13.0'
+ext.JDROID_GRADLE_PLUGIN_VERSION = '0.18.0'
+ext.JDROID_JAVA_VERSION = '0.15.0'
 
 apply plugin: 'com.jdroid.root'
 apply plugin: 'com.jdroid.component.builder'
@@ -21,8 +20,8 @@ buildscript {
 		maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
 	}
 	dependencies {
-		classpath 'com.jdroidframework:jdroid-component-builder:0.3.0-SNAPSHOT'
-		classpath 'com.jdroidframework:jdroid-gradle-root-plugin:0.16.3'
+		classpath 'com.jdroidframework:jdroid-component-builder:0.4.0'
+		classpath 'com.jdroidframework:jdroid-gradle-root-plugin:0.18.0'
 	}
 }
 

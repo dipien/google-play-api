@@ -19,6 +19,15 @@ dependencies {
 	compile 'com.jdroidframework:jdroid-java-core:' + JDROID_JAVA_VERSION
 }
 
+gradlePlugin {
+	plugins {
+		publisherPlugin {
+			id = 'com.jdroid.googleplay.publisher'
+			implementationClass = 'com.jdroid.android.googleplay.publisher.GooglePlayPublisherPlugin'
+		}
+	}
+}
+
 // Configuration to publish your plugin to the plugin portal
 pluginBundle {
 	website = 'http://www.jdroidframework.com/'
