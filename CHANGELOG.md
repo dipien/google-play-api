@@ -1,5 +1,16 @@
 # Change Log
 
+## [v0.5.0](https://github.com/maxirosson/jdroid-googleplay-publisher/tree/v0.5.0) (2018-01-07)
+[Full Changelog](https://github.com/maxirosson/jdroid-googleplay-publisher/compare/v0.4.2...v0.5.0)
+
+**Implemented enhancements:**
+
+- Upgrade to Android Publisher SDK v2-rev49-1.23.0 [\#19](https://github.com/maxirosson/jdroid-googleplay-publisher/issues/19)
+
+**Fixed bugs:**
+
+- Could not find method getStringListProp\(\) for arguments \[LOCALES\] [\#20](https://github.com/maxirosson/jdroid-googleplay-publisher/issues/20)
+
 ## [v0.4.2](https://github.com/maxirosson/jdroid-googleplay-publisher/tree/v0.4.2) (2017-07-11)
 [Full Changelog](https://github.com/maxirosson/jdroid-googleplay-publisher/compare/v0.4.1...v0.4.2)
 
