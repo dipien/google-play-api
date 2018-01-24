@@ -35,6 +35,12 @@ Setup up your Google Developers Service Account
 #### Java Library
 * [jdroid-java-googleplay-publisher](/jdroid-java-googleplay-publisher)
 
+## Resources
+
+* https://support.google.com/googleplay/android-developer/answer/1078870
+* https://developer.android.com/distribute/best-practices/launch/store-listing.html
+* https://developer.android.com/distribute/best-practices/launch/feature-graphic.html
+
 ## Donations
 Help us to continue with this project:
 
