@@ -12,6 +12,8 @@ buildscript {
 
 dependencies {
 	compile 'com.jdroidframework:jdroid-java-core:' + JDROID_JAVA_VERSION
-	compile 'com.google.apis:google-api-services-androidpublisher:v2-rev49-1.23.0'
-	compile 'com.google.api-client:google-api-client:1.19.0'
+
+	// https://developers.google.com/api-client-library/java/apis/androidpublisher/v2
+	// http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.google.apis%22%20AND%20a%3A%22google-api-services-androidpublisher%22
+	compile 'com.google.apis:google-api-services-androidpublisher:v2-rev53-1.23.0'
 }
