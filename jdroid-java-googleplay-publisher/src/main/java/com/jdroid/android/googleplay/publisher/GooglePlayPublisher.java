@@ -132,7 +132,7 @@ public class GooglePlayPublisher {
 	}
 	
 	public static void verifyMetadata(App app) {
-		System.out.println(("Verifying the content to upload to Google Play on " + app.getAppContext().getMetadataPath() + "/googleplay"));
+		System.out.println(("Verifying the content to upload to Google Play on " + app.getAppContext().getMetadataPath()));
 		
 		for (LocaleListing each : app.getLocaleListings()) {
 			System.out.println(("Verifying locale " + each.getLanguageTag()));

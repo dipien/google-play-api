@@ -116,21 +116,21 @@ You can use it to host your shared assets between locales and avoid to duplicate
 
 Add your assets to each locale or default directory:
     
-|Asset                |Required|Location                                     |
-| ------------------- | ------ | --------------------------------------------|
-|Title                |true    |title.txt                                    |
-|Short Description    |true    |short_description.txt                        |
-|Full Description     |true    |full_description.txt                         |
-|Video                |false   |video.txt                                    |
-|Feature Graphic      |true    |images/featureGraphic.png                    |
-|High Resolution Icon |true    |images/highResolutionIcon.png                |
-|Tv Banner            |false   |images/tvBanner.png                          |
-|Promo Graphic        |true    |images/promoGraphic.png                      |
-|Phone Screenshots    |true    |phoneScreenshots/screenshot[1 ... 8].png     |
-|7-inch Screenshots   |false   |sevenInchScreenshots/screenshot[1 ... 8].png |
-|10-inch Screenshots  |false   |tenInchScreenshots/screenshot[1 ... 8].png   |
-|Tv Screenshots       |false   |tvScreenshots/screenshot[1 ... 8].png        |
-|Wear Screenshots     |false   |wearScreenshots/screenshot[1 ... 8].png      |
+|Asset                |Required|Location                                            |
+| ------------------- | ------ | ---------------------------------------------------|
+|Title                |true    |title.txt                                           |
+|Short Description    |true    |short_description.txt                               |
+|Full Description     |true    |full_description.txt                                |
+|Video                |false   |video.txt                                           |
+|Feature Graphic      |true    |images/featureGraphic.png                           |
+|High Resolution Icon |true    |images/highResolutionIcon.png                       |
+|Tv Banner            |false   |images/tvBanner.png                                 |
+|Promo Graphic        |true    |images/promoGraphic.png                             |
+|Phone Screenshots    |true    |images/phoneScreenshots/screenshot[1 ... 8].png     |
+|7-inch Screenshots   |false   |images/sevenInchScreenshots/screenshot[1 ... 8].png |
+|10-inch Screenshots  |false   |images/tenInchScreenshots/screenshot[1 ... 8].png   |
+|Tv Screenshots       |false   |images/tvScreenshots/screenshot[1 ... 8].png        |
+|Wear Screenshots     |false   |images/wearScreenshots/screenshot[1 ... 8].png      |
 
 
 ###### Metadata path
