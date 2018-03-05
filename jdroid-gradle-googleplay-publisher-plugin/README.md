@@ -123,7 +123,7 @@ Add your assets to each locale or default directory:
 |Full Description     |true    |full_description.txt                                |
 |Video                |false   |video.txt                                           |
 |Feature Graphic      |true    |images/featureGraphic.png                           |
-|High Resolution Icon |true    |images/highResolutionIcon.png                       |
+|High Resolution Icon |true    |images/icon.png                                     |
 |Tv Banner            |false   |images/tvBanner.png                                 |
 |Promo Graphic        |true    |images/promoGraphic.png                             |
 |Phone Screenshots    |true    |images/phoneScreenshots/screenshot[1 ... 8].png     |
