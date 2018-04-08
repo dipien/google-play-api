@@ -2,11 +2,11 @@
 Gradle Plugin & Java Library for Google Play API
 
 ## Continuous Integration
-|Branch|Status|
-| ------------- | ------------- |
-|Master|[![Build Status](https://travis-ci.org/maxirosson/jdroid-googleplay-publisher.svg?branch=master)](https://travis-ci.org/maxirosson/jdroid-googleplay-publisher)|
-|Staging|[![Build Status](https://api.travis-ci.org/maxirosson/jdroid-googleplay-publisher.svg?branch=staging)](https://travis-ci.org/maxirosson/jdroid-googleplay-publisher)|
-|Production|[![Build Status](https://api.travis-ci.org/maxirosson/jdroid-googleplay-publisher.svg?branch=production)](https://travis-ci.org/maxirosson/jdroid-googleplay-publisher)|
+|Branch|Status|Workflows|Insights|
+| ------------- | ------------- | ------------- | ------------- |
+|master|[![CircleCI](https://circleci.com/gh/maxirosson/jdroid-googleplay-publisher/tree/master.svg?style=svg)](https://circleci.com/gh/maxirosson/jdroid-googleplay-publisher/tree/master)|[Workflows](https://circleci.com/gh/maxirosson/workflows/jdroid-googleplay-publisher/tree/master)|[Insights](https://circleci.com/build-insights/gh/maxirosson/jdroid-googleplay-publisher/master)|
+|staging|[![CircleCI](https://circleci.com/gh/maxirosson/jdroid-googleplay-publisher/tree/staging.svg?style=svg)](https://circleci.com/gh/maxirosson/jdroid-googleplay-publisher/tree/staging)|[Workflows](https://circleci.com/gh/maxirosson/workflows/jdroid-googleplay-publisher/tree/staging)|[Insights](https://circleci.com/build-insights/gh/maxirosson/jdroid-googleplay-publisher/staging)|
+|production|[![CircleCI](https://circleci.com/gh/maxirosson/jdroid-googleplay-publisher/tree/production.svg?style=svg)](https://circleci.com/gh/maxirosson/jdroid-googleplay-publisher/tree/production)|[Workflows](https://circleci.com/gh/maxirosson/workflows/jdroid-googleplay-publisher/tree/production)|[Insights](https://circleci.com/build-insights/gh/maxirosson/jdroid-googleplay-publisher/production)|
 
 ## Setup
 
@@ -45,5 +45,3 @@ Setup up your Google Developers Service Account
 Help us to continue with this project:
 
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=2UEBTRTSCYA9L)
-
-<a href='https://pledgie.com/campaigns/30030'><img alt='Click here to lend your support to: Jdroid and make a donation at pledgie.com !' src='https://pledgie.com/campaigns/30030.png?skin_name=chrome' border='0' ></a>

@@ -1,8 +1,0 @@
-language: java
-
-sudo: false
-
-jdk:
-  - oraclejdk8
-
-script: ./gradlew check uploadArchives -PLOCAL_UPLOAD=false --stacktrace

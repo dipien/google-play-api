@@ -1,0 +1,96 @@
+defaults: &defaults
+  working_directory: ~/jdroid-googleplay-publisher
+  docker:
+    - image: circleci/openjdk:8-jdk
+  environment:
+    JVM_OPTS: -Xmx3200m
+    LOCAL_MAVEN_REPO: ~/repo
+    GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.caching=true
+version: 2
+jobs:
+  build:
+    <<: *defaults
+    steps:
+      - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          key: app-{{ .Branch }}-{{ checksum "build.gradle" }}
+
+      - run:
+          name: Assembling
+          command: ./gradlew assemble --refresh-dependencies --stacktrace --scan
+
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: app-{{ .Branch }}-{{ checksum "build.gradle" }}
+
+      - run:
+          name: Saving jars
+          command: |
+            mkdir -p ~/jars/
+            find . -type f -regex ".*/build/libs/.*jar" -exec cp {} ~/jars/ \;
+          when: always
+
+      - store_artifacts:
+          path: ~/jars
+          destination: jars
+
+  verify:
+    <<: *defaults
+    steps:
+      - checkout
+
+      - restore_cache:
+          key: app-{{ .Branch }}-{{ checksum "build.gradle" }}
+
+      - run:
+          name: Verifying
+          command: ./gradlew check --stacktrace
+
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: app-{{ .Branch }}-{{ checksum "build.gradle" }}
+
+      - run:
+          name: Saving test results
+          command: |
+            mkdir -p ~/junit/
+            find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} ~/junit/ \;
+          when: always
+      - store_test_results:
+          path: ~/junit
+
+      - store_artifacts:
+          path: ./jdroid-gradle-googleplay-publisher-plugin/build/reports/tests/test
+          destination: jdroid-gradle-googleplay-publisher-plugin/tests
+
+      - store_artifacts:
+          path: ./jdroid-java-googleplay-publisher/build/reports/tests/test
+          destination: jdroid-java-googleplay-publisher/tests
+
+  deploy:
+    <<: *defaults
+    steps:
+      - checkout
+
+      - restore_cache:
+          key: app-{{ .Branch }}-{{ checksum "build.gradle" }}
+
+      - run:
+          name: Uploading to Nexus Sonatype
+          command: ./gradlew uploadArchives -PLOCAL_UPLOAD=false --stacktrace
+
+workflows:
+  version: 2
+  commit:
+    jobs:
+      - build
+      - verify:
+          requires:
+            - build
+      - deploy:
+          requires:
+            - verify
