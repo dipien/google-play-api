@@ -1,5 +1,12 @@
 # Change Log
 
+## [v1.0.0](https://github.com/maxirosson/jdroid-googleplay-publisher/tree/v1.0.0) (2018-04-11)
+[Full Changelog](https://github.com/maxirosson/jdroid-googleplay-publisher/compare/v0.5.0...v1.0.0)
+
+**Closed issues:**
+
+- Upgrade to Android Publisher SDK to v2-rev53-1.23.0 [\#24](https://github.com/maxirosson/jdroid-googleplay-publisher/issues/24)
+
 ## [v0.5.0](https://github.com/maxirosson/jdroid-googleplay-publisher/tree/v0.5.0) (2018-01-07)
 [Full Changelog](https://github.com/maxirosson/jdroid-googleplay-publisher/compare/v0.4.2...v0.5.0)
 
