@@ -10,13 +10,13 @@ buildscript {
 		// https://plugins.gradle.org/plugin/com.gradle.plugin-publish
 		classpath "com.gradle.publish:plugin-publish-plugin:0.9.4"
 
-		classpath 'com.jdroidframework:jdroid-gradle-project-plugin:' + JDROID_GRADLE_PLUGIN_VERSION
+		classpath 'com.jdroidtools:jdroid-gradle-project-plugin:' + JDROID_GRADLE_PLUGIN_VERSION
 	}
 }
 
 dependencies {
 	compile project(path: ":jdroid-java-googleplay-publisher")
-	compile 'com.jdroidframework:jdroid-java-core:' + JDROID_JAVA_VERSION
+	compile 'com.jdroidtools:jdroid-java-core:' + JDROID_JAVA_VERSION
 }
 
 gradlePlugin {
@@ -30,7 +30,7 @@ gradlePlugin {
 
 // Configuration to publish your plugin to the plugin portal
 pluginBundle {
-	website = 'http://www.jdroidframework.com/'
+	website = 'http://jdroidtools.com/'
 	vcsUrl = 'https://github.com/maxirosson/jdroid-googleplay-publisher'
 
 	plugins {
@@ -43,7 +43,7 @@ pluginBundle {
 	}
 
 	mavenCoordinates {
-		groupId = "com.jdroidframework"
+		groupId = "com.jdroidtools"
 		artifactId = "jdroid-google-publisher-plugin"
 	}
 }
