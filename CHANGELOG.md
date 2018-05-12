@@ -1,5 +1,16 @@
 # Change Log
 
+## [v1.1.0](https://github.com/maxirosson/jdroid-googleplay-publisher/tree/v1.1.0) (2018-05-12)
+[Full Changelog](https://github.com/maxirosson/jdroid-googleplay-publisher/compare/v1.0.0...v1.1.0)
+
+**Implemented enhancements:**
+
+- Add internal track type support [\#25](https://github.com/maxirosson/jdroid-googleplay-publisher/issues/25)
+
+**Closed issues:**
+
+- Upgrade to Android Publisher SDK v2-rev75-1.23.0 [\#26](https://github.com/maxirosson/jdroid-googleplay-publisher/issues/26)
+
 ## [v1.0.0](https://github.com/maxirosson/jdroid-googleplay-publisher/tree/v1.0.0) (2018-04-11)
 [Full Changelog](https://github.com/maxirosson/jdroid-googleplay-publisher/compare/v0.5.0...v1.0.0)
 
