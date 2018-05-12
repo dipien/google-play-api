@@ -183,12 +183,43 @@ Whether the task should fail if the uploaded APK specifies a version code that h
     
     FAIL_ON_APK_UPGRADE_VERSION_CONFLICT = false
     
+#### Promote from Internal to Alpha
+
+Promote a current internal to alpha
+
+    ./gradlew googlePlayPromoteFromInternalToAlpha
+
+#### Promote from Internal to Beta
+
+Promote a current internal to beta
+
+    ./gradlew googlePlayPromoteFromInternalToBeta
+
+#### Promote from Internal to Rollout
+
+Promote a current internal to rollout
+
+    ./gradlew googlePlayPromoteFromInternalToRollout
+
+###### User Fraction
+
+Portion of the users who should get the staged rollout version of the APK.
+The maximum rollout fraction is 0.5 (50% of users). Default value: 0.005 (0.5%)
+
+    USER_FRACTION = 0.2
+
+#### Promote from Internal to Production
+
+Promote a current internal to production
+
+    ./gradlew googlePlayPromoteFromInternalToProduction
+
 #### Promote from Alpha to Beta
 
 Promote a current alpha to beta
 
     ./gradlew googlePlayPromoteFromAlphaToBeta
-    
+
 #### Promote from Alpha to Rollout
 
 Promote a current alpha to staged rollout
@@ -202,11 +233,11 @@ The maximum rollout fraction is 0.5 (50% of users). Default value: 0.005 (0.5%)
     
     USER_FRACTION = 0.2
     
-#### Promote from Alpha to Beta
+#### Promote from Alpha to Production
 
-Promote a current alpha to beta
+Promote a current alpha to production
 
-    ./gradlew googlePlayPromoteFromAlphaToBeta
+    ./gradlew googlePlayPromoteFromAlphaToProduction
     
 #### Promote from Beta to Rollout
 
@@ -220,6 +251,12 @@ Portion of the users who should get the staged rollout version of the APK.
 The maximum rollout fraction is 0.5 (50% of users). Default value: 0.005 (0.5%)
     
     USER_FRACTION = 0.2
+
+#### Promote from Beta to Production
+
+Promote a current beta to production
+
+    ./gradlew googlePlayPromoteFromBetaToProduction
     
 #### Increase Staged Rollout
 

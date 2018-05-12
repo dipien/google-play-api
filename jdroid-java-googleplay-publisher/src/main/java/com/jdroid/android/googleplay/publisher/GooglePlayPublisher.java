@@ -463,7 +463,55 @@ public class GooglePlayPublisher {
 		}
 	}
 	
+	public static void promoteFromInternalToAlpha(App app) {
+		promote(app, TrackType.INTERNAL, TrackType.ALPHA);
+	}
+	
+	public static void promoteFromInternalToBeta(App app) {
+		promote(app, TrackType.INTERNAL, TrackType.BETA);
+	}
+	
+	public static void promoteFromInternalToRollout(App app) {
+		if (app.getAppContext().getUserFraction() == null) {
+			app.getAppContext().setUserFraction(DEFAULT_USER_FRACTION);
+		}
+		promote(app, TrackType.INTERNAL, TrackType.ROLLOUT);
+	}
+	
+	public static void promoteFromInternalToProduction(App app) {
+		promote(app, TrackType.INTERNAL, TrackType.PRODUCTION);
+	}
+	
 	public static void promoteFromAlphaToBeta(App app) {
+		promote(app, TrackType.ALPHA, TrackType.BETA);
+	}
+	public static void promoteFromAlphaToRollout(App app) {
+		if (app.getAppContext().getUserFraction() == null) {
+			app.getAppContext().setUserFraction(DEFAULT_USER_FRACTION);
+		}
+		promote(app, TrackType.ALPHA, TrackType.ROLLOUT);
+	}
+	
+	public static void promoteFromAlphaToProduction(App app) {
+		promote(app, TrackType.ALPHA, TrackType.PRODUCTION);
+	}
+	
+	public static void promoteFromBetaToRollout(App app) {
+		if (app.getAppContext().getUserFraction() == null) {
+			app.getAppContext().setUserFraction(DEFAULT_USER_FRACTION);
+		}
+		promote(app, TrackType.BETA, TrackType.ROLLOUT);
+	}
+	
+	public static void promoteFromBetaToProduction(App app) {
+		promote(app, TrackType.BETA, TrackType.PRODUCTION);
+	}
+	
+	public static void promoteFromRolloutToProduction(App app) {
+		promote(app, TrackType.ROLLOUT, TrackType.PRODUCTION);
+	}
+	
+	private static void promote(App app, TrackType fromTrackType, TrackType toTrackType) {
 		try {
 			// Create the API service.
 			AndroidPublisher service = init(app.getAppContext());
@@ -476,158 +524,28 @@ public class GooglePlayPublisher {
 			System.out.println(String.format("Created edit with id: %s", editId));
 			
 			// Add APKs to beta track
-			Edits.Tracks.Get getTrackRequest = edits.tracks().get(app.getApplicationId(), editId, TrackType.ALPHA.getKey());
-			Track alphaTrack = getTrackRequest.execute();
-			
-			Track betaTrackToAdd = new Track();
-			betaTrackToAdd.setTrack(TrackType.BETA.getKey());
-			betaTrackToAdd.setVersionCodes(alphaTrack.getVersionCodes());
-			Edits.Tracks.Update updateTrackRequest = edits.tracks().update(app.getApplicationId(), editId, betaTrackToAdd.getTrack(), betaTrackToAdd);
+			Edits.Tracks.Get getTrackRequest = edits.tracks().get(app.getApplicationId(), editId, fromTrackType.getKey());
+			Track fromTrack = getTrackRequest.execute();
+			Track track = new Track();
+			track.setTrack(toTrackType.getKey());
+			track.setVersionCodes(fromTrack.getVersionCodes());
+			Edits.Tracks.Update updateTrackRequest = edits.tracks().update(app.getApplicationId(), editId, track.getTrack(), track);
 			Track updatedTrack = updateTrackRequest.execute();
 			System.out.println(String.format("Track %s has been updated.", updatedTrack.getTrack()));
 			
-			// Remove APKs from alpha track
-			Track alphaTrackToRemove = new Track();
-			alphaTrackToRemove.setTrack(TrackType.ALPHA.getKey());
-			alphaTrackToRemove.setVersionCodes(Lists.<Integer>newArrayList());
-			updateTrackRequest = edits.tracks().update(app.getApplicationId(), editId, alphaTrackToRemove.getTrack(), alphaTrackToRemove);
+			// Remove APKs from internal track
+			Track trackToRemove = new Track();
+			trackToRemove.setTrack(fromTrackType.getKey());
+			trackToRemove.setVersionCodes(Lists.newArrayList());
+			updateTrackRequest = edits.tracks().update(app.getApplicationId(), editId, trackToRemove.getTrack(), trackToRemove);
 			updateTrackRequest.execute();
-			System.out.println(String.format("Track %s has been updated.", alphaTrackToRemove.getTrack()));
+			System.out.println(String.format("Track %s has been updated.", trackToRemove.getTrack()));
 			
 			// Commit changes for edit.
 			commitEdit(app, edits, editId);
 			
 		} catch (IOException ex) {
-			throw new UnexpectedException("Exception was thrown while promoting from alpha to beta", ex);
-		}
-	}
-	
-	public static void promoteFromBetaToRollout(App app) {
-		try {
-			
-			if (app.getAppContext().getUserFraction() == null) {
-				app.getAppContext().setUserFraction(DEFAULT_USER_FRACTION);
-			}
-			
-			// Create the API service.
-			AndroidPublisher service = init(app.getAppContext());
-			Edits edits = service.edits();
-			
-			// Create a new edit to make changes.
-			Insert editRequest = edits.insert(app.getApplicationId(), null);
-			AppEdit edit = editRequest.execute();
-			String editId = edit.getId();
-			System.out.println(String.format("Created edit with id: %s", editId));
-			
-			// Add APKs to rollout track
-			Edits.Tracks.Get getTrackRequest = edits.tracks().get(app.getApplicationId(), editId, TrackType.BETA.getKey());
-			Track betaTrack = getTrackRequest.execute();
-			
-			Track rolloutTrackToAdd = new Track();
-			rolloutTrackToAdd.setTrack(TrackType.ROLLOUT.getKey());
-			rolloutTrackToAdd.setVersionCodes(betaTrack.getVersionCodes());
-			rolloutTrackToAdd.setUserFraction(app.getAppContext().getUserFraction());
-			Edits.Tracks.Update updateTrackRequest = edits.tracks().update(app.getApplicationId(), editId, rolloutTrackToAdd.getTrack(), rolloutTrackToAdd);
-			Track updatedTrack = updateTrackRequest.execute();
-			System.out.println(String.format("Track %s has been updated.", updatedTrack.getTrack()));
-			
-			// Remove APKs from beta track
-			Track betaTrackToRemove = new Track();
-			betaTrackToRemove.setTrack(TrackType.BETA.getKey());
-			betaTrackToRemove.setVersionCodes(Lists.<Integer>newArrayList());
-			updateTrackRequest = edits.tracks().update(app.getApplicationId(), editId, betaTrackToRemove.getTrack(), betaTrackToRemove);
-			updateTrackRequest.execute();
-			System.out.println(String.format("Track %s has been updated.", betaTrackToRemove.getTrack()));
-			
-			// Commit changes for edit.
-			commitEdit(app, edits, editId);
-			
-		} catch (IOException ex) {
-			throw new UnexpectedException("Exception was thrown while promoting from beta to rollout", ex);
-		}
-	}
-	
-	public static void promoteFromAlphaToRollout(App app) {
-		try {
-			
-			if (app.getAppContext().getUserFraction() == null) {
-				app.getAppContext().setUserFraction(DEFAULT_USER_FRACTION);
-			}
-			
-			// Create the API service.
-			AndroidPublisher service = init(app.getAppContext());
-			Edits edits = service.edits();
-			
-			// Create a new edit to make changes.
-			Insert editRequest = edits.insert(app.getApplicationId(), null);
-			AppEdit edit = editRequest.execute();
-			String editId = edit.getId();
-			System.out.println(String.format("Created edit with id: %s", editId));
-			
-			// Add APKs to rollout track
-			Edits.Tracks.Get getTrackRequest = edits.tracks().get(app.getApplicationId(), editId, TrackType.ALPHA.getKey());
-			Track alphaTrack = getTrackRequest.execute();
-			
-			Track rolloutTrackToAdd = new Track();
-			rolloutTrackToAdd.setTrack(TrackType.ROLLOUT.getKey());
-			rolloutTrackToAdd.setVersionCodes(alphaTrack.getVersionCodes());
-			rolloutTrackToAdd.setUserFraction(app.getAppContext().getUserFraction());
-			Edits.Tracks.Update updateTrackRequest = edits.tracks().update(app.getApplicationId(), editId, rolloutTrackToAdd.getTrack(), rolloutTrackToAdd);
-			Track updatedTrack = updateTrackRequest.execute();
-			System.out.println(String.format("Track %s has been updated.", updatedTrack.getTrack()));
-			
-			// Remove APKs from alpha track
-			Track alphaTrackToRemove = new Track();
-			alphaTrackToRemove.setTrack(TrackType.ALPHA.getKey());
-			alphaTrackToRemove.setVersionCodes(Lists.<Integer>newArrayList());
-			updateTrackRequest = edits.tracks().update(app.getApplicationId(), editId, alphaTrackToRemove.getTrack(), alphaTrackToRemove);
-			updateTrackRequest.execute();
-			System.out.println(String.format("Track %s has been updated.", alphaTrackToRemove.getTrack()));
-			
-			// Commit changes for edit.
-			commitEdit(app, edits, editId);
-			
-		} catch (IOException ex) {
-			throw new UnexpectedException("Exception was thrown while promoting from alpha to rollout", ex);
-		}
-	}
-	
-	public static void promoteFromRolloutToProduction(App app) {
-		try {
-			// Create the API service.
-			AndroidPublisher service = init(app.getAppContext());
-			Edits edits = service.edits();
-			
-			// Create a new edit to make changes.
-			Insert editRequest = edits.insert(app.getApplicationId(), null);
-			AppEdit edit = editRequest.execute();
-			String editId = edit.getId();
-			System.out.println(String.format("Created edit with id: %s", editId));
-			
-			// Add APKs to rollout track
-			Edits.Tracks.Get getTrackRequest = edits.tracks().get(app.getApplicationId(), editId, TrackType.ROLLOUT.getKey());
-			Track rolloutTrack = getTrackRequest.execute();
-			
-			Track productionTrackToAdd = new Track();
-			productionTrackToAdd.setTrack(TrackType.PRODUCTION.getKey());
-			productionTrackToAdd.setVersionCodes(rolloutTrack.getVersionCodes());
-			Edits.Tracks.Update updateTrackRequest = edits.tracks().update(app.getApplicationId(), editId, productionTrackToAdd.getTrack(), productionTrackToAdd);
-			Track updatedTrack = updateTrackRequest.execute();
-			System.out.println(String.format("Track %s has been updated.", updatedTrack.getTrack()));
-			
-			// Remove APKs from rollout track
-			Track rolloutTrackToRemove = new Track();
-			rolloutTrackToRemove.setTrack(TrackType.ROLLOUT.getKey());
-			rolloutTrackToRemove.setVersionCodes(Lists.<Integer>newArrayList());
-			updateTrackRequest = edits.tracks().update(app.getApplicationId(), editId, rolloutTrackToRemove.getTrack(), rolloutTrackToRemove);
-			updateTrackRequest.execute();
-			System.out.println(String.format("Track %s has been updated.", rolloutTrackToRemove.getTrack()));
-			
-			// Commit changes for edit.
-			commitEdit(app, edits, editId);
-			
-		} catch (IOException ex) {
-			throw new UnexpectedException("Exception was thrown while promoting from rollout to production", ex);
+			throw new UnexpectedException("Exception was thrown while promoting from " + fromTrackType.getKey() + " to " + toTrackType.getKey(), ex);
 		}
 	}
 	
