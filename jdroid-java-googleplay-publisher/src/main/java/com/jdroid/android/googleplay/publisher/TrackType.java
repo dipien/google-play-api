@@ -2,6 +2,7 @@ package com.jdroid.android.googleplay.publisher;
 
 public enum TrackType {
 	
+	INTERNAL("internal"),
 	ALPHA("alpha"),
 	BETA("beta"),
 	ROLLOUT("rollout"),
