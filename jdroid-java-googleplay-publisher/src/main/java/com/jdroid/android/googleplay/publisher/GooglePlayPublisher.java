@@ -99,7 +99,7 @@ public class GooglePlayPublisher {
 			throw new UnexpectedException("The private key json file directory is required");
 		}
 		
-		String privateKeyJsonFile = appContext.getPrivateKeyJsonFileDirectory() + java.io.File.separator + appContext.getApplicationId() + ".json";
+		String privateKeyJsonFile = appContext.getPrivateKeyJsonFileDirectory() + java.io.File.separator + appContext.getPrivateKeyJsonFileName() + ".json";
 		InputStream serviceAccountStream = new FileInputStream(privateKeyJsonFile);
 		GoogleCredential credential = GoogleCredential.fromStream(serviceAccountStream, HTTP_TRANSPORT, JSON_FACTORY);
 		return credential.createScoped(Collections.singleton(AndroidPublisherScopes.ANDROIDPUBLISHER));

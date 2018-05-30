@@ -25,16 +25,25 @@ The application id of your app. This property is required
     
     APPLICATION_ID = 'com.sample'
     
+###### Private Key Json File Name
+
+Private key json file name. This property is optional. The default value is the application id
+
+For example:
+
+    PRIVATE_KEY_JSON_FILE_NAME = 'credentials'
+
 ###### Private Key Json File Directory
 
 Path to the directory where the private key json file is located. This property is required.
-The private key json file path will generated as follows: **${PRIVATE_KEY_JSON_DIR}/${APPLICATION_ID}.json**
+The private key json file path will generated as follows: **${PRIVATE_KEY_JSON_DIR}/${PRIVATE_KEY_JSON_FILE_NAME}.json**
 
 For example:
-    
+
     APPLICATION_ID = 'com.sample'
-    PRIVATE_KEY_JSON_FILE_DIR = /credentials/googleplay
-    // The private key json file should be at /credentials/googleplay/com.sample.json
+    PRIVATE_KEY_JSON_FILE_NAME = 'key'
+    PRIVATE_KEY_JSON_FILE_DIR = '/credentials/googleplay'
+    // The private key json file should be at /credentials/googleplay/key.json
 
 ## Usage
 

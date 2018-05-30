@@ -20,11 +20,14 @@ Create an **AppContext** instance:
     // The application id of your app. This property is required
     appContext.setApplicationId("com.sample");
     
+    // Private key json file name. This property is optional. The default value is the application id
+    appContext.setPrivateKeyJsonFileName("key");
+
     // Path to the directory where the private key json file is located. This property is required.
-    // The private key json file path will generated as follows: ${PRIVATE_KEY_JSON_DIR}/${APPLICATION_ID}.json
-    // In this sample, the private key json file should be at /credentials/googleplay/com.sample.json
+    // The private key json file path will generated as follows: ${PRIVATE_KEY_JSON_DIR}/${PRIVATE_KEY_JSON_FILE_NAME}.json
+    // In this sample, the private key json file should be at /credentials/googleplay/key.json
     appContext.setPrivateKeyJsonFileDirectory("/credentials/googleplay");
-    
+
 ## Usage
 
 #### Verify Metadata

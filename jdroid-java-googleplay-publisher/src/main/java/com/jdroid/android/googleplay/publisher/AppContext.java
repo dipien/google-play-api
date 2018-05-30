@@ -10,6 +10,8 @@ public class AppContext {
 	// Path to the private key json file parent directory
 	private String privateKeyJsonFileDir;
 	
+	private String privateKeyJsonFileName;
+	
 	private String metadataPath;
 	private List<String> locales;
 	
@@ -28,7 +30,7 @@ public class AppContext {
 	private Boolean tvBannerRequired = false;
 	
 	private Boolean failOnApkUpgradeVersionConflict = true;
-
+	
 	public String getApplicationId() {
 		return applicationId;
 	}
@@ -173,5 +175,13 @@ public class AppContext {
 		if (failOnApkUpgradeVersionConflict != null) {
 			this.failOnApkUpgradeVersionConflict = failOnApkUpgradeVersionConflict;
 		}
+	}
+	
+	public String getPrivateKeyJsonFileName() {
+		return privateKeyJsonFileName != null ? privateKeyJsonFileName : applicationId;
+	}
+	
+	public void setPrivateKeyJsonFileName(String privateKeyJsonFileName) {
+		this.privateKeyJsonFileName = privateKeyJsonFileName;
 	}
 }
