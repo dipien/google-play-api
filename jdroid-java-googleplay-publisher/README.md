@@ -134,6 +134,34 @@ Create the following files with the release notes:
     {METADATA_PATH}/googleplay/{LOCALE_1}/changelogs/{VERSION_CODE}.txt
     {METADATA_PATH}/googleplay/{LOCALE_2}/changelogs/{VERSION_CODE}.txt
     
+#### Promote from Internal to Alpha
+
+Promote a current internal to alpha
+
+    GooglePlayPublisher.promoteFromInternalToAlpha(new App(appContext));
+    
+#### Promote from Internal to Beta
+
+Promote a current internal to beta
+
+    GooglePlayPublisher.promoteFromInternalToBeta(new App(appContext));
+    
+#### Promote from Internal to Rollout
+
+Promote a current internal to rollout
+
+    // Portion of the users who should get the staged rollout version of the APK. 
+    // The maximum rollout fraction is 0.5 (50% of users). Default value: 0.005 (0.5%)
+    appContext.setUserFraction(0.2);
+
+    GooglePlayPublisher.promoteFromInternalToRollout(new App(appContext));
+    
+#### Promote from Internal to Production
+
+Promote a current internal to production
+
+    GooglePlayPublisher.promoteFromInternalToProduction(new App(appContext));
+    
 #### Promote from Alpha to Beta
 
 Promote a current alpha to beta
@@ -150,11 +178,11 @@ Promote a current alpha to staged rollout
     
     GooglePlayPublisher.promoteFromAlphaToRollout(new App(appContext));
     
-#### Promote from Alpha to Beta
+#### Promote from Alpha to Production
 
-Promote a current alpha to beta
+Promote a current alpha to production
 
-    GooglePlayPublisher.promoteFromAlphaToBeta(new App(appContext));
+    GooglePlayPublisher.promoteFromAlphaToProduction(new App(appContext));
         
 #### Promote from Beta to Rollout
 
@@ -165,6 +193,12 @@ Promote a current beta to rollout
     appContext.setUserFraction(0.2);
     
     GooglePlayPublisher.promoteFromBetaToRollout(new App(appContext));
+
+#### Promote from Beta to Production
+
+Promote a current beta to production
+
+    GooglePlayPublisher.promoteFromBetaToProduction(new App(appContext));
     
 #### Increase Staged Rollout
 
