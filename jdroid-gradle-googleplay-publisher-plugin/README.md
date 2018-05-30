@@ -32,15 +32,9 @@ The private key json file path will generated as follows: **${PRIVATE_KEY_JSON_D
 
 For example:
     
-    PRIVATE_KEY_JSON_FILE_DIR = /credentials/googleplay
     APPLICATION_ID = 'com.sample'
+    PRIVATE_KEY_JSON_FILE_DIR = /credentials/googleplay
     // The private key json file should be at /credentials/googleplay/com.sample.json
-
-###### Locales
-
-List of supported locales on Google Play. This property is required
-    
-    LOCALES = 'en-US,es-419'
 
 ## Usage
 
@@ -49,6 +43,12 @@ List of supported locales on Google Play. This property is required
 Verify that the metadata to upload to Google Play is valid.
 
     ./gradlew googlePlayVerifyMetadata
+
+###### Locales
+
+List of supported locales on Google Play. This property is required
+
+    LOCALES = 'en-US,es-419'
     
 ###### Video Required
 
@@ -132,6 +132,11 @@ Add your assets to each locale or default directory:
 |Tv Screenshots       |false   |images/tvScreenshots/screenshot[1 ... 8].png        |
 |Wear Screenshots     |false   |images/wearScreenshots/screenshot[1 ... 8].png      |
 
+###### Locales
+
+List of supported locales on Google Play. This property is required
+
+    LOCALES = 'en-US,es-419'
 
 ###### Metadata path
 
@@ -150,6 +155,12 @@ List all the historical APKs uploaded.
 Upload new APK for your app and assign it to a release track.
 
     ./gradlew googlePlayPublishAPK
+
+###### Locales
+
+List of supported locales on Google Play. This property is required if you need to upload changelogs
+
+    LOCALES = 'en-US,es-419'
     
 ###### APK path
 

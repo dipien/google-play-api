@@ -20,12 +20,6 @@ Create an **AppContext** instance:
     // The application id of your app. This property is required
     appContext.setApplicationId("com.sample");
     
-    // List of supported locales on Google Play. This property is required
-    List<String> locales = new ArrayList<String>();
-    locales.add("en-US");
-    locales.add("es-419");
-    appContext.setLocales(locales);
-    
     // Path to the directory where the private key json file is located. This property is required.
     // The private key json file path will generated as follows: ${PRIVATE_KEY_JSON_DIR}/${APPLICATION_ID}.json
     // In this sample, the private key json file should be at /credentials/googleplay/com.sample.json
@@ -36,6 +30,12 @@ Create an **AppContext** instance:
 #### Verify Metadata
 
 Verify that the metadata to upload to Google Play is valid.
+
+    // List of supported locales on Google Play. This property is required
+    List<String> locales = new ArrayList<String>();
+    locales.add("en-US");
+    locales.add("es-419");
+    appContext.setLocales(locales);
 
     // If the video url is required. The default value is false
     appContext.setVideoRequired(true);
@@ -66,6 +66,12 @@ Verify that the metadata to upload to Google Play is valid.
 #### Publish Metadata
 
 Publish metadata (feature/promo graphics, High resolution icon, screenshots, title, short description, full description and video url) on Google Play. The listings are published for each locales defined on the **LOCALES** property. If some asset is not available for any locale, the resources inside the **default** directory will be used
+
+    // List of supported locales on Google Play. This property is required
+    List<String> locales = new ArrayList<String>();
+    locales.add("en-US");
+    locales.add("es-419");
+    appContext.setLocales(locales);
 
     // The path where all the listings directories will be located. This property is required
     appContext.setMetadataPath("/path/to/the/metadata");
@@ -110,6 +116,12 @@ Get all the historical APKs uploaded.
 #### Publish APK
 
 Upload new APK for your app and assign it to a release track.
+
+    // List of supported locales on Google Play. This property is required if you need to upload changelogs
+    List<String> locales = new ArrayList<String>();
+    locales.add("en-US");
+    locales.add("es-419");
+    appContext.setLocales(locales);
 
     // The path to the APK to publish
     appContext.setApkPath("/path/to/apk/file.apk");
