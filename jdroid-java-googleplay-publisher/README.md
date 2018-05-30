@@ -148,7 +148,7 @@ Promote a current internal to beta
     
 #### Promote from Internal to Rollout
 
-Promote a current internal to rollout
+Promote a current internal to staged rollout
 
     // Portion of the users who should get the staged rollout version of the APK. 
     // The maximum rollout fraction is 0.5 (50% of users). Default value: 0.005 (0.5%)
@@ -186,7 +186,7 @@ Promote a current alpha to production
         
 #### Promote from Beta to Rollout
 
-Promote a current beta to rollout
+Promote a current beta to staged rollout
 
     // Portion of the users who should get the staged rollout version of the APK. 
     // The maximum rollout fraction is 0.5 (50% of users). Default value: 0.005 (0.5%)
