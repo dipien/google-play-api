@@ -197,7 +197,7 @@ Promote a current internal to beta
 
 #### Promote from Internal to Rollout
 
-Promote a current internal to rollout
+Promote a current internal to staged rollout
 
     ./gradlew googlePlayPromoteFromInternalToRollout
 
@@ -241,7 +241,7 @@ Promote a current alpha to production
     
 #### Promote from Beta to Rollout
 
-Promote a current beta to rollout
+Promote a current beta to staged rollout
 
     ./gradlew googlePlayPromoteFromBetaToRollout
 
