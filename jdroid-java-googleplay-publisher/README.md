@@ -115,8 +115,14 @@ Add your assets to each locale or default directory:
 Get all the historical APKs uploaded.
 
     GooglePlayPublisher.getApks(new App(appContext));
-    
-#### Publish APK
+
+#### Get Bundles
+
+Get all the historical bundles uploaded.
+
+    GooglePlayPublisher.getBundles(new App(appContext));
+
+#### Publish APK / Bundle
 
 Upload new APK for your app and assign it to a release track.
 
@@ -126,22 +132,32 @@ Upload new APK for your app and assign it to a release track.
     locales.add("es-419");
     appContext.setLocales(locales);
 
-    // The path to the APK to publish
+    // The name to identify release in the Play Console only, such as an internal code name or build version. Default value: the version name
+    appContext.setReleaseName("My release");
+
+    // Whether the release should be created on draft mode. Default value: false
+    appContext.setDraft(true);
+
+    // The path to the APK / Bundle to publish
     appContext.setApkPath("/path/to/apk/file.apk");
-    
+    // or
+    appContext.setBundlePath("/path/to/bundle/file.aab");
+
     // The release track that you're assigning APKs to. 
-    // Acceptable values are: TrackType.ALPHA, TrackType.BETA, TrackType.ROLLOUT or TrackType.PRODUCTION
+    // Acceptable values are: TrackType.INTERNAL, TrackType.ALPHA, TrackType.BETA, TrackType.ROLLOUT or TrackType.PRODUCTION
     appContext.setTrackType(TrackType.ALPHA);
     
-    // Portion of the users who should get the staged rollout version of the APK. 
-    // The maximum rollout fraction is 0.5 (50% of users). Only used if trackType is TrackType.ROLLOUT. Default value: 0.005 (0.5%)  
+    // Fraction of users who are eligible to receive the release. 0 <= fraction < 1
+    // Only used if trackType is TrackType.ROLLOUT. Default value: 0.005 (0.5%)
     appContext.setUserFraction(0.1);
     
     // Whether the task should fail if the uploaded APK specifies a version code that has already been used. Default value: true
     appContext.setFailOnApkUpgradeVersionConflict(false);
 
     GooglePlayPublisher.publishApk(new App(appContext));
-    
+    // or
+    GooglePlayPublisher.publishBundle(new App(appContext));
+
 ###### Release Notes
 
 Create the following files with the release notes:
@@ -165,8 +181,7 @@ Promote a current internal to beta
 
 Promote a current internal to staged rollout
 
-    // Portion of the users who should get the staged rollout version of the APK. 
-    // The maximum rollout fraction is 0.5 (50% of users). Default value: 0.005 (0.5%)
+    // Fraction of users who are eligible to receive the release. 0 <= fraction < 1. Default value: 0.005 (0.5%)
     appContext.setUserFraction(0.2);
 
     GooglePlayPublisher.promoteFromInternalToRollout(new App(appContext));
@@ -181,14 +196,19 @@ Promote a current internal to production
 
 Promote a current alpha to beta
 
+    // Set a release name if you have more than one alpha track and you need to promote just one
+    appContext.setReleaseName("My release");
+
     GooglePlayPublisher.promoteFromAlphaToBeta(new App(appContext));
         
 #### Promote from Alpha to Rollout
 
 Promote a current alpha to staged rollout
 
-    // Portion of the users who should get the staged rollout version of the APK. 
-    // The maximum rollout fraction is 0.5 (50% of users). Default value: 0.005 (0.5%)
+    // Set a release name if you have more than one alpha track and you need to promote just one
+    appContext.setReleaseName("My release");
+
+    // Fraction of users who are eligible to receive the release. 0 <= fraction < 1. Default value: 0.005 (0.5%)
     appContext.setUserFraction(0.2);
     
     GooglePlayPublisher.promoteFromAlphaToRollout(new App(appContext));
@@ -197,14 +217,16 @@ Promote a current alpha to staged rollout
 
 Promote a current alpha to production
 
+    // Set a release name if you have more than one alpha track and you need to promote just one
+    appContext.setReleaseName("My release");
+
     GooglePlayPublisher.promoteFromAlphaToProduction(new App(appContext));
         
 #### Promote from Beta to Rollout
 
 Promote a current beta to staged rollout
 
-    // Portion of the users who should get the staged rollout version of the APK. 
-    // The maximum rollout fraction is 0.5 (50% of users). Default value: 0.005 (0.5%)
+    // Fraction of users who are eligible to receive the release. 0 <= fraction < 1. Default value: 0.005 (0.5%)
     appContext.setUserFraction(0.2);
     
     GooglePlayPublisher.promoteFromBetaToRollout(new App(appContext));
@@ -217,28 +239,30 @@ Promote a current beta to production
     
 #### Increase Staged Rollout
 
-Increase the fraction of users who should get the current staged rollout APK
+Increase the fraction of users who should get the current staged rollout
 
-    // Portion of the users who should get the staged rollout version of the APK. 
-    // The maximum rollout fraction is 0.5 (50% of users).
+    // Fraction of users who are eligible to receive the release. 0 <= fraction < 1. Default value: 0.005 (0.5%)
     appContext.setUserFraction(0.2);
     
     GooglePlayPublisher.increaseStagedRollout(new App(appContext));
-    
+
+#### Halt Staged Rollout
+
+Halt the current staged rollout
+
+    GooglePlayPublisher.haltStagedRollout(new App(appContext));
+
+#### Resume Staged Rollout
+
+Resume the current staged rollout
+
+    GooglePlayPublisher.resumeStagedRollout(new App(appContext));
+
 #### Promote from Rollout to Production
 
 Promote a current staged rollout to production
 
     GooglePlayPublisher.promoteFromRolloutToProduction(new App(appContext));
-
-#### Clean Track
-
-Remove all the APKs assigned to a track
-
-    // The release track that you're cleaning. Acceptable values are: TrackType.ALPHA, TrackType.BETA or TrackType.INTERNAL
-    appContext.setTrackType(TrackType.ALPHA)
-    
-    GooglePlayPublisher.cleanTrack(new App(appContext));
 
 #### Get Tracks
 

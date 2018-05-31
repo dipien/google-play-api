@@ -13,7 +13,6 @@ import com.google.api.client.repackaged.com.google.common.base.Strings;
 import com.google.api.client.util.Lists;
 import com.google.api.services.androidpublisher.AndroidPublisher;
 import com.google.api.services.androidpublisher.AndroidPublisher.Edits;
-import com.google.api.services.androidpublisher.AndroidPublisher.Edits.Apklistings;
 import com.google.api.services.androidpublisher.AndroidPublisher.Edits.Apks.Upload;
 import com.google.api.services.androidpublisher.AndroidPublisher.Edits.Commit;
 import com.google.api.services.androidpublisher.AndroidPublisher.Edits.Images;
@@ -21,12 +20,15 @@ import com.google.api.services.androidpublisher.AndroidPublisher.Edits.Images.De
 import com.google.api.services.androidpublisher.AndroidPublisher.Edits.Insert;
 import com.google.api.services.androidpublisher.AndroidPublisherScopes;
 import com.google.api.services.androidpublisher.model.Apk;
-import com.google.api.services.androidpublisher.model.ApkListing;
 import com.google.api.services.androidpublisher.model.ApksListResponse;
 import com.google.api.services.androidpublisher.model.AppEdit;
+import com.google.api.services.androidpublisher.model.Bundle;
+import com.google.api.services.androidpublisher.model.BundlesListResponse;
 import com.google.api.services.androidpublisher.model.ImagesUploadResponse;
 import com.google.api.services.androidpublisher.model.Listing;
+import com.google.api.services.androidpublisher.model.LocalizedText;
 import com.google.api.services.androidpublisher.model.Track;
+import com.google.api.services.androidpublisher.model.TrackRelease;
 import com.google.api.services.androidpublisher.model.TracksListResponse;
 import com.jdroid.java.exception.UnexpectedException;
 import com.jdroid.java.utils.StringUtils;
@@ -36,7 +38,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.GeneralSecurityException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -50,7 +51,8 @@ import java.util.List;
  */
 public class GooglePlayPublisher {
 
-	public static final String MIME_TYPE_APK = "application/vnd.android.package-archive";
+	private static final String APK_MIME_TYPE = "application/vnd.android.package-archive";
+	private static final String BUNDLE_MIME_TYPE = "application/octet-stream";
 	
 	/** Global instance of the JSON factory. */
 	private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
@@ -127,7 +129,33 @@ public class GooglePlayPublisher {
 			
 			return apksResponse.getApks();
 		} catch (IOException ex) {
-			throw new UnexpectedException("Exception was thrown while updating listing", ex);
+			throw new UnexpectedException("Exception was thrown while getting APKs list", ex);
+		}
+	}
+	
+	/**
+	 * Retrieve all the bundles for a given app.
+	 *
+	 * @param app
+	 */
+	public static List<Bundle> getBundles(App app) {
+		try {
+
+			AppContext appContext = app.getAppContext();
+			// Create the API service.
+			AndroidPublisher service = init(appContext);
+			Edits edits = service.edits();
+			
+			// Create a new edit to make changes.
+			Insert editRequest = edits.insert(app.getApplicationId(), null);
+			AppEdit appEdit = editRequest.execute();
+			
+			// Get a list of bundles.
+			BundlesListResponse bundlesListResponse = edits.bundles().list(app.getApplicationId(), appEdit.getId()).execute();
+			
+			return bundlesListResponse.getBundles();
+		} catch (IOException ex) {
+			throw new UnexpectedException("Exception was thrown while getting bundle list", ex);
 		}
 	}
 	
@@ -306,70 +334,59 @@ public class GooglePlayPublisher {
 			System.out.println(String.format("Created edit with id: %s", editId));
 			
 			// Upload new apk to developer console
-			AbstractInputStreamContent apkFile = new FileContent(MIME_TYPE_APK, new File(app.getAppContext().getApkPath()));
+			AbstractInputStreamContent apkFile = new FileContent(APK_MIME_TYPE, new File(app.getAppContext().getApkPath()));
 			Upload uploadRequest = edits.apks().upload(app.getApplicationId(), editId, apkFile);
 			Apk apk = uploadRequest.execute();
 			System.out.println(String.format("Version code %d has been uploaded", apk.getVersionCode()));
 			
-			// Remove any previous alpha or beta
-			if (app.getAppContext().getTrackType().equals(TrackType.ALPHA) || app.getAppContext().getTrackType().equals(TrackType.BETA)) {
-				Track track = getTrack(app, edits, editId);
-				if (track != null && !track.getVersionCodes().isEmpty()) {
-					Boolean replaceTrack = true;
-					for (Integer versionCode : track.getVersionCodes()) {
-						if (apk.getVersionCode() <= versionCode) {
-							replaceTrack = false;
-							break;
-						}
-					}
-					
-					if (replaceTrack) {
-						Track removeTrack = new Track();
-						removeTrack.setTrack(app.getAppContext().getTrackType().getKey());
-						Edits.Tracks.Update removeTrackRequest = edits.tracks().update(app.getApplicationId(), editId, track.getTrack(), removeTrack);
-						removeTrackRequest.execute();
-						System.out.println(String.format("Track %s has been removed.", removeTrack.getTrack()));
-					}
-				}
-			} else if (app.getAppContext().getTrackType().equals(TrackType.ROLLOUT)) {
-				Track track = getTrack(app, edits, editId);
-				if (track == null || track.getVersionCodes().isEmpty()) {
+			if (app.getAppContext().getTrackType().equals(TrackType.ROLLOUT)) {
+				Track currentRolloutTrack = getTrack(app, edits, editId);
+				if (currentRolloutTrack == null || currentRolloutTrack.getReleases().isEmpty()) {
 					if (app.getAppContext().getUserFraction() == null) {
 						app.getAppContext().setUserFraction(DEFAULT_USER_FRACTION);
 					}
 				} else {
 					if (app.getAppContext().getUserFraction() == null) {
-						app.getAppContext().setUserFraction(track.getUserFraction());
+						app.getAppContext().setUserFraction(currentRolloutTrack.getReleases().get(0).getUserFraction());
 					}
 				}
 			}
 			
 			// Assign apk to track.
-			List<Integer> apkVersionCodes = new ArrayList<>();
-			apkVersionCodes.add(apk.getVersionCode());
-			
 			Track track = new Track();
 			track.setTrack(app.getAppContext().getTrackType().getKey());
-			track.setVersionCodes(apkVersionCodes);
-			track.setUserFraction(app.getAppContext().getUserFraction());
+			TrackRelease trackRelease = new TrackRelease();
+			trackRelease.setName(app.getAppContext().getReleaseName());
+			trackRelease.setVersionCodes(Collections.singletonList(apk.getVersionCode().longValue()));
+			
+			TrackReleaseStatus trackReleaseStatus = null;
+			if (app.getAppContext().isDraft()) {
+				trackReleaseStatus = TrackReleaseStatus.DRAFT;
+			} else if (app.getAppContext().getTrackType().equals(TrackType.ROLLOUT)) {
+				trackReleaseStatus = TrackReleaseStatus.IN_PROGRESS;
+			} else {
+				trackReleaseStatus = TrackReleaseStatus.COMPLETED;
+			}
+			trackRelease.setStatus(trackReleaseStatus.getKey());
+			trackRelease.setUserFraction(app.getAppContext().getUserFraction());
+			
+			List<LocalizedText> releaseNotes = Lists.newArrayList();
+			for (LocaleListing each : app.getLocaleListings()) {
+				String changelog = app.getChangelog(each, apk.getVersionCode());
+				if (StringUtils.isNotBlank(changelog)) {
+					LocalizedText releaseNote = new LocalizedText();
+					releaseNote.setLanguage(each.getLanguageTag());
+					releaseNote.setText(changelog);
+					releaseNotes.add(releaseNote);
+				}
+			}
+			trackRelease.setReleaseNotes(releaseNotes);
+			track.setReleases(Collections.singletonList(trackRelease));
 			
 			Edits.Tracks.Update updateTrackRequest = edits.tracks().update(app.getApplicationId(), editId, track.getTrack(), track);
 			Track updatedTrack = updateTrackRequest.execute();
 			System.out.println(String.format("Track %s has been updated.", updatedTrack.getTrack()));
 			
-			for (LocaleListing each : app.getLocaleListings()) {
-				String changelog = app.getChangelog(each, apk.getVersionCode());
-				if (StringUtils.isNotBlank(changelog)) {
-					// Update recent changes field in apk listing.
-					ApkListing newApkListing = new ApkListing();
-					newApkListing.setLanguage(each.getLanguageTag());
-					newApkListing.setRecentChanges(changelog);
-					Apklistings.Update updateRecentChangesRequest = edits.apklistings().update(app.getApplicationId(),
-							editId, apk.getVersionCode(), each.getLanguageTag(), newApkListing);
-					updateRecentChangesRequest.execute();
-					System.out.println("Recent changes has been updated.");
-				}
-			}
 			
 			// Commit changes for edit.
 			commitEdit(app, edits, editId);
@@ -384,6 +401,89 @@ public class GooglePlayPublisher {
 		}
 	}
 	
+	public static void publishBundle(App app) {
+		try {
+			
+			if (Strings.isNullOrEmpty(app.getAppContext().getBundlePath())) {
+				throw new UnexpectedException("bundlePath cannot be null or empty!");
+			}
+			
+			if (app.getAppContext().getTrackType() == null) {
+				throw new UnexpectedException("trackType cannot be null or empty!");
+			}
+			
+			// Create the API service.
+			AndroidPublisher service = init(app.getAppContext());
+			Edits edits = service.edits();
+			
+			// Create a new edit to make changes.
+			Insert editRequest = edits.insert(app.getApplicationId(), null);
+			AppEdit edit = editRequest.execute();
+			String editId = edit.getId();
+			System.out.println(String.format("Created edit with id: %s", editId));
+			
+			// Upload new bundle to developer console
+			AbstractInputStreamContent bundleFile = new FileContent(BUNDLE_MIME_TYPE, new File(app.getAppContext().getBundlePath()));
+			Edits.Bundles.Upload uploadRequest = edits.bundles().upload(app.getApplicationId(), editId, bundleFile);
+			Bundle bundle = uploadRequest.execute();
+			System.out.println(String.format("Version code %d has been uploaded", bundle.getVersionCode()));
+			
+			if (app.getAppContext().getTrackType().equals(TrackType.ROLLOUT)) {
+				Track currentRolloutTrack = getTrack(app, edits, editId);
+				if (currentRolloutTrack == null || currentRolloutTrack.getReleases().isEmpty()) {
+					if (app.getAppContext().getUserFraction() == null) {
+						app.getAppContext().setUserFraction(DEFAULT_USER_FRACTION);
+					}
+				} else {
+					if (app.getAppContext().getUserFraction() == null) {
+						app.getAppContext().setUserFraction(currentRolloutTrack.getReleases().get(0).getUserFraction());
+					}
+				}
+			}
+			
+			// Assign bundle to track.
+			Track track = new Track();
+			track.setTrack(app.getAppContext().getTrackType().getKey());
+			TrackRelease trackRelease = new TrackRelease();
+			trackRelease.setName(app.getAppContext().getReleaseName());
+			trackRelease.setVersionCodes(Collections.singletonList(bundle.getVersionCode().longValue()));
+			
+			TrackReleaseStatus trackReleaseStatus = null;
+			if (app.getAppContext().isDraft()) {
+				trackReleaseStatus = TrackReleaseStatus.DRAFT;
+			} else if (app.getAppContext().getTrackType().equals(TrackType.ROLLOUT)) {
+				trackReleaseStatus = TrackReleaseStatus.IN_PROGRESS;
+			} else {
+				trackReleaseStatus = TrackReleaseStatus.COMPLETED;
+			}
+			trackRelease.setStatus(trackReleaseStatus.getKey());
+			trackRelease.setUserFraction(app.getAppContext().getUserFraction());
+			
+			List<LocalizedText> releaseNotes = Lists.newArrayList();
+			for (LocaleListing each : app.getLocaleListings()) {
+				String changelog = app.getChangelog(each, bundle.getVersionCode());
+				if (StringUtils.isNotBlank(changelog)) {
+					LocalizedText releaseNote = new LocalizedText();
+					releaseNote.setLanguage(each.getLanguageTag());
+					releaseNote.setText(changelog);
+					releaseNotes.add(releaseNote);
+				}
+			}
+			trackRelease.setReleaseNotes(releaseNotes);
+			track.setReleases(Collections.singletonList(trackRelease));
+			
+			Edits.Tracks.Update updateTrackRequest = edits.tracks().update(app.getApplicationId(), editId, track.getTrack(), track);
+			Track updatedTrack = updateTrackRequest.execute();
+			System.out.println(String.format("Track %s has been updated.", updatedTrack.getTrack()));
+			
+			
+			// Commit changes for edit.
+			commitEdit(app, edits, editId);
+		} catch (IOException ex) {
+			throw new UnexpectedException("Exception was thrown while uploading bundle and updating recent changes", ex);
+		}
+	}
+	
 	private static Track getTrack(App app, Edits edits, String editId) throws IOException {
 		Edits.Tracks.List getTracksRequest = edits.tracks().list(app.getApplicationId(), editId);
 		TracksListResponse tracksListResponse = getTracksRequest.execute();
@@ -395,47 +495,14 @@ public class GooglePlayPublisher {
 		return null;
 	}
 	
-	public static void cleanTrack(App app) {
-		try {
-			
-			if (app.getAppContext().getTrackType() == null) {
-				throw new UnexpectedException("trackType cannot be null or empty!");
-			}
-			
-			// Create the API service.
-			AndroidPublisher service = init(app.getAppContext());
-			Edits edits = service.edits();
-			
-			// Create a new edit to make changes.
-		 	Insert editRequest = edits.insert(app.getApplicationId(), null);
-			AppEdit edit = editRequest.execute();
-			String editId = edit.getId();
-			System.out.println(String.format("Created edit with id: %s", editId));
-			
-			Track track = getTrack(app, edits, editId);
-			
-			// Remove any previous alpha or beta
-			if (track != null && !track.getVersionCodes().isEmpty()) {
-				Track removeTrack = new Track();
-				removeTrack.setTrack(app.getAppContext().getTrackType().getKey());
-				Edits.Tracks.Update removeTrackRequest = edits.tracks().update(app.getApplicationId(), editId, track.getTrack(), removeTrack);
-				removeTrackRequest.execute();
-				System.out.println(String.format("Track %s has been removed.", removeTrack.getTrack()));
-				
-				// Commit changes for edit.
-				commitEdit(app, edits, editId);
-			}
-		} catch (IOException ex) {
-			throw new UnexpectedException("Exception was thrown while removing APKs from tracks", ex);
-		}
-	}
-	
 	public static void increaseStagedRollout(App app) {
 		try {
 			
 			if (app.getAppContext().getUserFraction() == null) {
 				throw new UnexpectedException("userFraction cannot be null or empty!");
 			}
+			
+			app.getAppContext().setTrackType(TrackType.ROLLOUT);
 			
 			// Create the API service.
 			AndroidPublisher service = init(app.getAppContext());
@@ -449,7 +516,17 @@ public class GooglePlayPublisher {
 			
 			Track track = new Track();
 			track.setTrack(TrackType.ROLLOUT.getKey());
-			track.setUserFraction(app.getAppContext().getUserFraction());
+			
+			Track currentRolloutTrack = getTrack(app, edits, editId);
+			if (currentRolloutTrack == null || currentRolloutTrack.getReleases().isEmpty()) {
+				throw new UnexpectedException("No current rollout track found");
+			}
+			
+			TrackRelease trackRelease = new TrackRelease();
+			trackRelease.setStatus(TrackReleaseStatus.IN_PROGRESS.getKey());
+			trackRelease.setUserFraction(app.getAppContext().getUserFraction());
+			trackRelease.setVersionCodes(currentRolloutTrack.getReleases().get(0).getVersionCodes());
+			track.setReleases(Collections.singletonList(trackRelease));
 			
 			Edits.Tracks.Patch patchTrackRequest = edits.tracks().patch(app.getApplicationId(), editId, track.getTrack(), track);
 			Track updatedTrack = patchTrackRequest.execute();
@@ -460,6 +537,86 @@ public class GooglePlayPublisher {
 			
 		} catch (IOException ex) {
 			throw new UnexpectedException("Exception was thrown while increasing the staged rollout", ex);
+		}
+	}
+	
+	public static void haltStagedRollout(App app) {
+		try {
+			
+			app.getAppContext().setTrackType(TrackType.ROLLOUT);
+			
+			// Create the API service.
+			AndroidPublisher service = init(app.getAppContext());
+			Edits edits = service.edits();
+			
+			// Create a new edit to make changes.
+			Insert editRequest = edits.insert(app.getApplicationId(), null);
+			AppEdit edit = editRequest.execute();
+			String editId = edit.getId();
+			System.out.println(String.format("Created edit with id: %s", editId));
+			
+			Track track = new Track();
+			track.setTrack(TrackType.ROLLOUT.getKey());
+			
+			Track currentRolloutTrack = getTrack(app, edits, editId);
+			if (currentRolloutTrack == null || currentRolloutTrack.getReleases().isEmpty()) {
+				throw new UnexpectedException("No current rollout track found");
+			}
+			
+			TrackRelease trackRelease = new TrackRelease();
+			trackRelease.setStatus(TrackReleaseStatus.HALTED.getKey());
+			trackRelease.setVersionCodes(currentRolloutTrack.getReleases().get(0).getVersionCodes());
+			track.setReleases(Collections.singletonList(trackRelease));
+			
+			Edits.Tracks.Patch patchTrackRequest = edits.tracks().patch(app.getApplicationId(), editId, track.getTrack(), track);
+			Track updatedTrack = patchTrackRequest.execute();
+			System.out.println(String.format("Track %s has been updated.", updatedTrack.getTrack()));
+			
+			// Commit changes for edit.
+			commitEdit(app, edits, editId);
+			
+		} catch (IOException ex) {
+			throw new UnexpectedException("Exception was thrown while halting the staged rollout", ex);
+		}
+	}
+	
+	public static void resumeStagedRollout(App app) {
+		try {
+			
+			app.getAppContext().setTrackType(TrackType.ROLLOUT);
+			
+			// Create the API service.
+			AndroidPublisher service = init(app.getAppContext());
+			Edits edits = service.edits();
+			
+			// Create a new edit to make changes.
+			Insert editRequest = edits.insert(app.getApplicationId(), null);
+			AppEdit edit = editRequest.execute();
+			String editId = edit.getId();
+			System.out.println(String.format("Created edit with id: %s", editId));
+			
+			Track track = new Track();
+			track.setTrack(TrackType.ROLLOUT.getKey());
+			
+			Track currentRolloutTrack = getTrack(app, edits, editId);
+			if (currentRolloutTrack == null || currentRolloutTrack.getReleases().isEmpty()) {
+				throw new UnexpectedException("No current rollout track found");
+			}
+			
+			TrackRelease trackRelease = new TrackRelease();
+			trackRelease.setStatus(TrackReleaseStatus.IN_PROGRESS.getKey());
+			trackRelease.setVersionCodes(currentRolloutTrack.getReleases().get(0).getVersionCodes());
+			track.setReleases(Collections.singletonList(trackRelease));
+			
+			Edits.Tracks.Patch patchTrackRequest = edits.tracks().patch(app.getApplicationId(), editId, track.getTrack(), track);
+			Track updatedTrack = patchTrackRequest.execute();
+			System.out.println(String.format("Track %s has been updated.", updatedTrack.getTrack()));
+			
+			// Commit changes for edit.
+			commitEdit(app, edits, editId);
+			
+		} catch (IOException ex) {
+			throw new UnexpectedException("Exception was thrown while resuming the staged rollout", ex);
 		}
 	}
 	
@@ -523,23 +680,36 @@ public class GooglePlayPublisher {
 			String editId = edit.getId();
 			System.out.println(String.format("Created edit with id: %s", editId));
 			
-			// Add APKs to beta track
+			// Add APKs/bundles to toTrackType track
 			Edits.Tracks.Get getTrackRequest = edits.tracks().get(app.getApplicationId(), editId, fromTrackType.getKey());
 			Track fromTrack = getTrackRequest.execute();
-			Track track = new Track();
-			track.setTrack(toTrackType.getKey());
-			track.setVersionCodes(fromTrack.getVersionCodes());
-			Edits.Tracks.Update updateTrackRequest = edits.tracks().update(app.getApplicationId(), editId, track.getTrack(), track);
+			
+			Track toTrack = new Track();
+			toTrack.setTrack(toTrackType.getKey());
+			List<TrackRelease> toTrackReleases = Lists.newArrayList();
+			for (TrackRelease fromTrackRelease : fromTrack.getReleases()) {
+				if (app.getAppContext().getReleaseName() == null || app.getAppContext().getReleaseName().equals(fromTrackRelease.getName())) {
+					TrackRelease toTrackRelease = new TrackRelease();
+					toTrackRelease.setName(fromTrackRelease.getName());
+					toTrackRelease.setUserFraction(app.getAppContext().getUserFraction());
+					toTrackRelease.setVersionCodes(fromTrackRelease.getVersionCodes());
+					
+					TrackReleaseStatus trackReleaseStatus;
+					if (toTrackType.equals(TrackType.ROLLOUT)) {
+						trackReleaseStatus = TrackReleaseStatus.IN_PROGRESS;
+					} else {
+						trackReleaseStatus = TrackReleaseStatus.COMPLETED;
+					}
+					toTrackRelease.setStatus(trackReleaseStatus.getKey());
+					toTrackRelease.setReleaseNotes(fromTrackRelease.getReleaseNotes());
+					toTrackReleases.add(toTrackRelease);
+				}
+			}
+			toTrack.setReleases(toTrackReleases);
+			
+			Edits.Tracks.Update updateTrackRequest = edits.tracks().update(app.getApplicationId(), editId, toTrack.getTrack(), toTrack);
 			Track updatedTrack = updateTrackRequest.execute();
 			System.out.println(String.format("Track %s has been updated.", updatedTrack.getTrack()));
-			
-			// Remove APKs from internal track
-			Track trackToRemove = new Track();
-			trackToRemove.setTrack(fromTrackType.getKey());
-			trackToRemove.setVersionCodes(Lists.newArrayList());
-			updateTrackRequest = edits.tracks().update(app.getApplicationId(), editId, trackToRemove.getTrack(), trackToRemove);
-			updateTrackRequest.execute();
-			System.out.println(String.format("Track %s has been updated.", trackToRemove.getTrack()));
 			
 			// Commit changes for edit.
 			commitEdit(app, edits, editId);

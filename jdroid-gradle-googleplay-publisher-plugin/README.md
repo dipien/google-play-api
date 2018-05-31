@@ -158,35 +158,59 @@ The path where all the listings directories will be located. The default value i
 List all the historical APKs uploaded.
 
     ./gradlew googlePlayListAPKs
-    
-#### Publish APK
 
-Upload new APK for your app and assign it to a release track.
+#### List Bundles
+
+List all the historical Bundles uploaded.
+
+    ./gradlew googlePlayListBundles
+
+#### Publish APK / Bundle
+
+Upload new APK / Bundle for your app and assign it to a release track.
 
     ./gradlew googlePlayPublishAPK
+
+    // or
+
+    ./gradlew googlePlayPublishBundle
 
 ###### Locales
 
 List of supported locales on Google Play. This property is required if you need to upload changelogs
 
     LOCALES = 'en-US,es-419'
-    
-###### APK path
 
-The path to the APK to publish
+###### Release Name
+
+The name to identify release in the Play Console only, such as an internal code name or build version. Default value: the version name
+
+    RELEASE_NAME = 'My release'
+
+###### Draft
+
+Whether the release should be created on draft mode. Default value: false
+
+    DRAFT = true
+    
+###### APK path / Bundle path
+
+The path to the APK / Bundle to publish
 
     APK_PATH = /path/to/apk/file.apk
+    // or
+    BUNDLE_PATH = /path/to/bundle/file.aab
 
 ###### Track
 
-The release track that you're assigning APKs to. Acceptable values are: **alpha**, **beta**, **rollout** or **production**
+The release track that you're assigning APKs to. Acceptable values are: **internal**, **alpha**, **beta**, **rollout** or **production**
 
     TRACK = alpha
     
 ###### User Fraction
 
-Portion of the users who should get the staged rollout version of the APK. 
-The maximum rollout fraction is 0.5 (50% of users). Only used if **TRACK** is **rollout**. Default value: 0.005 (0.5%)  
+Fraction of users who are eligible to receive the release. 0 <= fraction < 1
+Only used if **TRACK** is **rollout**. Default value: 0.005 (0.5%)
     
     USER_FRACTION = 0.1
     
@@ -223,8 +247,7 @@ Promote a current internal to staged rollout
 
 ###### User Fraction
 
-Portion of the users who should get the staged rollout version of the APK.
-The maximum rollout fraction is 0.5 (50% of users). Default value: 0.005 (0.5%)
+Fraction of users who are eligible to receive the release. 0 <= fraction < 1. Default value: 0.005 (0.5%)
 
     USER_FRACTION = 0.2
 
@@ -240,16 +263,27 @@ Promote a current alpha to beta
 
     ./gradlew googlePlayPromoteFromAlphaToBeta
 
+###### Release Name
+
+Set a release name if you have more than one alpha track and you need to promote just one
+
+    RELEASE_NAME = 'My release'
+
 #### Promote from Alpha to Rollout
 
 Promote a current alpha to staged rollout
 
     ./gradlew googlePlayPromoteFromAlphaToRollout
+
+###### Release Name
+
+Set a release name if you have more than one alpha track and you need to promote just one
+
+    RELEASE_NAME = 'My release'
     
 ###### User Fraction
 
-Portion of the users who should get the staged rollout version of the APK. 
-The maximum rollout fraction is 0.5 (50% of users). Default value: 0.005 (0.5%)
+Fraction of users who are eligible to receive the release. 0 <= fraction < 1. Default value: 0.005 (0.5%)
     
     USER_FRACTION = 0.2
     
@@ -258,6 +292,12 @@ The maximum rollout fraction is 0.5 (50% of users). Default value: 0.005 (0.5%)
 Promote a current alpha to production
 
     ./gradlew googlePlayPromoteFromAlphaToProduction
+
+###### Release Name
+
+Set a release name if you have more than one alpha track and you need to promote just one
+
+    RELEASE_NAME = 'My release'
     
 #### Promote from Beta to Rollout
 
@@ -267,8 +307,7 @@ Promote a current beta to staged rollout
 
 ###### User Fraction
 
-Portion of the users who should get the staged rollout version of the APK. 
-The maximum rollout fraction is 0.5 (50% of users). Default value: 0.005 (0.5%)
+Fraction of users who are eligible to receive the release. 0 <= fraction < 1. Default value: 0.005 (0.5%)
     
     USER_FRACTION = 0.2
 
@@ -280,35 +319,34 @@ Promote a current beta to production
     
 #### Increase Staged Rollout
 
-Increase the fraction of users who should get the current staged rollout APK
+Increase the fraction of users who should get the current staged rollout
 
     ./gradlew googlePlayIncreaseStagedRollout
 
 ###### User Fraction
 
-Portion of the users who should get the staged rollout version of the APK. 
-The maximum rollout fraction is 0.5 (50% of users).
+Fraction of users who are eligible to receive the release. 0 <= fraction < 1.
     
     USER_FRACTION = 0.2
-    
+
+#### Halt Staged Rollout
+
+Halt the current staged rollout
+
+    ./gradlew googlePlayHaltStagedRollout
+
+#### Resume Staged Rollout
+
+Resume the current staged rollout
+
+    ./gradlew googlePlayResumeStagedRollout
+
 #### Promote from Rollout to Production
 
 Promote a current staged rollout to production
 
     ./gradlew googlePlayPromoteFromRolloutToProduction
 
-#### Clean Track
-
-Remove all the APKs assigned to a track
-
-    ./gradlew googlePlayCleanTrack
-
-###### Track
-
-The release track that you're cleaning. Acceptable values are: **alpha**, **beta** or **internal**
-
-    TRACK = alpha
-    
 #### List Tracks
 
 List all the assigned APKs for each release track

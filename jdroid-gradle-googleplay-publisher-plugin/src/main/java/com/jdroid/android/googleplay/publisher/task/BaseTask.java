@@ -13,6 +13,8 @@ public abstract class BaseTask extends AbstractTask {
 		appContext.setApplicationId(propertyResolver.getStringProp("APPLICATION_ID"));
 		appContext.setPrivateKeyJsonFileDirectory(propertyResolver.getStringProp("PRIVATE_KEY_JSON_FILE_DIR"));
 		appContext.setLocales(propertyResolver.getStringListProp("LOCALES"));
+		appContext.setReleaseName(propertyResolver.getStringProp("RELEASE_NAME"));
+		appContext.setDraft(propertyResolver.getBooleanProp("DRAFT"));
 
 		appContext.setMetadataPath(propertyResolver.getStringProp("METADATA_PATH", getProject().getProjectDir().getAbsolutePath()));
 
@@ -26,6 +28,7 @@ public abstract class BaseTask extends AbstractTask {
 		appContext.setWearScreenshotsRequired(propertyResolver.getBooleanProp("WEAR_SCREENSHOTS_REQUIRED"));
 
 		appContext.setApkPath(propertyResolver.getStringProp("APK_PATH"));
+		appContext.setBundlePath(propertyResolver.getStringProp("BASE_PATH"));
 		appContext.setTrackType(TrackType.findByKey(propertyResolver.getStringProp("TRACK")));
 		appContext.setUserFraction(propertyResolver.getDoubleProp("USER_FRACTION"));
 

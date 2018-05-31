@@ -16,8 +16,11 @@ public class AppContext {
 	private List<String> locales;
 	
 	private String apkPath;
+	private String bundlePath;
 	private TrackType trackType;
 	private Double userFraction;
+	private Boolean draft = false;
+	private String releaseName;
 	
 	// Validations
 	private Boolean videoRequired = false;
@@ -183,5 +186,31 @@ public class AppContext {
 	
 	public void setPrivateKeyJsonFileName(String privateKeyJsonFileName) {
 		this.privateKeyJsonFileName = privateKeyJsonFileName;
+	}
+	
+	public Boolean isDraft() {
+		return draft;
+	}
+	
+	public void setDraft(Boolean draft) {
+		if (draft != null) {
+			this.draft = draft;
+		}
+	}
+	
+	public String getReleaseName() {
+		return releaseName;
+	}
+	
+	public void setReleaseName(String releaseName) {
+		this.releaseName = releaseName;
+	}
+	
+	public String getBundlePath() {
+		return bundlePath;
+	}
+	
+	public void setBundlePath(String bundlePath) {
+		this.bundlePath = bundlePath;
 	}
 }
