@@ -7,10 +7,8 @@ public class AppContext {
 	// The application id of the app
 	private String applicationId;
 
-	// Path to the private key json file parent directory
-	private String privateKeyJsonFileDir;
-	
-	private String privateKeyJsonFileName;
+	// Path to the private key json file
+	private String privateKeyJsonFilePath;
 	
 	private String metadataPath;
 	private List<String> locales;
@@ -146,14 +144,6 @@ public class AppContext {
 		}
 	}
 	
-	public String getPrivateKeyJsonFileDirectory() {
-		return privateKeyJsonFileDir;
-	}
-	
-	public void setPrivateKeyJsonFileDirectory(String privateKeyJsonFileDir) {
-		this.privateKeyJsonFileDir = privateKeyJsonFileDir;
-	}
-	
 	public TrackType getTrackType() {
 		return trackType;
 	}
@@ -180,14 +170,6 @@ public class AppContext {
 		}
 	}
 	
-	public String getPrivateKeyJsonFileName() {
-		return privateKeyJsonFileName != null ? privateKeyJsonFileName : applicationId;
-	}
-	
-	public void setPrivateKeyJsonFileName(String privateKeyJsonFileName) {
-		this.privateKeyJsonFileName = privateKeyJsonFileName;
-	}
-	
 	public Boolean isDraft() {
 		return draft;
 	}
@@ -212,5 +194,13 @@ public class AppContext {
 	
 	public void setBundlePath(String bundlePath) {
 		this.bundlePath = bundlePath;
+	}
+	
+	public String getPrivateKeyJsonFilePath() {
+		return privateKeyJsonFilePath;
+	}
+	
+	public void setPrivateKeyJsonFilePath(String privateKeyJsonFilePath) {
+		this.privateKeyJsonFilePath = privateKeyJsonFilePath;
 	}
 }

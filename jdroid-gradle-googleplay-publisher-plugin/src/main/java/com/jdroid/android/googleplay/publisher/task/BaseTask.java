@@ -11,8 +11,7 @@ public abstract class BaseTask extends AbstractTask {
 	protected void onExecute() {
 		AppContext appContext = new AppContext();
 		appContext.setApplicationId(propertyResolver.getStringProp("APPLICATION_ID"));
-		appContext.setPrivateKeyJsonFileDirectory(propertyResolver.getStringProp("PRIVATE_KEY_JSON_FILE_DIR"));
-		appContext.setPrivateKeyJsonFileName(propertyResolver.getStringProp("PRIVATE_KEY_JSON_FILE_NAME"));
+		appContext.setPrivateKeyJsonFilePath(propertyResolver.getStringProp("PRIVATE_KEY_JSON_FILE_PATH"));
 		appContext.setLocales(propertyResolver.getStringListProp("LOCALES"));
 		appContext.setReleaseName(propertyResolver.getStringProp("RELEASE_NAME"));
 		appContext.setDraft(propertyResolver.getBooleanProp("DRAFT"));
