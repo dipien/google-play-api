@@ -10,6 +10,8 @@ import org.gradle.api.logging.LogLevel;
 
 public class ListTracksTask extends BaseTask {
 	
+	private LogLevel logLevel = LogLevel.LIFECYCLE;
+	
 	public ListTracksTask() {
 		setDescription("List all the tracks and its releases");
 	}
@@ -19,16 +21,16 @@ public class ListTracksTask extends BaseTask {
 		TracksListResponse tracksListResponse = GooglePlayPublisher.getTracks(app);
 		
 		for (Track track : tracksListResponse.getTracks()) {
-			getLogger().log(LogLevel.INFO, "Track: " + track.getTrack());
-			getLogger().log(LogLevel.INFO, "-------------------------------");
+			getLogger().log(logLevel, "Track: " + track.getTrack());
+			getLogger().log(logLevel, "-------------------------------");
 			for (TrackRelease trackRelease : track.getReleases()) {
-				getLogger().log(LogLevel.INFO, "  Release name: " + trackRelease.getName());
-				getLogger().log(LogLevel.INFO, "  Version codes: " + trackRelease.getVersionCodes());
-				getLogger().log(LogLevel.INFO, "  User fraction: " + trackRelease.getUserFraction());
-				getLogger().log(LogLevel.INFO, "  Status: " + trackRelease.getStatus());
-				getLogger().log(LogLevel.INFO, "  Release Notes: " + trackRelease.getReleaseNotes());
+				getLogger().log(logLevel, "  Release name: " + trackRelease.getName());
+				getLogger().log(logLevel, "  Version codes: " + trackRelease.getVersionCodes());
+				getLogger().log(logLevel, "  User fraction: " + trackRelease.getUserFraction());
+				getLogger().log(logLevel, "  Status: " + trackRelease.getStatus());
+				getLogger().log(logLevel, "  Release Notes: " + trackRelease.getReleaseNotes());
 			}
-			getLogger().log(LogLevel.INFO, "/n");
+			getLogger().log(logLevel, "/n");
 		}
 	}
 

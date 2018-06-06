@@ -15,7 +15,7 @@ public class ListApksTask extends BaseTask {
 	@Override
 	protected void onExecute(App app) {
 		for (Apk apk : GooglePlayPublisher.getApks(app)) {
-			getLogger().log(LogLevel.INFO, String.format("Version Code: %d - Binary sha1: %s", apk.getVersionCode(), apk.getBinary().getSha1()));
+			getLogger().log(LogLevel.LIFECYCLE, String.format("Version Code: %d - Binary sha1: %s", apk.getVersionCode(), apk.getBinary().getSha1()));
 		}
 
 	}

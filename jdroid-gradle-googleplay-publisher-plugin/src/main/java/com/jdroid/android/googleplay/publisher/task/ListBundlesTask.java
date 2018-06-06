@@ -15,7 +15,7 @@ public class ListBundlesTask extends BaseTask {
 	@Override
 	protected void onExecute(App app) {
 		for (Bundle bundle : GooglePlayPublisher.getBundles(app)) {
-			getLogger().log(LogLevel.INFO, String.format("Version Code: %d - Binary sha1: %s", bundle.getVersionCode(), bundle.getSha1()));
+			getLogger().log(LogLevel.LIFECYCLE, String.format("Version Code: %d - Binary sha1: %s", bundle.getVersionCode(), bundle.getSha1()));
 		}
 
 	}
