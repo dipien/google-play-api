@@ -13,11 +13,12 @@ Gradle Plugin & Java Library for Google Play API
 Setup up your Google Developers Service Account
 
 1. Open the [Google Play Console](https://play.google.com/apps/publish/)
-1. Select **Settings** tab, followed by the **API access** tab
+1. Select **Settings**, followed by **API access**
+1. If your account is not linked to a Google Developer Project, then click the **Create new project** button
 1. Click the **Create Service Account** button and follow the **Google API Console** link in the dialog
 1. Click the **Create Service account** button at the top of the developers console screen
 1. Provide a name for the service account
-1. Click **Select a role** and choose **Project > Service Account Actor**
+1. Click **Select a role** and choose **Project -> Editor**
 1. Check the **Furnish a new private key** checkbox
 1. Select **JSON** as the Key type
 1. Click **Create** to close the dialog
