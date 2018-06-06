@@ -1,5 +1,7 @@
 package com.jdroid.android.googleplay.publisher;
 
+import com.google.common.collect.Lists;
+
 import java.util.List;
 
 public class AppContext {
@@ -11,7 +13,7 @@ public class AppContext {
 	private String privateKeyJsonFilePath;
 	
 	private String metadataPath;
-	private List<String> locales;
+	private List<String> locales = Lists.newArrayList();
 	
 	private String apkPath;
 	private String bundlePath;
@@ -57,7 +59,9 @@ public class AppContext {
 	}
 
 	public void setLocales(List<String> locales) {
-		this.locales = locales;
+		if (locales != null) {
+			this.locales = locales;
+		}
 	}
 
 	public void setApkPath(String apkPath) {

@@ -64,10 +64,8 @@ public class GooglePlayPublisher {
 	/**
 	 * Performs all necessary setup steps for running requests against the API.
 	 * 
-	 * @param appContext
-	 * @return the {@Link AndroidPublisher} service
-	 * @throws GeneralSecurityException
-	 * @throws IOException
+	 * @param appContext the {@link AppContext}
+	 * @return the {@link AndroidPublisher} service
 	 */
 	private static AndroidPublisher init(AppContext appContext) {
 
@@ -87,15 +85,12 @@ public class GooglePlayPublisher {
 			// Set up and return API client.
 			return new AndroidPublisher.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential).setApplicationName(
 				appContext.getApplicationId()).build();
-		} catch (GeneralSecurityException e) {
-			throw new UnexpectedException(e);
-		} catch (IOException e) {
+		} catch (GeneralSecurityException | IOException e) {
 			throw new UnexpectedException(e);
 		}
 	}
 	
-	private static Credential authorizeWithServiceAccount(AppContext appContext) throws GeneralSecurityException,
-			IOException {
+	private static Credential authorizeWithServiceAccount(AppContext appContext) throws IOException {
 
 		if (StringUtils.isEmpty(appContext.getPrivateKeyJsonFilePath())) {
 			throw new UnexpectedException("The private key json file path is required");
@@ -358,7 +353,7 @@ public class GooglePlayPublisher {
 			trackRelease.setName(app.getAppContext().getReleaseName());
 			trackRelease.setVersionCodes(Collections.singletonList(apk.getVersionCode().longValue()));
 			
-			TrackReleaseStatus trackReleaseStatus = null;
+			TrackReleaseStatus trackReleaseStatus;
 			if (app.getAppContext().isDraft()) {
 				trackReleaseStatus = TrackReleaseStatus.DRAFT;
 			} else if (app.getAppContext().getTrackType().equals(TrackType.ROLLOUT)) {
@@ -447,7 +442,7 @@ public class GooglePlayPublisher {
 			trackRelease.setName(app.getAppContext().getReleaseName());
 			trackRelease.setVersionCodes(Collections.singletonList(bundle.getVersionCode().longValue()));
 			
-			TrackReleaseStatus trackReleaseStatus = null;
+			TrackReleaseStatus trackReleaseStatus;
 			if (app.getAppContext().isDraft()) {
 				trackReleaseStatus = TrackReleaseStatus.DRAFT;
 			} else if (app.getAppContext().getTrackType().equals(TrackType.ROLLOUT)) {
