@@ -126,7 +126,7 @@ public class GooglePlayPublisher {
 			// Get a list of apks.
 			ApksListResponse apksResponse = edits.apks().list(app.getApplicationId(), appEdit.getId()).execute();
 			
-			return apksResponse.getApks();
+			return apksResponse.getApks() != null ? apksResponse.getApks() : Lists.newArrayList();
 		} catch (IOException ex) {
 			throw new UnexpectedException("Exception was thrown while getting APKs list", ex);
 		}
@@ -152,7 +152,7 @@ public class GooglePlayPublisher {
 			// Get a list of bundles.
 			BundlesListResponse bundlesListResponse = edits.bundles().list(app.getApplicationId(), appEdit.getId()).execute();
 			
-			return bundlesListResponse.getBundles();
+			return bundlesListResponse.getBundles() != null ? bundlesListResponse.getBundles() : Lists.newArrayList();
 		} catch (IOException ex) {
 			throw new UnexpectedException("Exception was thrown while getting bundle list", ex);
 		}
