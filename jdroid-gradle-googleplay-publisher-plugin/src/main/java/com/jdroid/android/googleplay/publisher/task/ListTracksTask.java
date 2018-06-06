@@ -30,7 +30,7 @@ public class ListTracksTask extends BaseTask {
 				getLogger().log(logLevel, "  Status: " + trackRelease.getStatus());
 				getLogger().log(logLevel, "  Release Notes: " + trackRelease.getReleaseNotes());
 			}
-			getLogger().log(logLevel, "/n");
+			getLogger().log(logLevel, "");
 		}
 	}
 
