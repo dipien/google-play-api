@@ -1,3 +1,5 @@
+ext.APPLICATION_ID = "com.jdroid.googleplay.publisher.sample"
+
 apply plugin: 'com.android.application'
 apply plugin: 'com.jdroid.googleplay.publisher'
 

@@ -122,6 +122,8 @@ public class GooglePlayPublisher {
 			ApksListResponse apksResponse = edits.apks().list(app.getApplicationId(), appEdit.getId()).execute();
 			
 			return apksResponse.getApks() != null ? apksResponse.getApks() : Lists.newArrayList();
+		} catch (GoogleJsonResponseException ex) {
+			throw new UnexpectedException(ex.getDetails().getMessage(), ex);
 		} catch (IOException ex) {
 			throw new UnexpectedException("Exception was thrown while getting APKs list", ex);
 		}
@@ -148,6 +150,8 @@ public class GooglePlayPublisher {
 			BundlesListResponse bundlesListResponse = edits.bundles().list(app.getApplicationId(), appEdit.getId()).execute();
 			
 			return bundlesListResponse.getBundles() != null ? bundlesListResponse.getBundles() : Lists.newArrayList();
+		} catch (GoogleJsonResponseException ex) {
+			throw new UnexpectedException(ex.getDetails().getMessage(), ex);
 		} catch (IOException ex) {
 			throw new UnexpectedException("Exception was thrown while getting bundle list", ex);
 		}
@@ -301,6 +305,8 @@ public class GooglePlayPublisher {
 
 			commitEdit(app, edits, editId);
 			
+		} catch (GoogleJsonResponseException ex) {
+			throw new UnexpectedException(ex.getDetails().getMessage(), ex);
 		} catch (IOException ex) {
 			throw new UnexpectedException("Exception was thrown while updating listing", ex);
 		}
@@ -388,7 +394,7 @@ public class GooglePlayPublisher {
 			if (!app.getAppContext().failOnApkUpgradeVersionConflict() && ex.getDetails().getCode() == 403 && ex.getDetails().getMessage().equals("APK specifies a version code that has already been used.")) {
 				System.out.println("WARNING | apkUpgradeVersionConflict: APK specifies a version code that has already been used.");
 			} else {
-				throw new UnexpectedException("Exception was thrown while uploading apk and updating recent changes", ex);
+				throw new UnexpectedException(ex.getDetails().getMessage(), ex);
 			}
 		} catch (IOException ex) {
 			throw new UnexpectedException("Exception was thrown while uploading apk and updating recent changes", ex);
@@ -473,6 +479,9 @@ public class GooglePlayPublisher {
 			
 			// Commit changes for edit.
 			commitEdit(app, edits, editId);
+			
+		} catch (GoogleJsonResponseException ex) {
+			throw new UnexpectedException(ex.getDetails().getMessage(), ex);
 		} catch (IOException ex) {
 			throw new UnexpectedException("Exception was thrown while uploading bundle and updating recent changes", ex);
 		}
@@ -529,6 +538,8 @@ public class GooglePlayPublisher {
 			// Commit changes for edit.
 			commitEdit(app, edits, editId);
 			
+		} catch (GoogleJsonResponseException ex) {
+			throw new UnexpectedException(ex.getDetails().getMessage(), ex);
 		} catch (IOException ex) {
 			throw new UnexpectedException("Exception was thrown while increasing the staged rollout", ex);
 		}
@@ -569,6 +580,8 @@ public class GooglePlayPublisher {
 			// Commit changes for edit.
 			commitEdit(app, edits, editId);
 			
+		} catch (GoogleJsonResponseException ex) {
+			throw new UnexpectedException(ex.getDetails().getMessage(), ex);
 		} catch (IOException ex) {
 			throw new UnexpectedException("Exception was thrown while halting the staged rollout", ex);
 		}
@@ -609,6 +622,8 @@ public class GooglePlayPublisher {
 			// Commit changes for edit.
 			commitEdit(app, edits, editId);
 			
+		} catch (GoogleJsonResponseException ex) {
+			throw new UnexpectedException(ex.getDetails().getMessage(), ex);
 		} catch (IOException ex) {
 			throw new UnexpectedException("Exception was thrown while resuming the staged rollout", ex);
 		}
@@ -708,6 +723,8 @@ public class GooglePlayPublisher {
 			// Commit changes for edit.
 			commitEdit(app, edits, editId);
 			
+		} catch (GoogleJsonResponseException ex) {
+			throw new UnexpectedException(ex.getDetails().getMessage(), ex);
 		} catch (IOException ex) {
 			throw new UnexpectedException("Exception was thrown while promoting from " + fromTrackType.getKey() + " to " + toTrackType.getKey(), ex);
 		}
@@ -727,6 +744,9 @@ public class GooglePlayPublisher {
 			
 			Edits.Tracks.List getTracksRequest = edits.tracks().list(app.getApplicationId(), editId);
 			return getTracksRequest.execute();
+			
+		} catch (GoogleJsonResponseException ex) {
+			throw new UnexpectedException(ex.getDetails().getMessage(), ex);
 		} catch (IOException ex) {
 			throw new UnexpectedException("Exception was thrown while getting track", ex);
 		}
