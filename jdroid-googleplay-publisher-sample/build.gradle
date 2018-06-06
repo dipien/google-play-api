@@ -38,9 +38,18 @@ android {
 		versionName "1.0"
 	}
 
+	signingConfigs {
+		release {
+			storeFile file(project.ext.get("STORE_FILE"))
+			keyAlias project.ext.get("KEY_ALIAS")
+			keyPassword project.ext.get("KEY_PASSWORD")
+			storePassword project.ext.get("STORE_PASSWORD")
+		}
+	}
+
 	buildTypes {
 		release {
-			minifyEnabled false
+			signingConfig signingConfigs.release
 		}
 	}
 
