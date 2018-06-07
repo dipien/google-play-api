@@ -340,14 +340,14 @@ public class GooglePlayPublisher {
 			System.out.println(String.format("Version code %d has been uploaded", apk.getVersionCode()));
 			
 			if (app.getAppContext().getTrackType().equals(TrackType.ROLLOUT)) {
-				Track currentRolloutTrack = getTrack(app, edits, editId);
-				if (currentRolloutTrack == null || currentRolloutTrack.getReleases().isEmpty()) {
+				TrackRelease currentRolloutTrackRelease = getInProgressRollout(app, edits, editId);
+				if (currentRolloutTrackRelease == null) {
 					if (app.getAppContext().getUserFraction() == null) {
 						app.getAppContext().setUserFraction(DEFAULT_USER_FRACTION);
 					}
 				} else {
 					if (app.getAppContext().getUserFraction() == null) {
-						app.getAppContext().setUserFraction(currentRolloutTrack.getReleases().get(0).getUserFraction());
+						app.getAppContext().setUserFraction(currentRolloutTrackRelease.getUserFraction());
 					}
 				}
 			}
@@ -429,14 +429,14 @@ public class GooglePlayPublisher {
 			System.out.println(String.format("Version code %d has been uploaded", bundle.getVersionCode()));
 			
 			if (app.getAppContext().getTrackType().equals(TrackType.ROLLOUT)) {
-				Track currentRolloutTrack = getTrack(app, edits, editId);
-				if (currentRolloutTrack == null || currentRolloutTrack.getReleases().isEmpty()) {
+				TrackRelease currentRolloutTrackRelease = getInProgressRollout(app, edits, editId);
+				if (currentRolloutTrackRelease == null) {
 					if (app.getAppContext().getUserFraction() == null) {
 						app.getAppContext().setUserFraction(DEFAULT_USER_FRACTION);
 					}
 				} else {
 					if (app.getAppContext().getUserFraction() == null) {
-						app.getAppContext().setUserFraction(currentRolloutTrack.getReleases().get(0).getUserFraction());
+						app.getAppContext().setUserFraction(currentRolloutTrackRelease.getUserFraction());
 					}
 				}
 			}
@@ -487,11 +487,35 @@ public class GooglePlayPublisher {
 		}
 	}
 	
-	private static Track getTrack(App app, Edits edits, String editId) throws IOException {
+	private static TrackRelease getHaltedRollout(App app, Edits edits, String editId) throws IOException {
+		Track currentRolloutTrack = getTrack(app, TrackType.PRODUCTION, edits, editId);
+		if (currentRolloutTrack != null && currentRolloutTrack.getReleases() != null) {
+			for (TrackRelease trackRelease : currentRolloutTrack.getReleases()) {
+				if (trackRelease.getStatus().equals(TrackReleaseStatus.HALTED.getKey())) {
+					return trackRelease;
+				}
+			}
+		}
+		return null;
+	}
+	
+	private static TrackRelease getInProgressRollout(App app, Edits edits, String editId) throws IOException {
+		Track currentRolloutTrack = getTrack(app, TrackType.PRODUCTION, edits, editId);
+		if (currentRolloutTrack != null && currentRolloutTrack.getReleases() != null) {
+			for (TrackRelease trackRelease : currentRolloutTrack.getReleases()) {
+				if (trackRelease.getStatus().equals(TrackReleaseStatus.IN_PROGRESS.getKey())) {
+					return trackRelease;
+				}
+			}
+		}
+		return null;
+	}
+	
+	private static Track getTrack(App app, TrackType trackType, Edits edits, String editId) throws IOException {
 		Edits.Tracks.List getTracksRequest = edits.tracks().list(app.getApplicationId(), editId);
 		TracksListResponse tracksListResponse = getTracksRequest.execute();
 		for (Track track : tracksListResponse.getTracks()) {
-			if (track.getTrack().equals(app.getAppContext().getTrackType().getKey())) {
+			if (track.getTrack().equals(trackType.getKey())) {
 				return track;
 			}
 		}
@@ -505,7 +529,7 @@ public class GooglePlayPublisher {
 				throw new UnexpectedException("userFraction cannot be null or empty!");
 			}
 			
-			app.getAppContext().setTrackType(TrackType.ROLLOUT);
+			app.getAppContext().setTrackType(TrackType.PRODUCTION);
 			
 			// Create the API service.
 			AndroidPublisher service = init(app.getAppContext());
@@ -518,17 +542,17 @@ public class GooglePlayPublisher {
 			System.out.println(String.format("Created edit with id: %s", editId));
 			
 			Track track = new Track();
-			track.setTrack(TrackType.ROLLOUT.getKey());
+			track.setTrack(TrackType.PRODUCTION.getKey());
 			
-			Track currentRolloutTrack = getTrack(app, edits, editId);
-			if (currentRolloutTrack == null || currentRolloutTrack.getReleases().isEmpty()) {
-				throw new UnexpectedException("No current rollout track found");
+			TrackRelease currentRolloutRelease = getInProgressRollout(app, edits, editId);
+			if (currentRolloutRelease == null) {
+				throw new UnexpectedException("No in progress staged rollout release found");
 			}
 			
 			TrackRelease trackRelease = new TrackRelease();
 			trackRelease.setStatus(TrackReleaseStatus.IN_PROGRESS.getKey());
 			trackRelease.setUserFraction(app.getAppContext().getUserFraction());
-			trackRelease.setVersionCodes(currentRolloutTrack.getReleases().get(0).getVersionCodes());
+			trackRelease.setVersionCodes(currentRolloutRelease.getVersionCodes());
 			track.setReleases(Collections.singletonList(trackRelease));
 			
 			Edits.Tracks.Patch patchTrackRequest = edits.tracks().patch(app.getApplicationId(), editId, track.getTrack(), track);
@@ -548,7 +572,7 @@ public class GooglePlayPublisher {
 	public static void haltStagedRollout(App app) {
 		try {
 			
-			app.getAppContext().setTrackType(TrackType.ROLLOUT);
+			app.getAppContext().setTrackType(TrackType.PRODUCTION);
 			
 			// Create the API service.
 			AndroidPublisher service = init(app.getAppContext());
@@ -561,16 +585,17 @@ public class GooglePlayPublisher {
 			System.out.println(String.format("Created edit with id: %s", editId));
 			
 			Track track = new Track();
-			track.setTrack(TrackType.ROLLOUT.getKey());
+			track.setTrack(TrackType.PRODUCTION.getKey());
 			
-			Track currentRolloutTrack = getTrack(app, edits, editId);
-			if (currentRolloutTrack == null || currentRolloutTrack.getReleases().isEmpty()) {
-				throw new UnexpectedException("No current rollout track found");
+			TrackRelease currentRolloutRelease = getInProgressRollout(app, edits, editId);
+			if (currentRolloutRelease == null) {
+				throw new UnexpectedException("No in progress staged rollout release found");
 			}
 			
 			TrackRelease trackRelease = new TrackRelease();
 			trackRelease.setStatus(TrackReleaseStatus.HALTED.getKey());
-			trackRelease.setVersionCodes(currentRolloutTrack.getReleases().get(0).getVersionCodes());
+			trackRelease.setVersionCodes(currentRolloutRelease.getVersionCodes());
+			trackRelease.setUserFraction(currentRolloutRelease.getUserFraction());
 			track.setReleases(Collections.singletonList(trackRelease));
 			
 			Edits.Tracks.Patch patchTrackRequest = edits.tracks().patch(app.getApplicationId(), editId, track.getTrack(), track);
@@ -590,7 +615,7 @@ public class GooglePlayPublisher {
 	public static void resumeStagedRollout(App app) {
 		try {
 			
-			app.getAppContext().setTrackType(TrackType.ROLLOUT);
+			app.getAppContext().setTrackType(TrackType.PRODUCTION);
 			
 			// Create the API service.
 			AndroidPublisher service = init(app.getAppContext());
@@ -603,16 +628,17 @@ public class GooglePlayPublisher {
 			System.out.println(String.format("Created edit with id: %s", editId));
 			
 			Track track = new Track();
-			track.setTrack(TrackType.ROLLOUT.getKey());
+			track.setTrack(TrackType.PRODUCTION.getKey());
 			
-			Track currentRolloutTrack = getTrack(app, edits, editId);
-			if (currentRolloutTrack == null || currentRolloutTrack.getReleases().isEmpty()) {
-				throw new UnexpectedException("No current rollout track found");
+			TrackRelease currentRolloutRelease = getHaltedRollout(app, edits, editId);
+			if (currentRolloutRelease == null) {
+				throw new UnexpectedException("No halted staged rollout release found");
 			}
 			
 			TrackRelease trackRelease = new TrackRelease();
 			trackRelease.setStatus(TrackReleaseStatus.IN_PROGRESS.getKey());
-			trackRelease.setVersionCodes(currentRolloutTrack.getReleases().get(0).getVersionCodes());
+			trackRelease.setVersionCodes(currentRolloutRelease.getVersionCodes());
+			trackRelease.setUserFraction(currentRolloutRelease.getUserFraction());
 			track.setReleases(Collections.singletonList(trackRelease));
 			
 			Edits.Tracks.Patch patchTrackRequest = edits.tracks().patch(app.getApplicationId(), editId, track.getTrack(), track);
@@ -674,7 +700,40 @@ public class GooglePlayPublisher {
 	}
 	
 	public static void promoteFromRolloutToProduction(App app) {
-		promote(app, TrackType.ROLLOUT, TrackType.PRODUCTION);
+		try {
+			// Create the API service.
+			AndroidPublisher service = init(app.getAppContext());
+			Edits edits = service.edits();
+			
+			// Create a new edit to make changes.
+			Insert editRequest = edits.insert(app.getApplicationId(), null);
+			AppEdit edit = editRequest.execute();
+			String editId = edit.getId();
+			System.out.println(String.format("Created edit with id: %s", editId));
+			
+			TrackRelease currentRolloutRelease = getInProgressRollout(app, edits, editId);
+			if (currentRolloutRelease == null) {
+				throw new UnexpectedException("No in progress staged rollout release found");
+			}
+			currentRolloutRelease.setStatus(TrackReleaseStatus.COMPLETED.getKey());
+			currentRolloutRelease.setUserFraction(null);
+			
+			Track productionTrack = new Track();
+			productionTrack.setTrack(TrackType.PRODUCTION.getKey());
+			productionTrack.setReleases(Collections.singletonList(currentRolloutRelease));
+			
+			Edits.Tracks.Update updateTrackRequest = edits.tracks().update(app.getApplicationId(), editId, productionTrack.getTrack(), productionTrack);
+			Track updatedTrack = updateTrackRequest.execute();
+			System.out.println(String.format("Track %s has been updated.", updatedTrack.getTrack()));
+			
+			// Commit changes for edit.
+			commitEdit(app, edits, editId);
+			
+		} catch (GoogleJsonResponseException ex) {
+			throw new UnexpectedException(ex.getDetails().getMessage(), ex);
+		} catch (IOException ex) {
+			throw new UnexpectedException("Exception was thrown while promoting from rollout to production", ex);
+		}
 	}
 	
 	private static void promote(App app, TrackType fromTrackType, TrackType toTrackType) {
@@ -694,7 +753,11 @@ public class GooglePlayPublisher {
 			Track fromTrack = getTrackRequest.execute();
 			
 			Track toTrack = new Track();
-			toTrack.setTrack(toTrackType.getKey());
+			if (toTrackType.equals(TrackType.ROLLOUT)) {
+				toTrack.setTrack(TrackType.PRODUCTION.getKey());
+			} else {
+				toTrack.setTrack(toTrackType.getKey());
+			}
 			List<TrackRelease> toTrackReleases = Lists.newArrayList();
 			for (TrackRelease fromTrackRelease : fromTrack.getReleases()) {
 				if (app.getAppContext().getReleaseName() == null || app.getAppContext().getReleaseName().equals(fromTrackRelease.getName())) {

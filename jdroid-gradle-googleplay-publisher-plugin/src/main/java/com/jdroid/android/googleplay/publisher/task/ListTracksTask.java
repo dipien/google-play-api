@@ -21,16 +21,19 @@ public class ListTracksTask extends BaseTask {
 		TracksListResponse tracksListResponse = GooglePlayPublisher.getTracks(app);
 		
 		for (Track track : tracksListResponse.getTracks()) {
-			getLogger().log(logLevel, "Track: " + track.getTrack());
-			getLogger().log(logLevel, "-------------------------------");
-			for (TrackRelease trackRelease : track.getReleases()) {
-				getLogger().log(logLevel, "  Release name: " + trackRelease.getName());
-				getLogger().log(logLevel, "  Version codes: " + trackRelease.getVersionCodes());
-				getLogger().log(logLevel, "  User fraction: " + trackRelease.getUserFraction());
-				getLogger().log(logLevel, "  Status: " + trackRelease.getStatus());
-				getLogger().log(logLevel, "  Release Notes: " + trackRelease.getReleaseNotes());
+			if (track.getReleases() != null) {
+				getLogger().log(logLevel, "Track: " + track.getTrack());
+				getLogger().log(logLevel, "-------------------------------");
+				for (TrackRelease trackRelease : track.getReleases()) {
+					getLogger().log(logLevel, "  Release name: " + trackRelease.getName());
+					getLogger().log(logLevel, "  Version codes: " + trackRelease.getVersionCodes());
+					getLogger().log(logLevel, "  User fraction: " + trackRelease.getUserFraction());
+					getLogger().log(logLevel, "  Status: " + trackRelease.getStatus());
+					getLogger().log(logLevel, "  Release Notes: " + trackRelease.getReleaseNotes());
+					getLogger().log(logLevel, "");
+				}
+				getLogger().log(logLevel, "");
 			}
-			getLogger().log(logLevel, "");
 		}
 	}
 
