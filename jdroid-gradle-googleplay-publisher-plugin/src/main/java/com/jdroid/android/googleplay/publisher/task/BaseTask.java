@@ -18,6 +18,7 @@ public abstract class BaseTask extends AbstractTask {
 
 		appContext.setMetadataPath(propertyResolver.getStringProp("METADATA_PATH", getProject().getProjectDir().getAbsolutePath()));
 
+		appContext.setReleaseNotesRequired(propertyResolver.getBooleanProp("RELEASE_NOTES_REQUIRED"));
 		appContext.setVideoRequired(propertyResolver.getBooleanProp("VIDEO_REQUIRED"));
 		appContext.setPromoGraphicRequired(propertyResolver.getBooleanProp("PROMO_GRAPHIC_REQUIRED"));
 		appContext.setPhoneScreenshotsRequired(propertyResolver.getBooleanProp("PHONE_SCREENSHOTS_REQUIRED"));

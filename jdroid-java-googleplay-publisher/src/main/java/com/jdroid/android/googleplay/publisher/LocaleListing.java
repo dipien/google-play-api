@@ -3,6 +3,7 @@ package com.jdroid.android.googleplay.publisher;
 import com.google.api.client.http.AbstractInputStreamContent;
 import com.google.api.client.http.FileContent;
 import com.google.api.client.util.Lists;
+import com.jdroid.java.exception.UnexpectedException;
 import com.jdroid.java.utils.FileUtils;
 
 import java.io.File;
@@ -24,66 +25,88 @@ public class LocaleListing {
 		return locale.toLanguageTag();
 	}
 	
-	public String getTitle() {
-		return getDetailsContent("title");
+	public String getTitle(LocaleListing defaultLocaleListing) {
+		return getDetailsContent("title", true, defaultLocaleListing);
 	}
 	
-	public String getShortDescription() {
-		return getDetailsContent("short_description");
+	public String getShortDescription(LocaleListing defaultLocaleListing) {
+		return getDetailsContent("short_description", true, defaultLocaleListing);
 	}
 	
-	public String getFullDescription() {
-		return getDetailsContent("full_description");
+	public String getFullDescription(LocaleListing defaultLocaleListing) {
+		return getDetailsContent("full_description", true, defaultLocaleListing);
 	}
 	
-	public String getVideo() {
-		return getDetailsContent("video");
+	public String getVideo(LocaleListing defaultLocaleListing, Boolean required) {
+		return getDetailsContent("video", required, defaultLocaleListing);
 	}
 	
-	public String getReleaseNotes(Integer versionCode) {
+	public String getReleaseNotes(Integer versionCode, LocaleListing defaultLocaleListing, Boolean required) {
+		String releaseNotes = getReleaseNotes(versionCode);
+		if (releaseNotes == null) {
+			releaseNotes = defaultLocaleListing.getReleaseNotes(versionCode);
+		}
+		if (releaseNotes == null && required) {
+			throw new UnexpectedException("Release notes for version code " + versionCode + " were not found for locale " + getLanguageTag());
+		}
+		return releaseNotes;
+	}
+	
+	private String getReleaseNotes(Integer versionCode) {
 		File file = new File(basePath + "release_notes" + java.io.File.separator + versionCode + ".txt");
 		return file.exists() ? FileUtils.toString(file) : getDefaultReleaseNotes();
 	}
 	
-	public String getDefaultReleaseNotes() {
+	private String getDefaultReleaseNotes() {
 		File file = new File(basePath + "release_notes" + java.io.File.separator + "default_release_notes.txt");
 		return file.exists() ? FileUtils.toString(file) : null;
 	}
 	
-	public AbstractInputStreamContent getFeatureGraphic() {
-		return getImagesContent("featureGraphic");
+	public AbstractInputStreamContent getFeatureGraphic(LocaleListing defaultLocaleListing) {
+		return getImageContent("feature_graphic", true, defaultLocaleListing);
 	}
 	
-	public AbstractInputStreamContent getPromoGraphic() {
-		return getImagesContent("promoGraphic");
+	public AbstractInputStreamContent getPromoGraphic(LocaleListing defaultLocaleListing, Boolean required) {
+		return getImageContent("promo_graphic", required, defaultLocaleListing);
 	}
 	
-	public AbstractInputStreamContent getHighResolutionIcon() {
-		return getImagesContent("icon");
+	public AbstractInputStreamContent getHighResolutionIcon(LocaleListing defaultLocaleListing) {
+		return getImageContent("high_resolution_icon", true, defaultLocaleListing);
 	}
 	
-	public List<AbstractInputStreamContent> getPhoneScreenshots() {
-		return getScreenshots("phoneScreenshots");
+	public List<AbstractInputStreamContent> getPhoneScreenshots(LocaleListing defaultLocaleListing, Boolean required) {
+		return getScreenshots("phone_screenshots", required, defaultLocaleListing);
 	}
 	
-	public List<AbstractInputStreamContent> getSevenInchScreenshots() {
-		return getScreenshots("sevenInchScreenshots");
+	public List<AbstractInputStreamContent> getSevenInchScreenshots(LocaleListing defaultLocaleListing, Boolean required) {
+		return getScreenshots("seven_inch_screenshots", required, defaultLocaleListing);
 	}
 	
-	public AbstractInputStreamContent getTvBanner() {
-		return getImagesContent("tvBanner");
+	public AbstractInputStreamContent getTvBanner(LocaleListing defaultLocaleListing, Boolean required) {
+		return getImageContent("tv_banner", required, defaultLocaleListing);
 	}
 	
-	public List<AbstractInputStreamContent> getTenInchScreenshots() {
-		return getScreenshots("tenInchScreenshots");
+	public List<AbstractInputStreamContent> getTenInchScreenshots(LocaleListing defaultLocaleListing, Boolean required) {
+		return getScreenshots("ten_inch_screenshots", required, defaultLocaleListing);
 	}
 	
-	public List<AbstractInputStreamContent> getTvScreenshots() {
-		return getScreenshots("tvScreenshots");
+	public List<AbstractInputStreamContent> getTvScreenshots(LocaleListing defaultLocaleListing, Boolean required) {
+		return getScreenshots("tv_screenshots", required, defaultLocaleListing);
 	}
 	
-	public List<AbstractInputStreamContent> getWearScreenshots() {
-		return getScreenshots("wearScreenshots");
+	public List<AbstractInputStreamContent> getWearScreenshots(LocaleListing defaultLocaleListing, Boolean required) {
+		return getScreenshots("wear_screenshots", required, defaultLocaleListing);
+	}
+	
+	private List<AbstractInputStreamContent> getScreenshots(String screenSize, Boolean required, LocaleListing defaultLocaleListing) {
+		List<AbstractInputStreamContent> abstractInputStreamContents = getScreenshots(screenSize);
+		if (abstractInputStreamContents.isEmpty()) {
+			abstractInputStreamContents = defaultLocaleListing.getScreenshots(screenSize);
+		}
+		if (abstractInputStreamContents.isEmpty() && required) {
+			throw new UnexpectedException("images" + java.io.File.separator + screenSize + " was not found for locale " + getLanguageTag());
+		}
+		return abstractInputStreamContents;
 	}
 	
 	private List<AbstractInputStreamContent> getScreenshots(String screenSize) {
@@ -97,9 +120,31 @@ public class LocaleListing {
 		return abstractInputStreamContents;
 	}
 	
+	private String getDetailsContent(String item, Boolean required, LocaleListing defaultLocaleListing) {
+		String detailsContent = getDetailsContent(item);
+		if (detailsContent == null) {
+			detailsContent = defaultLocaleListing.getDetailsContent(item);
+		}
+		if (detailsContent == null && required) {
+			throw new UnexpectedException(item + ".txt was not found for locale " + getLanguageTag());
+		}
+		return detailsContent;
+	}
+	
 	private String getDetailsContent(String item) {
 		File file = new File(basePath + item + ".txt");
 		return file.exists() ? FileUtils.toString(file) : null;
+	}
+	
+	private AbstractInputStreamContent getImageContent(String item, Boolean required, LocaleListing defaultLocaleListing) {
+		AbstractInputStreamContent imageContent = getImagesContent(item);
+		if (imageContent == null) {
+			imageContent = defaultLocaleListing.getImagesContent(item);
+		}
+		if (imageContent == null && required) {
+			throw new UnexpectedException("images/" + item + ".png was not found for locale " + getLanguageTag());
+		}
+		return imageContent;
 	}
 	
 	private AbstractInputStreamContent getImagesContent(String item) {

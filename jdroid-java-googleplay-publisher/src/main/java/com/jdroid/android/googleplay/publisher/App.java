@@ -2,7 +2,6 @@ package com.jdroid.android.googleplay.publisher;
 
 import com.google.api.client.http.AbstractInputStreamContent;
 import com.google.api.client.util.Lists;
-import com.jdroid.java.exception.UnexpectedException;
 
 import java.util.List;
 import java.util.Locale;
@@ -30,164 +29,65 @@ public class App {
 	}
 
 	public String getTitle(LocaleListing localeListing) {
-		String title = localeListing.getTitle();
-		if (title == null) {
-			title = defaultLocaleListing.getTitle();
-		}
-		if (title == null) {
-			throw new UnexpectedException("The title.txt was not found for locale " + localeListing.getLanguageTag());
-		}
-		return title;
+		return localeListing.getTitle(defaultLocaleListing);
 	}
 
 	public String getFullDescription(LocaleListing localeListing) {
-		String fullDescription = localeListing.getFullDescription();
-		if (fullDescription == null) {
-			fullDescription = defaultLocaleListing.getFullDescription();
-		}
-		if (fullDescription == null) {
-			throw new UnexpectedException("The full_description.txt was not found for locale " + localeListing.getLanguageTag());
-		}
-		return fullDescription;
+		return localeListing.getFullDescription(defaultLocaleListing);
 	}
 
 	public String getShortDescription(LocaleListing localeListing) {
-		String shortDescription = localeListing.getShortDescription();
-		if (shortDescription == null) {
-			shortDescription = defaultLocaleListing.getShortDescription();
-		}
-		if (shortDescription == null) {
-			throw new UnexpectedException("The short_description.txt was not found for locale " + localeListing.getLanguageTag());
-		}
-		return shortDescription;
+		return localeListing.getShortDescription(defaultLocaleListing);
 	}
 	
 	public String getVideo(LocaleListing localeListing) {
-		String video = localeListing.getVideo();
-		if (video == null) {
-			video = defaultLocaleListing.getVideo();
-		}
-		if (video == null && appContext.isVideoRequired()) {
-			throw new UnexpectedException("The video.txt was not found for locale " + localeListing.getLanguageTag());
-		}
-		return video;
+		return localeListing.getVideo(defaultLocaleListing, appContext.isVideoRequired());
 	}
 
 	public AbstractInputStreamContent getFeatureGraphic(LocaleListing localeListing) {
-		AbstractInputStreamContent featureGraphic = localeListing.getFeatureGraphic();
-		if (featureGraphic == null) {
-			featureGraphic = defaultLocaleListing.getFeatureGraphic();
-		}
-		if (featureGraphic == null) {
-			throw new UnexpectedException("images/featureGraphic.png was not found for locale " + localeListing.getLanguageTag());
-		}
-		return featureGraphic;
+		return localeListing.getFeatureGraphic(defaultLocaleListing);
 	}
 
 	public AbstractInputStreamContent getPromoGraphic(LocaleListing localeListing) {
-		AbstractInputStreamContent promoGraphic = localeListing.getPromoGraphic();
-		if (promoGraphic == null) {
-			promoGraphic = defaultLocaleListing.getPromoGraphic();
-		}
-		if (promoGraphic == null && appContext.isPromoGraphicRequired()) {
-			throw new UnexpectedException("images/promoGraphic.png was not found for locale " + localeListing.getLanguageTag());
-		}
-		return promoGraphic;
+		return localeListing.getPromoGraphic(defaultLocaleListing, appContext.isPromoGraphicRequired());
 	}
 
 	public AbstractInputStreamContent getHighResolutionIcon(LocaleListing localeListing) {
-		AbstractInputStreamContent highResolutionIcon = localeListing.getHighResolutionIcon();
-		if (highResolutionIcon == null) {
-			highResolutionIcon = defaultLocaleListing.getHighResolutionIcon();
-		}
-		if (highResolutionIcon == null) {
-			throw new UnexpectedException("images/icon.png was not found for locale " + localeListing.getLanguageTag());
-		}
-		return highResolutionIcon;
+		return localeListing.getHighResolutionIcon(defaultLocaleListing);
 	}
 
 	public AbstractInputStreamContent getTvBanner(LocaleListing localeListing) {
-		AbstractInputStreamContent tvBanner = localeListing.getTvBanner();
-		if (tvBanner == null) {
-			tvBanner = defaultLocaleListing.getTvBanner();
-		}
-		if (tvBanner == null && appContext.isTvBannerRequired()) {
-			throw new UnexpectedException("images/tvBanner.png was not found for locale " + localeListing.getLanguageTag());
-		}
-		return tvBanner;
+		return localeListing.getTvBanner(defaultLocaleListing, appContext.isTvBannerRequired());
 	}
 
 	public List<AbstractInputStreamContent> getPhoneScreenshots(LocaleListing localeListing) {
-		List<AbstractInputStreamContent> phoneScreenshots = localeListing.getPhoneScreenshots();
-		if (phoneScreenshots.isEmpty()) {
-			phoneScreenshots = defaultLocaleListing.getPhoneScreenshots();
-		}
-		if (phoneScreenshots.isEmpty() && appContext.isPhoneScreenshotsRequired()) {
-			throw new UnexpectedException("Phone screenshots were not found for locale " + localeListing.getLanguageTag());
-		}
-		return phoneScreenshots;
+		return localeListing.getPhoneScreenshots(defaultLocaleListing, appContext.isPhoneScreenshotsRequired());
 	}
 
 	public List<AbstractInputStreamContent> getSevenInchScreenshots(LocaleListing localeListing) {
-		List<AbstractInputStreamContent> sevenInchScreenshots = localeListing.getSevenInchScreenshots();
-		if (sevenInchScreenshots.isEmpty()) {
-			sevenInchScreenshots = defaultLocaleListing.getSevenInchScreenshots();
-		}
-		if (sevenInchScreenshots.isEmpty() && appContext.isSevenInchScreenshotsRequired()) {
-			throw new UnexpectedException("7 Inch screenshots were not found for locale " + localeListing.getLanguageTag());
-		}
-		return sevenInchScreenshots;
+		return localeListing.getSevenInchScreenshots(defaultLocaleListing, appContext.isSevenInchScreenshotsRequired());
 	}
 
 	public List<AbstractInputStreamContent> getTenInchScreenshots(LocaleListing localeListing) {
-		List<AbstractInputStreamContent> tenInchScreenshots = localeListing.getTenInchScreenshots();
-		if (tenInchScreenshots.isEmpty()) {
-			tenInchScreenshots = defaultLocaleListing.getTenInchScreenshots();
-		}
-		if (tenInchScreenshots.isEmpty() && appContext.isTenInchScreenshotsRequired()) {
-			throw new UnexpectedException("10 Inch screenshots were not found for locale " + localeListing.getLanguageTag());
-		}
-		return tenInchScreenshots;
+		return localeListing.getTenInchScreenshots(defaultLocaleListing, appContext.isTenInchScreenshotsRequired());
 	}
 	
 	public List<AbstractInputStreamContent> getWearScreenshots(LocaleListing localeListing) {
-		List<AbstractInputStreamContent> wearScreenshots = localeListing.getWearScreenshots();
-		if (wearScreenshots.isEmpty()) {
-			wearScreenshots = defaultLocaleListing.getWearScreenshots();
-		}
-		if (wearScreenshots.isEmpty() && appContext.isWearScreenshotsRequired()) {
-			throw new UnexpectedException("Wear screenshots were not found for locale " + localeListing.getLanguageTag());
-		}
-		return wearScreenshots;
+		return localeListing.getWearScreenshots(defaultLocaleListing, appContext.isWearScreenshotsRequired());
 	}
 	
 	public List<AbstractInputStreamContent> getTvScreenshots(LocaleListing localeListing) {
-		List<AbstractInputStreamContent> tvScreenshots = localeListing.getTvScreenshots();
-		if (tvScreenshots.isEmpty()) {
-			tvScreenshots = defaultLocaleListing.getTvScreenshots();
-		}
-		if (tvScreenshots.isEmpty() && appContext.isTvScreenshotsRequired()) {
-			throw new UnexpectedException("Tv screenshots were not found for locale " + localeListing.getLanguageTag());
-		}
-		return tvScreenshots;
+		return localeListing.getTvScreenshots(defaultLocaleListing, appContext.isTvScreenshotsRequired());
 	}
 	
 	public String getReleaseNotes(LocaleListing localeListing, Integer versionCode) {
-		String releaseNotes = localeListing.getReleaseNotes(versionCode);
-		if (releaseNotes == null) {
-			releaseNotes = defaultLocaleListing.getReleaseNotes(versionCode);
-		}
-		return releaseNotes;
+		return localeListing.getReleaseNotes(versionCode, defaultLocaleListing, appContext.isReleaseNotesRequired());
 	}
 	
 	public List<LocaleListing> getLocaleListings() {
 		return localeListings;
 	}
 
-	public LocaleListing getDefaultLocaleListing() {
-		return defaultLocaleListing;
-	}
-	
 	public String getApplicationId() {
 		return appContext.getApplicationId();
 	}

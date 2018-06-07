@@ -242,9 +242,9 @@ public class GooglePlayPublisher {
 				}
 
 				// Phone Screenshots
-				Deleteall deleteallRequest = edits.images().deleteall(app.getApplicationId(), editId,
+				Deleteall deleteAllRequest = edits.images().deleteall(app.getApplicationId(), editId,
 						localeString, ImageType.PHONE_SCREENSHOTS.getKey());
-				deleteallRequest.execute();
+				deleteAllRequest.execute();
 				System.out.println("Phone screenshots has been deleted.");
 				for (AbstractInputStreamContent content : app.getPhoneScreenshots(each)) {
 					uploadImageRequest = edits.images().upload(app.getApplicationId(), editId,
@@ -254,9 +254,9 @@ public class GooglePlayPublisher {
 				}
 
 				// 7-inch Screenshots
-				deleteallRequest = edits.images().deleteall(app.getApplicationId(), editId,
+				deleteAllRequest = edits.images().deleteall(app.getApplicationId(), editId,
 						localeString, ImageType.SEVEN_INCH_SCREENSHOTS.getKey());
-				deleteallRequest.execute();
+				deleteAllRequest.execute();
 				System.out.println("Seven inch screenshots has been deleted.");
 				for (AbstractInputStreamContent content : app.getSevenInchScreenshots(each)) {
 					uploadImageRequest = edits.images().upload(app.getApplicationId(), editId,
@@ -266,9 +266,9 @@ public class GooglePlayPublisher {
 				}
 
 				// 10-inch Screenshots
-				deleteallRequest = edits.images().deleteall(app.getApplicationId(), editId,
+				deleteAllRequest = edits.images().deleteall(app.getApplicationId(), editId,
 						localeString, ImageType.TEN_INCH_SCREENSHOTS.getKey());
-				deleteallRequest.execute();
+				deleteAllRequest.execute();
 				System.out.println("Ten inch screenshots has been deleted.");
 				for (AbstractInputStreamContent content : app.getTenInchScreenshots(each)) {
 					uploadImageRequest = edits.images().upload(app.getApplicationId(), editId,
@@ -278,9 +278,9 @@ public class GooglePlayPublisher {
 				}
 				
 				// Tv Screenshots
-				deleteallRequest = edits.images().deleteall(app.getApplicationId(), editId,
+				deleteAllRequest = edits.images().deleteall(app.getApplicationId(), editId,
 						localeString, ImageType.TV_SCREENSHOTS.getKey());
-				deleteallRequest.execute();
+				deleteAllRequest.execute();
 				System.out.println("Tv screenshots has been deleted.");
 				for (AbstractInputStreamContent content : app.getTvScreenshots(each)) {
 					uploadImageRequest = edits.images().upload(app.getApplicationId(), editId,
@@ -290,9 +290,9 @@ public class GooglePlayPublisher {
 				}
 				
 				// Wear Screenshots
-				deleteallRequest = edits.images().deleteall(app.getApplicationId(), editId,
+				deleteAllRequest = edits.images().deleteall(app.getApplicationId(), editId,
 						localeString, ImageType.WEAR_SCREENSHOTS.getKey());
-				deleteallRequest.execute();
+				deleteAllRequest.execute();
 				System.out.println("Wear screenshots has been deleted.");
 				for (AbstractInputStreamContent content : app.getWearScreenshots(each)) {
 					uploadImageRequest = edits.images().upload(app.getApplicationId(), editId,

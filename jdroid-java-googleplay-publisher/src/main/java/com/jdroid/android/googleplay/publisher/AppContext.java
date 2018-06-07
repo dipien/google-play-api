@@ -23,8 +23,9 @@ public class AppContext {
 	private String releaseName;
 	
 	// Validations
+	private Boolean releaseNotesRequired = false;
 	private Boolean videoRequired = false;
-	private Boolean promoGraphicRequired = true;
+	private Boolean promoGraphicRequired = false;
 	private Boolean phoneScreenshotsRequired = true;
 	private Boolean sevenInchScreenshotsRequired = false;
 	private Boolean tenInchScreenshotsRequired = false;
@@ -206,5 +207,15 @@ public class AppContext {
 	
 	public void setPrivateKeyJsonFilePath(String privateKeyJsonFilePath) {
 		this.privateKeyJsonFilePath = privateKeyJsonFilePath;
+	}
+	
+	public Boolean isReleaseNotesRequired() {
+		return releaseNotesRequired;
+	}
+	
+	public void setReleaseNotesRequired(Boolean releaseNotesRequired) {
+		if (releaseNotesRequired != null) {
+			this.releaseNotesRequired = releaseNotesRequired;
+		}
 	}
 }
