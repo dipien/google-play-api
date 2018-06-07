@@ -40,13 +40,13 @@ public class LocaleListing {
 		return getDetailsContent("video");
 	}
 	
-	public String getChangelog(Integer versionCode) {
-		File file = new File(basePath + "changelogs" + java.io.File.separator + versionCode + ".txt");
-		return file.exists() ? FileUtils.toString(file) : getDefaultChangelog();
+	public String getReleaseNotes(Integer versionCode) {
+		File file = new File(basePath + "release_notes" + java.io.File.separator + versionCode + ".txt");
+		return file.exists() ? FileUtils.toString(file) : getDefaultReleaseNotes();
 	}
 	
-	public String getDefaultChangelog() {
-		File file = new File(basePath + "changelogs" + java.io.File.separator + "default_change_log.txt");
+	public String getDefaultReleaseNotes() {
+		File file = new File(basePath + "release_notes" + java.io.File.separator + "default_release_notes.txt");
 		return file.exists() ? FileUtils.toString(file) : null;
 	}
 	

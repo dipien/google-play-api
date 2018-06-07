@@ -172,12 +172,12 @@ public class App {
 		return tvScreenshots;
 	}
 	
-	public String getChangelog(LocaleListing localeListing, Integer versionCode) {
-		String changelog = localeListing.getChangelog(versionCode);
-		if (changelog == null) {
-			changelog = defaultLocaleListing.getChangelog(versionCode);
+	public String getReleaseNotes(LocaleListing localeListing, Integer versionCode) {
+		String releaseNotes = localeListing.getReleaseNotes(versionCode);
+		if (releaseNotes == null) {
+			releaseNotes = defaultLocaleListing.getReleaseNotes(versionCode);
 		}
-		return changelog;
+		return releaseNotes;
 	}
 	
 	public List<LocaleListing> getLocaleListings() {

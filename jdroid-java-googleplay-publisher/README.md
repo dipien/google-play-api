@@ -121,7 +121,7 @@ Get all the historical bundles uploaded.
 
 Upload new APK for your app and assign it to a release track.
 
-    // List of supported locales on Google Play. This property is required if you need to upload changelogs
+    // List of supported locales on Google Play. This property is required if you need to upload release notes
     List<String> locales = new ArrayList<String>();
     locales.add("en-US");
     locales.add("es-419");
@@ -155,11 +155,23 @@ Upload new APK for your app and assign it to a release track.
 
 ###### Release Notes
 
-Create the following files with the release notes:
+Create files with the release notes. For example:
 
-    {METADATA_PATH}/googleplay/{LOCALE_1}/changelogs/{VERSION_CODE}.txt
-    {METADATA_PATH}/googleplay/{LOCALE_2}/changelogs/{VERSION_CODE}.txt
-    
+    // Release notes for LOCALE_1 and VERSION_CODE_1
+    {METADATA_PATH}/googleplay/{LOCALE_1}/release_notes/{VERSION_CODE_1}.txt
+
+    // Release notes for LOCALE_2 and VERSION_CODE_1
+    {METADATA_PATH}/googleplay/{LOCALE_2}/release_notes/{VERSION_CODE_1}.txt
+
+    // Release notes for LOCALE_2 and any version code
+    {METADATA_PATH}/googleplay/{LOCALE_2}/release_notes/default_release_notes.txt
+
+    // Release notes for any locale and VERSION_CODE_2
+    {METADATA_PATH}/googleplay/default/release_notes/{VERSION_CODE_2}.txt
+
+    // Release notes for any locale and version code
+    {METADATA_PATH}/googleplay/default/release_notes/default_release_notes.txt
+
 #### Promote from Internal to Alpha
 
 Promote a current internal to alpha

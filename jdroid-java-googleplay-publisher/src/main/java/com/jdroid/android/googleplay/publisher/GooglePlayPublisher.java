@@ -369,11 +369,11 @@ public class GooglePlayPublisher {
 			
 			List<LocalizedText> releaseNotes = Lists.newArrayList();
 			for (LocaleListing each : app.getLocaleListings()) {
-				String changelog = app.getChangelog(each, apk.getVersionCode());
-				if (StringUtils.isNotBlank(changelog)) {
+				String releaseNoteText = app.getReleaseNotes(each, apk.getVersionCode());
+				if (StringUtils.isNotBlank(releaseNoteText)) {
 					LocalizedText releaseNote = new LocalizedText();
 					releaseNote.setLanguage(each.getLanguageTag());
-					releaseNote.setText(changelog);
+					releaseNote.setText(releaseNoteText);
 					releaseNotes.add(releaseNote);
 				}
 			}
@@ -447,12 +447,13 @@ public class GooglePlayPublisher {
 			
 			List<LocalizedText> releaseNotes = Lists.newArrayList();
 			for (LocaleListing each : app.getLocaleListings()) {
-				String changelog = app.getChangelog(each, bundle.getVersionCode());
-				if (StringUtils.isNotBlank(changelog)) {
+				String releaseNoteText = app.getReleaseNotes(each, bundle.getVersionCode());
+				if (StringUtils.isNotBlank(releaseNoteText)) {
 					LocalizedText releaseNote = new LocalizedText();
 					releaseNote.setLanguage(each.getLanguageTag());
-					releaseNote.setText(changelog);
+					releaseNote.setText(releaseNoteText);
 					releaseNotes.add(releaseNote);
+					System.out.println("Adding release notes for locale " + each.getLanguageTag());
 				}
 			}
 			trackRelease.setReleaseNotes(releaseNotes);

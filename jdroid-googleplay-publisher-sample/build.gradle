@@ -1,4 +1,5 @@
 ext.APPLICATION_ID = "com.jdroid.googleplay.publisher.sample"
+ext.LOCALES = 'en-US'
 
 apply plugin: 'com.android.application'
 apply plugin: 'com.jdroid.googleplay.publisher'
@@ -34,8 +35,8 @@ android {
 		applicationId "com.jdroid.googleplay.publisher.sample"
 		minSdkVersion 19
 		targetSdkVersion 27
-		versionCode 190060011
-		versionName "6.0.11"
+		versionCode 190060015
+		versionName "6.0.15"
 	}
 
 	signingConfigs {
