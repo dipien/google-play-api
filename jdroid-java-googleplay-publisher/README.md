@@ -139,11 +139,11 @@ Upload new APK for your app and assign it to a release track.
     appContext.setBundlePath("/path/to/bundle/file.aab");
 
     // The release track that you're assigning APKs to. 
-    // Acceptable values are: TrackType.INTERNAL, TrackType.ALPHA, TrackType.BETA, TrackType.ROLLOUT or TrackType.PRODUCTION
-    appContext.setTrackType(TrackType.ALPHA);
+    // Acceptable values are: TrackType.INTERNAL, TrackType.ALPHA, TrackType.BETA or TrackType.PRODUCTION
+    appContext.setTrackType(TrackType.PRODUCTION);
     
     // Fraction of users who are eligible to receive the release. 0 <= fraction < 1
-    // Only used if trackType is TrackType.ROLLOUT. Default value: 0.005 (0.5%)
+    // Only used if trackType is TrackType.PRODUCTION. Default value: the previous rollout user fraction (if any) or 100%
     appContext.setUserFraction(0.1);
     
     // Whether the task should fail if the uploaded APK specifies a version code that has already been used. Default value: true
@@ -172,18 +172,12 @@ Promote a current internal to beta
 
     GooglePlayPublisher.promoteFromInternalToBeta(new App(appContext));
     
-#### Promote from Internal to Rollout
-
-Promote a current internal to staged rollout
-
-    // Fraction of users who are eligible to receive the release. 0 <= fraction < 1. Default value: 0.005 (0.5%)
-    appContext.setUserFraction(0.2);
-
-    GooglePlayPublisher.promoteFromInternalToRollout(new App(appContext));
-    
 #### Promote from Internal to Production
 
 Promote a current internal to production
+
+    // Fraction of users who are eligible to receive the release. 0 <= fraction < 1. Default value: the previous rollout user fraction (if any) or 100%
+    appContext.setUserFraction(0.2);
 
     GooglePlayPublisher.promoteFromInternalToProduction(new App(appContext));
     
@@ -195,18 +189,6 @@ Promote a current alpha to beta
     appContext.setReleaseName("My release");
 
     GooglePlayPublisher.promoteFromAlphaToBeta(new App(appContext));
-        
-#### Promote from Alpha to Rollout
-
-Promote a current alpha to staged rollout
-
-    // Set a release name if you have more than one alpha track and you need to promote just one
-    appContext.setReleaseName("My release");
-
-    // Fraction of users who are eligible to receive the release. 0 <= fraction < 1. Default value: 0.005 (0.5%)
-    appContext.setUserFraction(0.2);
-    
-    GooglePlayPublisher.promoteFromAlphaToRollout(new App(appContext));
     
 #### Promote from Alpha to Production
 
@@ -215,20 +197,17 @@ Promote a current alpha to production
     // Set a release name if you have more than one alpha track and you need to promote just one
     appContext.setReleaseName("My release");
 
-    GooglePlayPublisher.promoteFromAlphaToProduction(new App(appContext));
-        
-#### Promote from Beta to Rollout
-
-Promote a current beta to staged rollout
-
-    // Fraction of users who are eligible to receive the release. 0 <= fraction < 1. Default value: 0.005 (0.5%)
+    // Fraction of users who are eligible to receive the release. 0 <= fraction < 1. Default value: the previous rollout user fraction (if any) or 100%
     appContext.setUserFraction(0.2);
-    
-    GooglePlayPublisher.promoteFromBetaToRollout(new App(appContext));
+
+    GooglePlayPublisher.promoteFromAlphaToProduction(new App(appContext));
 
 #### Promote from Beta to Production
 
 Promote a current beta to production
+
+    // Fraction of users who are eligible to receive the release. 0 <= fraction < 1. Default value: the previous rollout user fraction (if any) or 100%
+    appContext.setUserFraction(0.2);
 
     GooglePlayPublisher.promoteFromBetaToProduction(new App(appContext));
     
@@ -253,11 +232,11 @@ Resume the current staged rollout
 
     GooglePlayPublisher.resumeStagedRollout(new App(appContext));
 
-#### Promote from Rollout to Production
+#### Complete Staged Rollout
 
-Promote a current staged rollout to production
+Rollout the release to 100% of users
 
-    GooglePlayPublisher.promoteFromRolloutToProduction(new App(appContext));
+    GooglePlayPublisher.completeStageRollout(new App(appContext));
 
 #### Get Tracks
 

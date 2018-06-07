@@ -191,14 +191,14 @@ The path to the APK / Bundle to publish
 
 ###### Track
 
-The release track that you're assigning APKs to. Acceptable values are: **internal**, **alpha**, **beta**, **rollout** or **production**
+The release track that you're assigning APKs to. Acceptable values are: **internal**, **alpha**, **beta** or **production**
 
-    TRACK = alpha
+    TRACK = production
     
 ###### User Fraction
 
 Fraction of users who are eligible to receive the release. 0 <= fraction < 1
-Only used if **TRACK** is **rollout**. Default value: 0.005 (0.5%)
+Only used if **TRACK** is **production**. Default value: the previous rollout user fraction (if any) or 100%
     
     USER_FRACTION = 0.1
     
@@ -227,23 +227,17 @@ Promote a current internal to beta
 
     ./gradlew googlePlayPromoteFromInternalToBeta
 
-#### Promote from Internal to Rollout
-
-Promote a current internal to staged rollout
-
-    ./gradlew googlePlayPromoteFromInternalToRollout
-
-###### User Fraction
-
-Fraction of users who are eligible to receive the release. 0 <= fraction < 1. Default value: 0.005 (0.5%)
-
-    USER_FRACTION = 0.2
-
 #### Promote from Internal to Production
 
 Promote a current internal to production
 
     ./gradlew googlePlayPromoteFromInternalToProduction
+
+###### User Fraction
+
+Fraction of users who are eligible to receive the release. 0 <= fraction < 1. Default value: the previous rollout user fraction (if any) or 100%
+
+    USER_FRACTION = 0.2
 
 #### Promote from Alpha to Beta
 
@@ -256,24 +250,6 @@ Promote a current alpha to beta
 Set a release name if you have more than one alpha track and you need to promote just one
 
     RELEASE_NAME = 'My release'
-
-#### Promote from Alpha to Rollout
-
-Promote a current alpha to staged rollout
-
-    ./gradlew googlePlayPromoteFromAlphaToRollout
-
-###### Release Name
-
-Set a release name if you have more than one alpha track and you need to promote just one
-
-    RELEASE_NAME = 'My release'
-    
-###### User Fraction
-
-Fraction of users who are eligible to receive the release. 0 <= fraction < 1. Default value: 0.005 (0.5%)
-    
-    USER_FRACTION = 0.2
     
 #### Promote from Alpha to Production
 
@@ -281,29 +257,29 @@ Promote a current alpha to production
 
     ./gradlew googlePlayPromoteFromAlphaToProduction
 
+###### User Fraction
+
+Fraction of users who are eligible to receive the release. 0 <= fraction < 1. Default value: the previous rollout user fraction (if any) or 100%
+
+    USER_FRACTION = 0.2
+
 ###### Release Name
 
 Set a release name if you have more than one alpha track and you need to promote just one
 
     RELEASE_NAME = 'My release'
-    
-#### Promote from Beta to Rollout
-
-Promote a current beta to staged rollout
-
-    ./gradlew googlePlayPromoteFromBetaToRollout
-
-###### User Fraction
-
-Fraction of users who are eligible to receive the release. 0 <= fraction < 1. Default value: 0.005 (0.5%)
-    
-    USER_FRACTION = 0.2
 
 #### Promote from Beta to Production
 
 Promote a current beta to production
 
     ./gradlew googlePlayPromoteFromBetaToProduction
+
+###### User Fraction
+
+Fraction of users who are eligible to receive the release. 0 <= fraction < 1. Default value: the previous rollout user fraction (if any) or 100%
+
+    USER_FRACTION = 0.2
     
 #### Increase Staged Rollout
 
@@ -329,11 +305,11 @@ Resume the current staged rollout
 
     ./gradlew googlePlayResumeStagedRollout
 
-#### Promote from Rollout to Production
+#### Complete Staged Rollout
 
-Promote a current staged rollout to production
+Rollout the release to 100% of users
 
-    ./gradlew googlePlayPromoteFromRolloutToProduction
+    ./gradlew googlePlayCompleteStageRollout
 
 #### List Tracks
 

@@ -5,7 +5,6 @@ public enum TrackType {
 	INTERNAL("internal"),
 	ALPHA("alpha"),
 	BETA("beta"),
-	ROLLOUT("rollout"),
 	PRODUCTION("production");
 	
 	private String key;

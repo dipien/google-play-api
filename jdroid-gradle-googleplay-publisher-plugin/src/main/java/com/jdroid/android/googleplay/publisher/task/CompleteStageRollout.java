@@ -3,15 +3,15 @@ package com.jdroid.android.googleplay.publisher.task;
 import com.jdroid.android.googleplay.publisher.App;
 import com.jdroid.android.googleplay.publisher.GooglePlayPublisher;
 
-public class PromoteFromInternalToRolloutTask extends BaseTask {
+public class CompleteStageRollout extends BaseTask {
 	
-	public PromoteFromInternalToRolloutTask() {
-		setDescription("Promote a current internal to rollout");
+	public CompleteStageRollout() {
+		setDescription("Rollout the release to 100% of users");
 	}
 
 	@Override
 	protected void onExecute(App app) {
-		GooglePlayPublisher.promoteFromInternalToRollout(app);
+		GooglePlayPublisher.completeStageRollout(app);
 	}
 
 }

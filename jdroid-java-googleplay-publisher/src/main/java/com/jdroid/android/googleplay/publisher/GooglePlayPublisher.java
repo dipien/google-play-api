@@ -56,7 +56,6 @@ public class GooglePlayPublisher {
 	
 	/** Global instance of the JSON factory. */
 	private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
-	public static final double DEFAULT_USER_FRACTION = 0.005;
 	
 	/** Global instance of the HTTP transport. */
 	private static HttpTransport HTTP_TRANSPORT;
@@ -312,6 +311,15 @@ public class GooglePlayPublisher {
 		}
 	}
 	
+	private static void setDefaultUserFraction(App app, Edits edits, String editId) throws IOException {
+		if (app.getAppContext().getTrackType().equals(TrackType.PRODUCTION)) {
+			TrackRelease currentRolloutTrackRelease = getInProgressRollout(app, edits, editId);
+			if (currentRolloutTrackRelease != null && app.getAppContext().getUserFraction() == null) {
+				app.getAppContext().setUserFraction(currentRolloutTrackRelease.getUserFraction());
+			}
+		}
+	}
+	
 	public static void publishApk(App app) {
 		try {
 			
@@ -339,18 +347,7 @@ public class GooglePlayPublisher {
 			Apk apk = uploadRequest.execute();
 			System.out.println(String.format("Version code %d has been uploaded", apk.getVersionCode()));
 			
-			if (app.getAppContext().getTrackType().equals(TrackType.ROLLOUT)) {
-				TrackRelease currentRolloutTrackRelease = getInProgressRollout(app, edits, editId);
-				if (currentRolloutTrackRelease == null) {
-					if (app.getAppContext().getUserFraction() == null) {
-						app.getAppContext().setUserFraction(DEFAULT_USER_FRACTION);
-					}
-				} else {
-					if (app.getAppContext().getUserFraction() == null) {
-						app.getAppContext().setUserFraction(currentRolloutTrackRelease.getUserFraction());
-					}
-				}
-			}
+			setDefaultUserFraction(app, edits, editId);
 			
 			// Assign apk to track.
 			Track track = new Track();
@@ -362,7 +359,7 @@ public class GooglePlayPublisher {
 			TrackReleaseStatus trackReleaseStatus;
 			if (app.getAppContext().isDraft()) {
 				trackReleaseStatus = TrackReleaseStatus.DRAFT;
-			} else if (app.getAppContext().getTrackType().equals(TrackType.ROLLOUT)) {
+			} else if (app.getAppContext().getUserFraction() != null) {
 				trackReleaseStatus = TrackReleaseStatus.IN_PROGRESS;
 			} else {
 				trackReleaseStatus = TrackReleaseStatus.COMPLETED;
@@ -428,18 +425,7 @@ public class GooglePlayPublisher {
 			Bundle bundle = uploadRequest.execute();
 			System.out.println(String.format("Version code %d has been uploaded", bundle.getVersionCode()));
 			
-			if (app.getAppContext().getTrackType().equals(TrackType.ROLLOUT)) {
-				TrackRelease currentRolloutTrackRelease = getInProgressRollout(app, edits, editId);
-				if (currentRolloutTrackRelease == null) {
-					if (app.getAppContext().getUserFraction() == null) {
-						app.getAppContext().setUserFraction(DEFAULT_USER_FRACTION);
-					}
-				} else {
-					if (app.getAppContext().getUserFraction() == null) {
-						app.getAppContext().setUserFraction(currentRolloutTrackRelease.getUserFraction());
-					}
-				}
-			}
+			setDefaultUserFraction(app, edits, editId);
 			
 			// Assign bundle to track.
 			Track track = new Track();
@@ -451,7 +437,7 @@ public class GooglePlayPublisher {
 			TrackReleaseStatus trackReleaseStatus;
 			if (app.getAppContext().isDraft()) {
 				trackReleaseStatus = TrackReleaseStatus.DRAFT;
-			} else if (app.getAppContext().getTrackType().equals(TrackType.ROLLOUT)) {
+			} else if (app.getAppContext().getUserFraction() != null) {
 				trackReleaseStatus = TrackReleaseStatus.IN_PROGRESS;
 			} else {
 				trackReleaseStatus = TrackReleaseStatus.COMPLETED;
@@ -663,13 +649,6 @@ public class GooglePlayPublisher {
 		promote(app, TrackType.INTERNAL, TrackType.BETA);
 	}
 	
-	public static void promoteFromInternalToRollout(App app) {
-		if (app.getAppContext().getUserFraction() == null) {
-			app.getAppContext().setUserFraction(DEFAULT_USER_FRACTION);
-		}
-		promote(app, TrackType.INTERNAL, TrackType.ROLLOUT);
-	}
-	
 	public static void promoteFromInternalToProduction(App app) {
 		promote(app, TrackType.INTERNAL, TrackType.PRODUCTION);
 	}
@@ -677,29 +656,16 @@ public class GooglePlayPublisher {
 	public static void promoteFromAlphaToBeta(App app) {
 		promote(app, TrackType.ALPHA, TrackType.BETA);
 	}
-	public static void promoteFromAlphaToRollout(App app) {
-		if (app.getAppContext().getUserFraction() == null) {
-			app.getAppContext().setUserFraction(DEFAULT_USER_FRACTION);
-		}
-		promote(app, TrackType.ALPHA, TrackType.ROLLOUT);
-	}
 	
 	public static void promoteFromAlphaToProduction(App app) {
 		promote(app, TrackType.ALPHA, TrackType.PRODUCTION);
-	}
-	
-	public static void promoteFromBetaToRollout(App app) {
-		if (app.getAppContext().getUserFraction() == null) {
-			app.getAppContext().setUserFraction(DEFAULT_USER_FRACTION);
-		}
-		promote(app, TrackType.BETA, TrackType.ROLLOUT);
 	}
 	
 	public static void promoteFromBetaToProduction(App app) {
 		promote(app, TrackType.BETA, TrackType.PRODUCTION);
 	}
 	
-	public static void promoteFromRolloutToProduction(App app) {
+	public static void completeStageRollout(App app) {
 		try {
 			// Create the API service.
 			AndroidPublisher service = init(app.getAppContext());
@@ -738,6 +704,9 @@ public class GooglePlayPublisher {
 	
 	private static void promote(App app, TrackType fromTrackType, TrackType toTrackType) {
 		try {
+			
+			app.getAppContext().setTrackType(toTrackType);
+			
 			// Create the API service.
 			AndroidPublisher service = init(app.getAppContext());
 			Edits edits = service.edits();
@@ -748,16 +717,15 @@ public class GooglePlayPublisher {
 			String editId = edit.getId();
 			System.out.println(String.format("Created edit with id: %s", editId));
 			
+			setDefaultUserFraction(app, edits, editId);
+			
 			// Add APKs/bundles to toTrackType track
 			Edits.Tracks.Get getTrackRequest = edits.tracks().get(app.getApplicationId(), editId, fromTrackType.getKey());
 			Track fromTrack = getTrackRequest.execute();
 			
 			Track toTrack = new Track();
-			if (toTrackType.equals(TrackType.ROLLOUT)) {
-				toTrack.setTrack(TrackType.PRODUCTION.getKey());
-			} else {
-				toTrack.setTrack(toTrackType.getKey());
-			}
+			toTrack.setTrack(toTrackType.getKey());
+			
 			List<TrackRelease> toTrackReleases = Lists.newArrayList();
 			for (TrackRelease fromTrackRelease : fromTrack.getReleases()) {
 				if (app.getAppContext().getReleaseName() == null || app.getAppContext().getReleaseName().equals(fromTrackRelease.getName())) {
@@ -767,7 +735,7 @@ public class GooglePlayPublisher {
 					toTrackRelease.setVersionCodes(fromTrackRelease.getVersionCodes());
 					
 					TrackReleaseStatus trackReleaseStatus;
-					if (toTrackType.equals(TrackType.ROLLOUT)) {
+					if (app.getAppContext().getUserFraction() != null) {
 						trackReleaseStatus = TrackReleaseStatus.IN_PROGRESS;
 					} else {
 						trackReleaseStatus = TrackReleaseStatus.COMPLETED;
