@@ -16,8 +16,31 @@ Add the following configuration to your `build.gradle`, replacing X.Y.Z by the [
     }
     
     apply plugin: 'com.jdroid.googleplay.publisher'
-    
-Define the following gradle properties:
+
+All the plugin configuration properties can be added using any of the following ways:
+
+* Using the **jdroidGooglePlayPublisher** extension on the build.gradle. For example:
+
+      jdroidGooglePlayPublisher {
+          applicationId 'com.sample'
+      }
+
+* As a command line parameter. For example:
+
+      ./gradlew googlePlayVerifyMetadata -PapplicationId=com.sample
+
+* As a property on a gradle.properties file
+
+      applicationId = 'com.sample'
+
+* As an extra property on the build.gradle
+
+      ext.applicationId = 'com.sample'
+
+* As a System Environment property
+
+
+#### Common Properties
 
 ###### Application Id
 
