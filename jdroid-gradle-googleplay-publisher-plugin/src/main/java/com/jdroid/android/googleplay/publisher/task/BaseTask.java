@@ -34,7 +34,10 @@ public abstract class BaseTask extends AbstractTask {
 		appContext.setWearScreenshotsRequired(extension.getWearScreenshotsRequired());
 
 		appContext.setApkPath(extension.getApkPath());
+		appContext.setApkDir(extension.getApkDir());
 		appContext.setBundlePath(extension.getBundlePath());
+		appContext.setBundleDir(extension.getBundleDir());
+		
 		appContext.setTrackType(TrackType.findByKey(extension.getTrack()));
 		appContext.setUserFraction(extension.getUserFraction());
 

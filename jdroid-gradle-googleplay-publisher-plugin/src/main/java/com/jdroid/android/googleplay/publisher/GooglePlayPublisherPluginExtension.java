@@ -15,7 +15,10 @@ public class GooglePlayPublisherPluginExtension {
 	private String locales;
 	
 	private String apkPath;
+	private String apkDir;
 	private String bundlePath;
+	private String bundleDir;
+	
 	private String track;
 	private Double userFraction;
 	private Boolean draft;
@@ -43,7 +46,10 @@ public class GooglePlayPublisherPluginExtension {
 		locales = propertyResolver.getStringProp("locales");
 		
 		apkPath = propertyResolver.getStringProp("apkPath");
+		apkDir = propertyResolver.getStringProp("apkDir");
 		bundlePath = propertyResolver.getStringProp("bundlePath");
+		bundleDir = propertyResolver.getStringProp("bundleDir");
+		
 		track = propertyResolver.getStringProp("track");
 		userFraction = propertyResolver.getDoubleProp("userFraction");
 		draft = propertyResolver.getBooleanProp("draft");
@@ -222,4 +228,19 @@ public class GooglePlayPublisherPluginExtension {
 		this.failOnApkUpgradeVersionConflict = failOnApkUpgradeVersionConflict;
 	}
 	
+	public String getApkDir() {
+		return apkDir;
+	}
+	
+	public void setApkDir(String apkDir) {
+		this.apkDir = apkDir;
+	}
+	
+	public String getBundleDir() {
+		return bundleDir;
+	}
+	
+	public void setBundleDir(String bundleDir) {
+		this.bundleDir = bundleDir;
+	}
 }

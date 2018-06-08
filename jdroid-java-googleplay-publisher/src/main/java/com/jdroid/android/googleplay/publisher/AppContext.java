@@ -16,7 +16,10 @@ public class AppContext {
 	private List<String> locales = Lists.newArrayList();
 	
 	private String apkPath;
+	private String apkDir;
 	private String bundlePath;
+	private String bundleDir;
+	
 	private TrackType trackType;
 	private Double userFraction;
 	private Boolean draft = false;
@@ -217,5 +220,21 @@ public class AppContext {
 		if (releaseNotesRequired != null) {
 			this.releaseNotesRequired = releaseNotesRequired;
 		}
+	}
+	
+	public String getApkDir() {
+		return apkDir;
+	}
+	
+	public void setApkDir(String apkDir) {
+		this.apkDir = apkDir;
+	}
+	
+	public String getBundleDir() {
+		return bundleDir;
+	}
+	
+	public void setBundleDir(String bundleDir) {
+		this.bundleDir = bundleDir;
 	}
 }

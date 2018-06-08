@@ -32,9 +32,14 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 /**
  * Helper class to initialize the publisher APIs client library.
@@ -275,8 +280,8 @@ public class GooglePlayPublisher {
 	public static void publishApk(App app) {
 		try {
 			
-			if (Strings.isNullOrEmpty(app.getAppContext().getApkPath())) {
-				throw new UnexpectedException("apkPath cannot be null or empty!");
+			if (Strings.isNullOrEmpty(app.getAppContext().getApkDir()) && Strings.isNullOrEmpty(app.getAppContext().getApkPath())) {
+				throw new UnexpectedException("apkDir and apkPath cannot be both null or empty!");
 			}
 			
 			if (app.getAppContext().getTrackType() == null) {
@@ -287,8 +292,23 @@ public class GooglePlayPublisher {
 			AppEdit edit = createEdit(app, edits);
 			
 			// Upload new apk to developer console
+			if (app.getAppContext().getApkDir() != null) {
+				Stream<Path> pathStream = Files.list(Paths.get(app.getAppContext().getApkDir())).filter(new Predicate<Path>() {
+					@Override
+					public boolean test(Path path) {
+						return path.getFileName().endsWith(".apk") && !path.getFileName().endsWith("unaligned.apk");
+					}
+				});
+				if (pathStream.count() == 1) {
+					app.getAppContext().setApkPath(pathStream.findAny().get().toAbsolutePath().toString());
+				} else if (pathStream.count() == 0) {
+					throw new UnexpectedException("APK not found");
+				} else {
+					throw new UnexpectedException("More than one APK found at the specified path");
+				}
+			}
 			AbstractInputStreamContent apkFile = new FileContent(APK_MIME_TYPE, new File(app.getAppContext().getApkPath()));
-			Apk apk  = edits.apks().upload(app.getApplicationId(), edit.getId(), apkFile).execute();
+			Apk apk = edits.apks().upload(app.getApplicationId(), edit.getId(), apkFile).execute();
 			System.out.println(String.format("Version code %d has been uploaded", apk.getVersionCode()));
 			
 			setDefaultUserFraction(app, edits, edit.getId());
@@ -344,8 +364,8 @@ public class GooglePlayPublisher {
 	public static void publishBundle(App app) {
 		try {
 			
-			if (Strings.isNullOrEmpty(app.getAppContext().getBundlePath())) {
-				throw new UnexpectedException("bundlePath cannot be null or empty!");
+			if (Strings.isNullOrEmpty(app.getAppContext().getBundleDir()) && Strings.isNullOrEmpty(app.getAppContext().getBundlePath())) {
+				throw new UnexpectedException("bundleDir and bundlePath cannot be both null or empty!");
 			}
 			
 			if (app.getAppContext().getTrackType() == null) {
@@ -356,8 +376,24 @@ public class GooglePlayPublisher {
 			AppEdit edit = createEdit(app, edits);
 			
 			// Upload new bundle to developer console
+			if (app.getAppContext().getBundleDir() != null) {
+				Stream<Path> pathStream = Files.list(Paths.get(app.getAppContext().getBundleDir())).filter(new Predicate<Path>() {
+					@Override
+					public boolean test(Path path) {
+						return path.getFileName().endsWith(".aab") && !path.getFileName().endsWith("unaligned.aab");
+					}
+				});
+				if (pathStream.count() == 1) {
+					app.getAppContext().setBundlePath(pathStream.findAny().get().toAbsolutePath().toString());
+				} else if (pathStream.count() == 0) {
+					throw new UnexpectedException("Bundle not found");
+				} else {
+					throw new UnexpectedException("More than one Bundle found at the specified path");
+				}
+			}
+			
 			AbstractInputStreamContent bundleFile = new FileContent(BUNDLE_MIME_TYPE, new File(app.getAppContext().getBundlePath()));
-			Bundle bundle  = edits.bundles().upload(app.getApplicationId(), edit.getId(), bundleFile).execute();
+			Bundle bundle = edits.bundles().upload(app.getApplicationId(), edit.getId(), bundleFile).execute();
 			System.out.println(String.format("Version code %d has been uploaded", bundle.getVersionCode()));
 			
 			setDefaultUserFraction(app, edits, edit.getId());

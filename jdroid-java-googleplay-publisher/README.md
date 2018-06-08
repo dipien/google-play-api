@@ -135,8 +135,9 @@ Upload new APK for your app and assign it to a release track.
 
     // The path to the APK / Bundle to publish
     appContext.setApkPath("/path/to/apk/file.apk");
-    // or
-    appContext.setBundlePath("/path/to/bundle/file.aab");
+    // appContext.setApkDir("/path/to/apk/");
+    // appContext.setBundlePath("/path/to/bundle/file.aab");
+    // appContext.setBundleDir("/path/to/bundle/");
 
     // The release track that you're assigning APKs to. 
     // Acceptable values are: TrackType.INTERNAL, TrackType.ALPHA, TrackType.BETA or TrackType.PRODUCTION

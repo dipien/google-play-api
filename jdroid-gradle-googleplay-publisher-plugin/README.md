@@ -204,13 +204,14 @@ Whether the release should be created on draft mode. Default value: false
 
     draft = true
     
-###### APK path / Bundle path
+###### APK path/dir or Bundle path/dir
 
 The path to the APK / Bundle to publish
 
     apkPath = /path/to/apk/file.apk
-    // or
-    bundlePath = /path/to/bundle/file.aab
+    // apkDir = /path/to/bundle/
+    // bundlePath = /path/to/bundle/file.aab
+    // bundleDir = /path/to/bundle/
 
 ###### Track
 
