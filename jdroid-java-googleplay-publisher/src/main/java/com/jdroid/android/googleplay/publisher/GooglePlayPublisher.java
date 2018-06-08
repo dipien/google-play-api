@@ -254,7 +254,7 @@ public class GooglePlayPublisher {
 				}
 			}
 
-			commitEdit(app, edits, edit.getId());
+			commitEdit(app, edits, edit);
 			
 		} catch (GoogleJsonResponseException ex) {
 			throw new UnexpectedException(ex.getDetails().getMessage(), ex);
@@ -329,7 +329,7 @@ public class GooglePlayPublisher {
 			
 			
 			// Commit changes for edit.
-			commitEdit(app, edits, edit.getId());
+			commitEdit(app, edits, edit);
 		} catch (GoogleJsonResponseException ex) {
 			if (!app.getAppContext().failOnApkUpgradeVersionConflict() && ex.getDetails().getCode() == 403 && ex.getDetails().getMessage().equals("APK specifies a version code that has already been used.")) {
 				System.out.println("WARNING | apkUpgradeVersionConflict: APK specifies a version code that has already been used.");
@@ -399,7 +399,7 @@ public class GooglePlayPublisher {
 			
 			
 			// Commit changes for edit.
-			commitEdit(app, edits, edit.getId());
+			commitEdit(app, edits, edit);
 			
 		} catch (GoogleJsonResponseException ex) {
 			throw new UnexpectedException(ex.getDetails().getMessage(), ex);
@@ -472,7 +472,7 @@ public class GooglePlayPublisher {
 			System.out.println(String.format("Track %s has been updated.", updatedTrack.getTrack()));
 			
 			// Commit changes for edit.
-			commitEdit(app, edits, edit.getId());
+			commitEdit(app, edits, edit);
 			
 		} catch (GoogleJsonResponseException ex) {
 			throw new UnexpectedException(ex.getDetails().getMessage(), ex);
@@ -507,7 +507,7 @@ public class GooglePlayPublisher {
 			System.out.println(String.format("Track %s has been updated.", updatedTrack.getTrack()));
 			
 			// Commit changes for edit.
-			commitEdit(app, edits, edit.getId());
+			commitEdit(app, edits, edit);
 			
 		} catch (GoogleJsonResponseException ex) {
 			throw new UnexpectedException(ex.getDetails().getMessage(), ex);
@@ -542,7 +542,7 @@ public class GooglePlayPublisher {
 			System.out.println(String.format("Track %s has been updated.", updatedTrack.getTrack()));
 			
 			// Commit changes for edit.
-			commitEdit(app, edits, edit.getId());
+			commitEdit(app, edits, edit);
 			
 		} catch (GoogleJsonResponseException ex) {
 			throw new UnexpectedException(ex.getDetails().getMessage(), ex);
@@ -595,7 +595,7 @@ public class GooglePlayPublisher {
 			System.out.println(String.format("Track %s has been updated.", updatedTrack.getTrack()));
 			
 			// Commit changes for edit.
-			commitEdit(app, edits, edit.getId());
+			commitEdit(app, edits, edit);
 			
 		} catch (GoogleJsonResponseException ex) {
 			throw new UnexpectedException(ex.getDetails().getMessage(), ex);
@@ -645,7 +645,7 @@ public class GooglePlayPublisher {
 			System.out.println(String.format("Track %s has been updated.", updatedTrack.getTrack()));
 			
 			// Commit changes for edit.
-			commitEdit(app, edits, edit.getId());
+			commitEdit(app, edits, edit);
 			
 		} catch (GoogleJsonResponseException ex) {
 			throw new UnexpectedException(ex.getDetails().getMessage(), ex);
@@ -673,8 +673,8 @@ public class GooglePlayPublisher {
 		return edit;
 	}
 	
-	private static void commitEdit(App app, Edits edits, String editId) throws IOException {
-		AppEdit appEdit = edits.commit(app.getApplicationId(), editId).execute();
+	private static void commitEdit(App app, Edits edits, AppEdit edit) throws IOException {
+		AppEdit appEdit = edits.commit(app.getApplicationId(), edit.getId()).execute();
 		System.out.println(String.format("App edit with id %s has been comitted", appEdit.getId()));
 	}
 }
