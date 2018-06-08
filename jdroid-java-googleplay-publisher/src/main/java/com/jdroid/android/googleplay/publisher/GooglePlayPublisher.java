@@ -13,11 +13,6 @@ import com.google.api.client.repackaged.com.google.common.base.Strings;
 import com.google.api.client.util.Lists;
 import com.google.api.services.androidpublisher.AndroidPublisher;
 import com.google.api.services.androidpublisher.AndroidPublisher.Edits;
-import com.google.api.services.androidpublisher.AndroidPublisher.Edits.Apks.Upload;
-import com.google.api.services.androidpublisher.AndroidPublisher.Edits.Commit;
-import com.google.api.services.androidpublisher.AndroidPublisher.Edits.Images;
-import com.google.api.services.androidpublisher.AndroidPublisher.Edits.Images.Deleteall;
-import com.google.api.services.androidpublisher.AndroidPublisher.Edits.Insert;
 import com.google.api.services.androidpublisher.AndroidPublisherScopes;
 import com.google.api.services.androidpublisher.model.Apk;
 import com.google.api.services.androidpublisher.model.ApksListResponse;
@@ -107,18 +102,12 @@ public class GooglePlayPublisher {
 	 */
 	public static List<Apk> getApks(App app) {
 		try {
-
-			AppContext appContext = app.getAppContext();
-			// Create the API service.
-			AndroidPublisher service = init(appContext);
-			Edits edits = service.edits();
 			
-			// Create a new edit to make changes.
-			Insert editRequest = edits.insert(app.getApplicationId(), null);
-			AppEdit appEdit = editRequest.execute();
+			Edits edits = init(app.getAppContext()).edits();
+			AppEdit edit = createEdit(app, edits);
 			
 			// Get a list of apks.
-			ApksListResponse apksResponse = edits.apks().list(app.getApplicationId(), appEdit.getId()).execute();
+			ApksListResponse apksResponse = edits.apks().list(app.getApplicationId(), edit.getId()).execute();
 			
 			return apksResponse.getApks() != null ? apksResponse.getApks() : Lists.newArrayList();
 		} catch (GoogleJsonResponseException ex) {
@@ -135,18 +124,12 @@ public class GooglePlayPublisher {
 	 */
 	public static List<Bundle> getBundles(App app) {
 		try {
-
-			AppContext appContext = app.getAppContext();
-			// Create the API service.
-			AndroidPublisher service = init(appContext);
-			Edits edits = service.edits();
 			
-			// Create a new edit to make changes.
-			Insert editRequest = edits.insert(app.getApplicationId(), null);
-			AppEdit appEdit = editRequest.execute();
+			Edits edits = init(app.getAppContext()).edits();
+			AppEdit edit = createEdit(app, edits);
 			
 			// Get a list of bundles.
-			BundlesListResponse bundlesListResponse = edits.bundles().list(app.getApplicationId(), appEdit.getId()).execute();
+			BundlesListResponse bundlesListResponse = edits.bundles().list(app.getApplicationId(), edit.getId()).execute();
 			
 			return bundlesListResponse.getBundles() != null ? bundlesListResponse.getBundles() : Lists.newArrayList();
 		} catch (GoogleJsonResponseException ex) {
@@ -181,17 +164,8 @@ public class GooglePlayPublisher {
 	public static void publishMetadata(App app) {
 		try {
 
-			AppContext appContext = app.getAppContext();
-
-			// Create the API service.
-			AndroidPublisher service = init(appContext);
-			Edits edits = service.edits();
-			
-			// Create an edit to update listing for application.
-			Insert editRequest = edits.insert(app.getApplicationId(), null);
-			AppEdit edit = editRequest.execute();
-			String editId = edit.getId();
-			System.out.println(String.format("Created edit with id: %s", editId));
+			Edits edits = init(app.getAppContext()).edits();
+			AppEdit edit = createEdit(app, edits);
 			
 			// Update listing for each locale of the application.
 			for (LocaleListing each : app.getLocaleListings()) {
@@ -203,106 +177,84 @@ public class GooglePlayPublisher {
 				listing.setFullDescription(app.getFullDescription(each));
 				listing.setShortDescription(app.getShortDescription(each));
 				listing.setVideo(app.getVideo(each));
-				Edits.Listings.Update updateListingsRequest = edits.listings().update(app.getApplicationId(),
-						editId, localeString, listing);
-				Listing updatedListing = updateListingsRequest.execute();
-				System.out.println(String.format("Created new " + localeString + " app listing with title: %s",
-						updatedListing.getTitle()));
+				Listing updatedListing = edits.listings().update(app.getApplicationId(), edit.getId(), localeString, listing).execute();
+				System.out.println(String.format("Created new " + localeString + " app listing with title: %s", updatedListing.getTitle()));
 
 				// Feature Graphic
 				AbstractInputStreamContent featureGraphic = app.getFeatureGraphic(each);
-				Images.Upload uploadImageRequest = edits.images().upload(app.getApplicationId(), editId,
-						localeString, ImageType.FEATURE_GRAPHIC.getKey(), featureGraphic);
-				ImagesUploadResponse response = uploadImageRequest.execute();
+				ImagesUploadResponse response = edits.images().upload(app.getApplicationId(), edit.getId(),
+						localeString, ImageType.FEATURE_GRAPHIC.getKey(), featureGraphic).execute();
 				System.out.println(String.format("Feature graphic %s has been updated.", response.getImage()));
 
 				// Promo Graphic
 				AbstractInputStreamContent promoGraphic = app.getPromoGraphic(each);
 				if (promoGraphic != null) {
-					uploadImageRequest = edits.images().upload(app.getApplicationId(), editId,
-							localeString, ImageType.PROMO_GRAPHIC.getKey(), promoGraphic);
-					response = uploadImageRequest.execute();
+					response = edits.images().upload(app.getApplicationId(), edit.getId(),
+							localeString, ImageType.PROMO_GRAPHIC.getKey(), promoGraphic).execute();
 					System.out.println(String.format("Promo graphic %s has been updated.", response.getImage()));
 				}
 
 				// High Resolution Icon
 				AbstractInputStreamContent highResolutionIcon = app.getHighResolutionIcon(each);
-				uploadImageRequest = edits.images().upload(app.getApplicationId(), editId,
-						localeString, ImageType.ICON.getKey(), highResolutionIcon);
-				response = uploadImageRequest.execute();
+				response = edits.images().upload(app.getApplicationId(), edit.getId(),
+						localeString, ImageType.ICON.getKey(), highResolutionIcon).execute();
 				System.out.println(String.format("High resolution icon %s has been updated.", response.getImage()));
 				
 				// High Resolution Icon
 				AbstractInputStreamContent tvBanner = app.getTvBanner(each);
 				if (tvBanner != null) {
-					uploadImageRequest = edits.images().upload(app.getApplicationId(), editId,
-							localeString, ImageType.TV_BANNER.getKey(), tvBanner);
-					response = uploadImageRequest.execute();
+					response = edits.images().upload(app.getApplicationId(), edit.getId(),
+							localeString, ImageType.TV_BANNER.getKey(), tvBanner).execute();
 					System.out.println(String.format("Tv banner %s has been updated.", response.getImage()));
 				}
 
 				// Phone Screenshots
-				Deleteall deleteAllRequest = edits.images().deleteall(app.getApplicationId(), editId,
-						localeString, ImageType.PHONE_SCREENSHOTS.getKey());
-				deleteAllRequest.execute();
+				edits.images().deleteall(app.getApplicationId(), edit.getId(), localeString, ImageType.PHONE_SCREENSHOTS.getKey()).execute();
 				System.out.println("Phone screenshots has been deleted.");
 				for (AbstractInputStreamContent content : app.getPhoneScreenshots(each)) {
-					uploadImageRequest = edits.images().upload(app.getApplicationId(), editId,
-							localeString, ImageType.PHONE_SCREENSHOTS.getKey(), content);
-					response = uploadImageRequest.execute();
+					response = edits.images().upload(app.getApplicationId(), edit.getId(),
+							localeString, ImageType.PHONE_SCREENSHOTS.getKey(), content).execute();
 					System.out.println(String.format("Phone screenshot %s has been updated.", response.getImage()));
 				}
 
 				// 7-inch Screenshots
-				deleteAllRequest = edits.images().deleteall(app.getApplicationId(), editId,
-						localeString, ImageType.SEVEN_INCH_SCREENSHOTS.getKey());
-				deleteAllRequest.execute();
+				edits.images().deleteall(app.getApplicationId(), edit.getId(), localeString, ImageType.SEVEN_INCH_SCREENSHOTS.getKey()).execute();
 				System.out.println("Seven inch screenshots has been deleted.");
 				for (AbstractInputStreamContent content : app.getSevenInchScreenshots(each)) {
-					uploadImageRequest = edits.images().upload(app.getApplicationId(), editId,
-							localeString, ImageType.SEVEN_INCH_SCREENSHOTS.getKey(), content);
-					response = uploadImageRequest.execute();
+					response = edits.images().upload(app.getApplicationId(), edit.getId(),
+							localeString, ImageType.SEVEN_INCH_SCREENSHOTS.getKey(), content).execute();
 					System.out.println(String.format("Seven inch screenshot %s has been updated.", response.getImage()));
 				}
 
 				// 10-inch Screenshots
-				deleteAllRequest = edits.images().deleteall(app.getApplicationId(), editId,
-						localeString, ImageType.TEN_INCH_SCREENSHOTS.getKey());
-				deleteAllRequest.execute();
+				edits.images().deleteall(app.getApplicationId(), edit.getId(), localeString, ImageType.TEN_INCH_SCREENSHOTS.getKey()).execute();
 				System.out.println("Ten inch screenshots has been deleted.");
 				for (AbstractInputStreamContent content : app.getTenInchScreenshots(each)) {
-					uploadImageRequest = edits.images().upload(app.getApplicationId(), editId,
-							localeString, ImageType.TEN_INCH_SCREENSHOTS.getKey(), content);
-					response = uploadImageRequest.execute();
+					response = edits.images().upload(app.getApplicationId(), edit.getId(),
+							localeString, ImageType.TEN_INCH_SCREENSHOTS.getKey(), content).execute();
 					System.out.println(String.format("Ten inch screenshot %s has been updated.", response.getImage()));
 				}
 				
 				// Tv Screenshots
-				deleteAllRequest = edits.images().deleteall(app.getApplicationId(), editId,
-						localeString, ImageType.TV_SCREENSHOTS.getKey());
-				deleteAllRequest.execute();
+				edits.images().deleteall(app.getApplicationId(), edit.getId(), localeString, ImageType.TV_SCREENSHOTS.getKey()).execute();
 				System.out.println("Tv screenshots has been deleted.");
 				for (AbstractInputStreamContent content : app.getTvScreenshots(each)) {
-					uploadImageRequest = edits.images().upload(app.getApplicationId(), editId,
-							localeString, ImageType.TV_SCREENSHOTS.getKey(), content);
-					response = uploadImageRequest.execute();
+					response = edits.images().upload(app.getApplicationId(), edit.getId(),
+							localeString, ImageType.TV_SCREENSHOTS.getKey(), content).execute();
 					System.out.println(String.format("Tv screenshot %s has been updated.", response.getImage()));
 				}
 				
 				// Wear Screenshots
-				deleteAllRequest = edits.images().deleteall(app.getApplicationId(), editId,
-						localeString, ImageType.WEAR_SCREENSHOTS.getKey());
-				deleteAllRequest.execute();
+				edits.images().deleteall(app.getApplicationId(), edit.getId(), localeString, ImageType.WEAR_SCREENSHOTS.getKey()).execute();
 				System.out.println("Wear screenshots has been deleted.");
 				for (AbstractInputStreamContent content : app.getWearScreenshots(each)) {
-					uploadImageRequest = edits.images().upload(app.getApplicationId(), editId,
-							localeString, ImageType.WEAR_SCREENSHOTS.getKey(), content);
-					response = uploadImageRequest.execute();
+					response = edits.images().upload(app.getApplicationId(), edit.getId(),
+							localeString, ImageType.WEAR_SCREENSHOTS.getKey(), content).execute();
 					System.out.println(String.format("Wear screenshot %s has been updated.", response.getImage()));
 				}
 			}
 
-			commitEdit(app, edits, editId);
+			commitEdit(app, edits, edit.getId());
 			
 		} catch (GoogleJsonResponseException ex) {
 			throw new UnexpectedException(ex.getDetails().getMessage(), ex);
@@ -331,23 +283,15 @@ public class GooglePlayPublisher {
 				throw new UnexpectedException("trackType cannot be null or empty!");
 			}
 			
-			// Create the API service.
-			AndroidPublisher service = init(app.getAppContext());
-			Edits edits = service.edits();
-			
-			// Create a new edit to make changes.
-			Insert editRequest = edits.insert(app.getApplicationId(), null);
-			AppEdit edit = editRequest.execute();
-			String editId = edit.getId();
-			System.out.println(String.format("Created edit with id: %s", editId));
+			Edits edits = init(app.getAppContext()).edits();
+			AppEdit edit = createEdit(app, edits);
 			
 			// Upload new apk to developer console
 			AbstractInputStreamContent apkFile = new FileContent(APK_MIME_TYPE, new File(app.getAppContext().getApkPath()));
-			Upload uploadRequest = edits.apks().upload(app.getApplicationId(), editId, apkFile);
-			Apk apk = uploadRequest.execute();
+			Apk apk  = edits.apks().upload(app.getApplicationId(), edit.getId(), apkFile).execute();
 			System.out.println(String.format("Version code %d has been uploaded", apk.getVersionCode()));
 			
-			setDefaultUserFraction(app, edits, editId);
+			setDefaultUserFraction(app, edits, edit.getId());
 			
 			// Assign apk to track.
 			Track track = new Track();
@@ -380,13 +324,12 @@ public class GooglePlayPublisher {
 			trackRelease.setReleaseNotes(releaseNotes);
 			track.setReleases(Collections.singletonList(trackRelease));
 			
-			Edits.Tracks.Update updateTrackRequest = edits.tracks().update(app.getApplicationId(), editId, track.getTrack(), track);
-			Track updatedTrack = updateTrackRequest.execute();
+			Track updatedTrack = edits.tracks().update(app.getApplicationId(), edit.getId(), track.getTrack(), track).execute();
 			System.out.println(String.format("Track %s has been updated.", updatedTrack.getTrack()));
 			
 			
 			// Commit changes for edit.
-			commitEdit(app, edits, editId);
+			commitEdit(app, edits, edit.getId());
 		} catch (GoogleJsonResponseException ex) {
 			if (!app.getAppContext().failOnApkUpgradeVersionConflict() && ex.getDetails().getCode() == 403 && ex.getDetails().getMessage().equals("APK specifies a version code that has already been used.")) {
 				System.out.println("WARNING | apkUpgradeVersionConflict: APK specifies a version code that has already been used.");
@@ -409,23 +352,15 @@ public class GooglePlayPublisher {
 				throw new UnexpectedException("trackType cannot be null or empty!");
 			}
 			
-			// Create the API service.
-			AndroidPublisher service = init(app.getAppContext());
-			Edits edits = service.edits();
-			
-			// Create a new edit to make changes.
-			Insert editRequest = edits.insert(app.getApplicationId(), null);
-			AppEdit edit = editRequest.execute();
-			String editId = edit.getId();
-			System.out.println(String.format("Created edit with id: %s", editId));
+			Edits edits = init(app.getAppContext()).edits();
+			AppEdit edit = createEdit(app, edits);
 			
 			// Upload new bundle to developer console
 			AbstractInputStreamContent bundleFile = new FileContent(BUNDLE_MIME_TYPE, new File(app.getAppContext().getBundlePath()));
-			Edits.Bundles.Upload uploadRequest = edits.bundles().upload(app.getApplicationId(), editId, bundleFile);
-			Bundle bundle = uploadRequest.execute();
+			Bundle bundle  = edits.bundles().upload(app.getApplicationId(), edit.getId(), bundleFile).execute();
 			System.out.println(String.format("Version code %d has been uploaded", bundle.getVersionCode()));
 			
-			setDefaultUserFraction(app, edits, editId);
+			setDefaultUserFraction(app, edits, edit.getId());
 			
 			// Assign bundle to track.
 			Track track = new Track();
@@ -459,13 +394,12 @@ public class GooglePlayPublisher {
 			trackRelease.setReleaseNotes(releaseNotes);
 			track.setReleases(Collections.singletonList(trackRelease));
 			
-			Edits.Tracks.Update updateTrackRequest = edits.tracks().update(app.getApplicationId(), editId, track.getTrack(), track);
-			Track updatedTrack = updateTrackRequest.execute();
+			Track updatedTrack = edits.tracks().update(app.getApplicationId(), edit.getId(), track.getTrack(), track).execute();
 			System.out.println(String.format("Track %s has been updated.", updatedTrack.getTrack()));
 			
 			
 			// Commit changes for edit.
-			commitEdit(app, edits, editId);
+			commitEdit(app, edits, edit.getId());
 			
 		} catch (GoogleJsonResponseException ex) {
 			throw new UnexpectedException(ex.getDetails().getMessage(), ex);
@@ -499,8 +433,7 @@ public class GooglePlayPublisher {
 	}
 	
 	private static Track getTrack(App app, TrackType trackType, Edits edits, String editId) throws IOException {
-		Edits.Tracks.List getTracksRequest = edits.tracks().list(app.getApplicationId(), editId);
-		TracksListResponse tracksListResponse = getTracksRequest.execute();
+		TracksListResponse tracksListResponse = edits.tracks().list(app.getApplicationId(), editId).execute();
 		for (Track track : tracksListResponse.getTracks()) {
 			if (track.getTrack().equals(trackType.getKey())) {
 				return track;
@@ -518,20 +451,13 @@ public class GooglePlayPublisher {
 			
 			app.getAppContext().setTrackType(TrackType.PRODUCTION);
 			
-			// Create the API service.
-			AndroidPublisher service = init(app.getAppContext());
-			Edits edits = service.edits();
-			
-			// Create a new edit to make changes.
-			Insert editRequest = edits.insert(app.getApplicationId(), null);
-			AppEdit edit = editRequest.execute();
-			String editId = edit.getId();
-			System.out.println(String.format("Created edit with id: %s", editId));
+			Edits edits = init(app.getAppContext()).edits();
+			AppEdit edit = createEdit(app, edits);
 			
 			Track track = new Track();
 			track.setTrack(TrackType.PRODUCTION.getKey());
 			
-			TrackRelease currentRolloutRelease = getInProgressRollout(app, edits, editId);
+			TrackRelease currentRolloutRelease = getInProgressRollout(app, edits, edit.getId());
 			if (currentRolloutRelease == null) {
 				throw new UnexpectedException("No in progress staged rollout release found");
 			}
@@ -542,12 +468,11 @@ public class GooglePlayPublisher {
 			trackRelease.setVersionCodes(currentRolloutRelease.getVersionCodes());
 			track.setReleases(Collections.singletonList(trackRelease));
 			
-			Edits.Tracks.Patch patchTrackRequest = edits.tracks().patch(app.getApplicationId(), editId, track.getTrack(), track);
-			Track updatedTrack = patchTrackRequest.execute();
+			Track updatedTrack = edits.tracks().patch(app.getApplicationId(), edit.getId(), track.getTrack(), track).execute();
 			System.out.println(String.format("Track %s has been updated.", updatedTrack.getTrack()));
 			
 			// Commit changes for edit.
-			commitEdit(app, edits, editId);
+			commitEdit(app, edits, edit.getId());
 			
 		} catch (GoogleJsonResponseException ex) {
 			throw new UnexpectedException(ex.getDetails().getMessage(), ex);
@@ -561,20 +486,13 @@ public class GooglePlayPublisher {
 			
 			app.getAppContext().setTrackType(TrackType.PRODUCTION);
 			
-			// Create the API service.
-			AndroidPublisher service = init(app.getAppContext());
-			Edits edits = service.edits();
-			
-			// Create a new edit to make changes.
-			Insert editRequest = edits.insert(app.getApplicationId(), null);
-			AppEdit edit = editRequest.execute();
-			String editId = edit.getId();
-			System.out.println(String.format("Created edit with id: %s", editId));
+			Edits edits = init(app.getAppContext()).edits();
+			AppEdit edit = createEdit(app, edits);
 			
 			Track track = new Track();
 			track.setTrack(TrackType.PRODUCTION.getKey());
 			
-			TrackRelease currentRolloutRelease = getInProgressRollout(app, edits, editId);
+			TrackRelease currentRolloutRelease = getInProgressRollout(app, edits, edit.getId());
 			if (currentRolloutRelease == null) {
 				throw new UnexpectedException("No in progress staged rollout release found");
 			}
@@ -585,12 +503,11 @@ public class GooglePlayPublisher {
 			trackRelease.setUserFraction(currentRolloutRelease.getUserFraction());
 			track.setReleases(Collections.singletonList(trackRelease));
 			
-			Edits.Tracks.Patch patchTrackRequest = edits.tracks().patch(app.getApplicationId(), editId, track.getTrack(), track);
-			Track updatedTrack = patchTrackRequest.execute();
+			Track updatedTrack = edits.tracks().patch(app.getApplicationId(), edit.getId(), track.getTrack(), track).execute();
 			System.out.println(String.format("Track %s has been updated.", updatedTrack.getTrack()));
 			
 			// Commit changes for edit.
-			commitEdit(app, edits, editId);
+			commitEdit(app, edits, edit.getId());
 			
 		} catch (GoogleJsonResponseException ex) {
 			throw new UnexpectedException(ex.getDetails().getMessage(), ex);
@@ -604,20 +521,13 @@ public class GooglePlayPublisher {
 			
 			app.getAppContext().setTrackType(TrackType.PRODUCTION);
 			
-			// Create the API service.
-			AndroidPublisher service = init(app.getAppContext());
-			Edits edits = service.edits();
-			
-			// Create a new edit to make changes.
-			Insert editRequest = edits.insert(app.getApplicationId(), null);
-			AppEdit edit = editRequest.execute();
-			String editId = edit.getId();
-			System.out.println(String.format("Created edit with id: %s", editId));
+			Edits edits = init(app.getAppContext()).edits();
+			AppEdit edit = createEdit(app, edits);
 			
 			Track track = new Track();
 			track.setTrack(TrackType.PRODUCTION.getKey());
 			
-			TrackRelease currentRolloutRelease = getHaltedRollout(app, edits, editId);
+			TrackRelease currentRolloutRelease = getHaltedRollout(app, edits, edit.getId());
 			if (currentRolloutRelease == null) {
 				throw new UnexpectedException("No halted staged rollout release found");
 			}
@@ -628,12 +538,11 @@ public class GooglePlayPublisher {
 			trackRelease.setUserFraction(currentRolloutRelease.getUserFraction());
 			track.setReleases(Collections.singletonList(trackRelease));
 			
-			Edits.Tracks.Patch patchTrackRequest = edits.tracks().patch(app.getApplicationId(), editId, track.getTrack(), track);
-			Track updatedTrack = patchTrackRequest.execute();
+			Track updatedTrack = edits.tracks().patch(app.getApplicationId(), edit.getId(), track.getTrack(), track).execute();
 			System.out.println(String.format("Track %s has been updated.", updatedTrack.getTrack()));
 			
 			// Commit changes for edit.
-			commitEdit(app, edits, editId);
+			commitEdit(app, edits, edit.getId());
 			
 		} catch (GoogleJsonResponseException ex) {
 			throw new UnexpectedException(ex.getDetails().getMessage(), ex);
@@ -668,17 +577,10 @@ public class GooglePlayPublisher {
 	
 	public static void completeStagedRollout(App app) {
 		try {
-			// Create the API service.
-			AndroidPublisher service = init(app.getAppContext());
-			Edits edits = service.edits();
+			Edits edits = init(app.getAppContext()).edits();
+			AppEdit edit = createEdit(app, edits);
 			
-			// Create a new edit to make changes.
-			Insert editRequest = edits.insert(app.getApplicationId(), null);
-			AppEdit edit = editRequest.execute();
-			String editId = edit.getId();
-			System.out.println(String.format("Created edit with id: %s", editId));
-			
-			TrackRelease currentRolloutRelease = getInProgressRollout(app, edits, editId);
+			TrackRelease currentRolloutRelease = getInProgressRollout(app, edits, edit.getId());
 			if (currentRolloutRelease == null) {
 				throw new UnexpectedException("No in progress staged rollout release found");
 			}
@@ -689,12 +591,11 @@ public class GooglePlayPublisher {
 			productionTrack.setTrack(TrackType.PRODUCTION.getKey());
 			productionTrack.setReleases(Collections.singletonList(currentRolloutRelease));
 			
-			Edits.Tracks.Update updateTrackRequest = edits.tracks().update(app.getApplicationId(), editId, productionTrack.getTrack(), productionTrack);
-			Track updatedTrack = updateTrackRequest.execute();
+			Track updatedTrack = edits.tracks().update(app.getApplicationId(), edit.getId(), productionTrack.getTrack(), productionTrack).execute();
 			System.out.println(String.format("Track %s has been updated.", updatedTrack.getTrack()));
 			
 			// Commit changes for edit.
-			commitEdit(app, edits, editId);
+			commitEdit(app, edits, edit.getId());
 			
 		} catch (GoogleJsonResponseException ex) {
 			throw new UnexpectedException(ex.getDetails().getMessage(), ex);
@@ -708,21 +609,13 @@ public class GooglePlayPublisher {
 			
 			app.getAppContext().setTrackType(toTrackType);
 			
-			// Create the API service.
-			AndroidPublisher service = init(app.getAppContext());
-			Edits edits = service.edits();
+			Edits edits = init(app.getAppContext()).edits();
+			AppEdit edit = createEdit(app, edits);
 			
-			// Create a new edit to make changes.
-			Insert editRequest = edits.insert(app.getApplicationId(), null);
-			AppEdit edit = editRequest.execute();
-			String editId = edit.getId();
-			System.out.println(String.format("Created edit with id: %s", editId));
-			
-			setDefaultUserFraction(app, edits, editId);
+			setDefaultUserFraction(app, edits, edit.getId());
 			
 			// Add APKs/bundles to toTrackType track
-			Edits.Tracks.Get getTrackRequest = edits.tracks().get(app.getApplicationId(), editId, fromTrackType.getKey());
-			Track fromTrack = getTrackRequest.execute();
+			Track fromTrack = edits.tracks().get(app.getApplicationId(), edit.getId(), fromTrackType.getKey()).execute();
 			
 			Track toTrack = new Track();
 			toTrack.setTrack(toTrackType.getKey());
@@ -748,12 +641,11 @@ public class GooglePlayPublisher {
 			}
 			toTrack.setReleases(toTrackReleases);
 			
-			Edits.Tracks.Update updateTrackRequest = edits.tracks().update(app.getApplicationId(), editId, toTrack.getTrack(), toTrack);
-			Track updatedTrack = updateTrackRequest.execute();
+			Track updatedTrack = edits.tracks().update(app.getApplicationId(), edit.getId(), toTrack.getTrack(), toTrack).execute();
 			System.out.println(String.format("Track %s has been updated.", updatedTrack.getTrack()));
 			
 			// Commit changes for edit.
-			commitEdit(app, edits, editId);
+			commitEdit(app, edits, edit.getId());
 			
 		} catch (GoogleJsonResponseException ex) {
 			throw new UnexpectedException(ex.getDetails().getMessage(), ex);
@@ -764,19 +656,9 @@ public class GooglePlayPublisher {
 	
 	public static TracksListResponse getTracks(App app) {
 		try {
-			// Create the API service.
-			AndroidPublisher service = init(app.getAppContext());
-			Edits edits = service.edits();
-			
-			// Create a new edit to make changes.
-			Insert editRequest = edits.insert(app.getApplicationId(), null);
-			AppEdit edit = editRequest.execute();
-			String editId = edit.getId();
-			System.out.println(String.format("Created edit with id: %s", editId));
-			
-			Edits.Tracks.List getTracksRequest = edits.tracks().list(app.getApplicationId(), editId);
-			return getTracksRequest.execute();
-			
+			Edits edits = init(app.getAppContext()).edits();
+			AppEdit edit = createEdit(app, edits);
+			return edits.tracks().list(app.getApplicationId(), edit.getId()).execute();
 		} catch (GoogleJsonResponseException ex) {
 			throw new UnexpectedException(ex.getDetails().getMessage(), ex);
 		} catch (IOException ex) {
@@ -784,9 +666,15 @@ public class GooglePlayPublisher {
 		}
 	}
 	
+	private static AppEdit createEdit(App app, Edits edits) throws IOException {
+		// Create a new edit to make changes.
+		AppEdit edit = edits.insert(app.getApplicationId(), null).execute();
+		System.out.println(String.format("Created edit with id: %s", edit.getId()));
+		return edit;
+	}
+	
 	private static void commitEdit(App app, Edits edits, String editId) throws IOException {
-		Commit commitRequest = edits.commit(app.getApplicationId(), editId);
-		AppEdit appEdit = commitRequest.execute();
+		AppEdit appEdit = edits.commit(app.getApplicationId(), editId).execute();
 		System.out.println(String.format("App edit with id %s has been comitted", appEdit.getId()));
 	}
 }
