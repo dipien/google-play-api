@@ -248,7 +248,7 @@ Resume the current staged rollout
 
 Rollout the release to 100% of users
 
-    GooglePlayPublisher.completeStageRollout(new App(appContext));
+    GooglePlayPublisher.completeStagedRollout(new App(appContext));
 
 #### Get Tracks
 

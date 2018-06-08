@@ -23,7 +23,7 @@ Define the following gradle properties:
 
 The application id of your app. This property is required
     
-    APPLICATION_ID = 'com.sample'
+    applicationId = 'com.sample'
     
 ###### Private Key Json File Path
 
@@ -31,7 +31,7 @@ Path to the private key json file. This property is required.
 
 For example:
 
-    PRIVATE_KEY_JSON_FILE_PATH = '/credentials/googleplay/key.json'
+    privateKeyJsonFilePath = '/credentials/googleplay/key.json'
 
 ## Usage
 
@@ -45,55 +45,55 @@ Verify that the metadata to upload to Google Play is valid.
 
 List of supported locales on Google Play. This property is required
 
-    LOCALES = 'en-US,es-419'
+    locales = 'en-US,es-419'
     
 ###### Video Required
 
 If the video url is required. The default value is **false**
 
-    VIDEO_REQUIRED = true
+    videoRequired = true
     
 ###### Promo Graphic Required
 
 If the promo graphic is required. The default value is **true**
 
-    PROMO_GRAPHIC_REQUIRED = false
+    promoGraphicRequired = false
 
 ###### Tv Banner Required
 
 If the tv banner is required. The default value is **false**
 
-    TV_BANNER_REQUIRED = true
+    tvBannerRequired = true
     
 ###### Phone Screenshots Required
 
 If the phone screenshots are required. The default value is **true**
 
-    PHONE_SCREENSHOTS_REQUIRED = false
+    phoneScreenshotsRequired = false
     
 ###### 7 inches Screenshots Required
 
 If the 7 inches screenshots are required. The default value is **false**
 
-    7_INCH_SCREENSHOTS_REQUIRED = true
+    sevenInchScreenshotsRequired = true
     
 ###### 10 inches Screenshots Required
 
 If the 10 inches screenshots are required. The default value is **false**
 
-    10_INCH_SCREENSHOTS_REQUIRED = true
+    tenInchScreenshotsRequired = true
     
 ###### Tv Screenshots Required
 
 If the tv screenshots are required. The default value is **false**
 
-    TV_SCREENSHOTS_REQUIRED = true
+    tvScreenshotsRequired = true
     
 ###### Wear Screenshots Required
 
 If the wear screenshots are required. The default value is **false**
 
-    WEAR_SCREENSHOTS_REQUIRED = true
+    wearScreenshotsRequired = true
 
 #### Publish Metadata
 
@@ -108,7 +108,7 @@ Create the following directories:
     {METADATA_PATH}/googleplay/default/
     
  
-The **{METADATA_PATH}/googleplay/default/** directory is optional. It is only used when a asset is not found on it's locale directory. 
+The **{metadataPath}/googleplay/default/** directory is optional. It is only used when a asset is not found on it's locale directory. 
 You can use it to host your shared assets between locales and avoid to duplicate it.
 
 Add your assets to each locale or default directory:
@@ -133,13 +133,13 @@ Add your assets to each locale or default directory:
 
 List of supported locales on Google Play. This property is required
 
-    LOCALES = 'en-US,es-419'
+    locales = 'en-US,es-419'
 
 ###### Metadata path
 
 The path where all the listings directories will be located. The default value is the path of the gradle project where the plugin is applied
 
-    METADATA_PATH = /path/to/the/metadata
+    metadataPath = /path/to/the/metadata
     
 #### List APKs
 
@@ -167,65 +167,65 @@ Upload new APK / Bundle for your app and assign it to a release track.
 
 List of supported locales on Google Play. This property is required if you need to upload release notes
 
-    LOCALES = 'en-US,es-419'
+    locales = 'en-US,es-419'
 
 ###### Release Name
 
 The name to identify release in the Play Console only, such as an internal code name or build version. Default value: the version name
 
-    RELEASE_NAME = 'My release'
+    releaseName = 'My release'
 
 ###### Draft
 
 Whether the release should be created on draft mode. Default value: false
 
-    DRAFT = true
+    draft = true
     
 ###### APK path / Bundle path
 
 The path to the APK / Bundle to publish
 
-    APK_PATH = /path/to/apk/file.apk
+    apkPath = /path/to/apk/file.apk
     // or
-    BUNDLE_PATH = /path/to/bundle/file.aab
+    bundlePath = /path/to/bundle/file.aab
 
 ###### Track
 
 The release track that you're assigning APKs to. Acceptable values are: **internal**, **alpha**, **beta** or **production**
 
-    TRACK = production
+    track = production
     
 ###### User Fraction
 
 Fraction of users who are eligible to receive the release. 0 <= fraction < 1
-Only used if **TRACK** is **production**. Default value: the previous rollout user fraction (if any) or 100%
+Only used if **track** is **production**. Default value: the previous rollout user fraction (if any) or 100%
     
-    USER_FRACTION = 0.1
+    userFraction = 0.1
     
 ###### Release Notes
 
 Create files with the release notes. For example:
 
     // Release notes for LOCALE_1 and VERSION_CODE_1
-    {METADATA_PATH}/googleplay/{LOCALE_1}/release_notes/{VERSION_CODE_1}.txt
+    {metadataPath}/googleplay/{LOCALE_1}/release_notes/{VERSION_CODE_1}.txt
 
     // Release notes for LOCALE_2 and VERSION_CODE_1
-    {METADATA_PATH}/googleplay/{LOCALE_2}/release_notes/{VERSION_CODE_1}.txt
+    {metadataPath}/googleplay/{LOCALE_2}/release_notes/{VERSION_CODE_1}.txt
 
     // Release notes for LOCALE_2 and any version code
-    {METADATA_PATH}/googleplay/{LOCALE_2}/release_notes/default_release_notes.txt
+    {metadataPath}/googleplay/{LOCALE_2}/release_notes/default_release_notes.txt
 
     // Release notes for any locale and VERSION_CODE_2
-    {METADATA_PATH}/googleplay/default/release_notes/{VERSION_CODE_2}.txt
+    {metadataPath}/googleplay/default/release_notes/{VERSION_CODE_2}.txt
 
     // Release notes for any locale and version code
-    {METADATA_PATH}/googleplay/default/release_notes/default_release_notes.txt
+    {metadataPath}/googleplay/default/release_notes/default_release_notes.txt
 
 ###### Fail on APK upgrade version conflict
 
 Whether the task should fail if the uploaded APK specifies a version code that has already been used. Default value: **true**
     
-    FAIL_ON_APK_UPGRADE_VERSION_CONFLICT = false
+    failOnApkUpgradeVersionConflict = false
     
 #### Promote from Internal to Alpha
 
@@ -249,7 +249,7 @@ Promote a current internal to production
 
 Fraction of users who are eligible to receive the release. 0 <= fraction < 1. Default value: the previous rollout user fraction (if any) or 100%
 
-    USER_FRACTION = 0.2
+    userFraction = 0.2
 
 #### Promote from Alpha to Beta
 
@@ -261,7 +261,7 @@ Promote a current alpha to beta
 
 Set a release name if you have more than one alpha track and you need to promote just one
 
-    RELEASE_NAME = 'My release'
+    releaseName = 'My release'
     
 #### Promote from Alpha to Production
 
@@ -273,13 +273,13 @@ Promote a current alpha to production
 
 Fraction of users who are eligible to receive the release. 0 <= fraction < 1. Default value: the previous rollout user fraction (if any) or 100%
 
-    USER_FRACTION = 0.2
+    userFraction = 0.2
 
 ###### Release Name
 
 Set a release name if you have more than one alpha track and you need to promote just one
 
-    RELEASE_NAME = 'My release'
+    releaseName = 'My release'
 
 #### Promote from Beta to Production
 
@@ -291,7 +291,7 @@ Promote a current beta to production
 
 Fraction of users who are eligible to receive the release. 0 <= fraction < 1. Default value: the previous rollout user fraction (if any) or 100%
 
-    USER_FRACTION = 0.2
+    userFraction = 0.2
     
 #### Increase Staged Rollout
 
@@ -303,7 +303,7 @@ Increase the fraction of users who should get the current staged rollout
 
 Fraction of users who are eligible to receive the release. 0 <= fraction < 1.
     
-    USER_FRACTION = 0.2
+    userFraction = 0.2
 
 #### Halt Staged Rollout
 
@@ -321,7 +321,7 @@ Resume the current staged rollout
 
 Rollout the release to 100% of users
 
-    ./gradlew googlePlayCompleteStageRollout
+    ./gradlew googlePlayCompleteStagedRollout
 
 #### List Tracks
 

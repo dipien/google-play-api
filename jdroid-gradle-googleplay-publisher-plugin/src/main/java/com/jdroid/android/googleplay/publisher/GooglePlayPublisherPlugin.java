@@ -1,6 +1,6 @@
 package com.jdroid.android.googleplay.publisher;
 
-import com.jdroid.android.googleplay.publisher.task.CompleteStageRollout;
+import com.jdroid.android.googleplay.publisher.task.CompleteStagedRollout;
 import com.jdroid.android.googleplay.publisher.task.HaltStagedRolloutTask;
 import com.jdroid.android.googleplay.publisher.task.IncreaseStagedRolloutTask;
 import com.jdroid.android.googleplay.publisher.task.ListApksTask;
@@ -23,9 +23,14 @@ import org.gradle.api.Project;
 
 public class GooglePlayPublisherPlugin implements Plugin<Project> {
 	
+	public static final String EXTENSION_NAME = "jdroidGooglePlayPublisher";
+	
 	@Override
 	public void apply(Project project) {
-
+		
+		project.getExtensions().create(EXTENSION_NAME, GooglePlayPublisherPluginExtension.class, project);
+		
+		
 		project.getTasks().create("googlePlayVerifyMetadata", MetadataVerificationTask.class);
 		project.getTasks().create("googlePlayPublishMetadata", PublishMetadataTask.class);
 		project.getTasks().create("googlePlayListAPKs", ListApksTask.class);
@@ -41,7 +46,7 @@ public class GooglePlayPublisherPlugin implements Plugin<Project> {
 		project.getTasks().create("googlePlayIncreaseStagedRollout", IncreaseStagedRolloutTask.class);
 		project.getTasks().create("googlePlayHaltStagedRollout", HaltStagedRolloutTask.class);
 		project.getTasks().create("googlePlayResumeStagedRollout", ResumeStagedRolloutTask.class);
-		project.getTasks().create("googlePlayCompleteStageRollout", CompleteStageRollout.class);
+		project.getTasks().create("googlePlayCompleteStagedRollout", CompleteStagedRollout.class);
 		project.getTasks().create("googlePlayListTracks", ListTracksTask.class);
 	}
 

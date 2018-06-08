@@ -1,7 +1,3 @@
-ext.APPLICATION_ID = "com.jdroid.googleplay.publisher.sample"
-ext.LOCALES = 'en-US'
-ext.RELEASE_NOTES_REQUIRED = true
-
 apply plugin: 'com.android.application'
 apply plugin: 'com.jdroid.googleplay.publisher'
 
@@ -36,8 +32,8 @@ android {
 		applicationId "com.jdroid.googleplay.publisher.sample"
 		minSdkVersion 19
 		targetSdkVersion 27
-		versionCode 190060016
-		versionName "6.0.16"
+		versionCode 190060017
+		versionName "6.0.17"
 	}
 
 	signingConfigs {
@@ -59,4 +55,10 @@ android {
 
 dependencies {
 	implementation 'com.android.support:appcompat-v7:27.1.1'
+}
+
+jdroidGooglePlayPublisher {
+	applicationId "com.jdroid.googleplay.publisher.sample"
+	locales 'en-US'
+	releaseNotesRequired true
 }

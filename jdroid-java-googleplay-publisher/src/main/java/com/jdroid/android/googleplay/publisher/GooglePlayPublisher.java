@@ -666,7 +666,7 @@ public class GooglePlayPublisher {
 		promote(app, TrackType.BETA, TrackType.PRODUCTION);
 	}
 	
-	public static void completeStageRollout(App app) {
+	public static void completeStagedRollout(App app) {
 		try {
 			// Create the API service.
 			AndroidPublisher service = init(app.getAppContext());
