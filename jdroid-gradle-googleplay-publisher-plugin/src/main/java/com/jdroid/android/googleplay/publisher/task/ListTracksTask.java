@@ -2,7 +2,6 @@ package com.jdroid.android.googleplay.publisher.task;
 
 import com.google.api.services.androidpublisher.model.Track;
 import com.google.api.services.androidpublisher.model.TrackRelease;
-import com.google.api.services.androidpublisher.model.TracksListResponse;
 import com.jdroid.android.googleplay.publisher.App;
 import com.jdroid.android.googleplay.publisher.GooglePlayPublisher;
 
@@ -18,9 +17,7 @@ public class ListTracksTask extends BaseTask {
 
 	@Override
 	protected void onExecute(App app) {
-		TracksListResponse tracksListResponse = GooglePlayPublisher.getTracks(app);
-		
-		for (Track track : tracksListResponse.getTracks()) {
+		for (Track track : GooglePlayPublisher.getTracks(app)) {
 			if (track.getReleases() != null) {
 				getLogger().log(logLevel, "Track: " + track.getTrack());
 				getLogger().log(logLevel, "-------------------------------");

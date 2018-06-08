@@ -24,7 +24,6 @@ import com.google.api.services.androidpublisher.model.Listing;
 import com.google.api.services.androidpublisher.model.LocalizedText;
 import com.google.api.services.androidpublisher.model.Track;
 import com.google.api.services.androidpublisher.model.TrackRelease;
-import com.google.api.services.androidpublisher.model.TracksListResponse;
 import com.jdroid.java.exception.UnexpectedException;
 import com.jdroid.java.utils.StringUtils;
 
@@ -469,13 +468,7 @@ public class GooglePlayPublisher {
 	}
 	
 	private static Track getTrack(App app, TrackType trackType, Edits edits, String editId) throws IOException {
-		TracksListResponse tracksListResponse = edits.tracks().list(app.getApplicationId(), editId).execute();
-		for (Track track : tracksListResponse.getTracks()) {
-			if (track.getTrack().equals(trackType.getKey())) {
-				return track;
-			}
-		}
-		return null;
+		return edits.tracks().get(app.getApplicationId(), editId, trackType.getKey()).execute();
 	}
 	
 	public static void increaseStagedRollout(App app) {
@@ -690,15 +683,68 @@ public class GooglePlayPublisher {
 		}
 	}
 	
-	public static TracksListResponse getTracks(App app) {
+	public static List<Track> getTracks(App app) {
 		try {
 			Edits edits = init(app.getAppContext()).edits();
 			AppEdit edit = createEdit(app, edits);
-			return edits.tracks().list(app.getApplicationId(), edit.getId()).execute();
+			return edits.tracks().list(app.getApplicationId(), edit.getId()).execute().getTracks();
 		} catch (GoogleJsonResponseException ex) {
 			throw new UnexpectedException(ex.getDetails().getMessage(), ex);
 		} catch (IOException ex) {
 			throw new UnexpectedException("Exception was thrown while getting track", ex);
+		}
+	}
+	
+	public static Track getTrack(App app) {
+		try {
+			Edits edits = init(app.getAppContext()).edits();
+			AppEdit edit = createEdit(app, edits);
+			return edits.tracks().get(app.getApplicationId(), edit.getId(), app.getAppContext().getTrackType().getKey()).execute();
+		} catch (GoogleJsonResponseException ex) {
+			throw new UnexpectedException(ex.getDetails().getMessage(), ex);
+		} catch (IOException ex) {
+			throw new UnexpectedException("Exception was thrown while getting track", ex);
+		}
+	}
+	
+	public static TrackRelease getInternalTrackRelease(App app) {
+		app.getAppContext().setTrackType(TrackType.INTERNAL);
+		List<TrackRelease> trackReleases = getTrackReleases(app);
+		return trackReleases.isEmpty() ? null : trackReleases.get(0);
+	}
+	
+	public static List<TrackRelease> getAlphaTrackReleases(App app) {
+		app.getAppContext().setTrackType(TrackType.ALPHA);
+		return getTrackReleases(app);
+	}
+	
+	public static TrackRelease getBetaTrackRelease(App app) {
+		app.getAppContext().setTrackType(TrackType.BETA);
+		List<TrackRelease> trackReleases = getTrackReleases(app);
+		return trackReleases.isEmpty() ? null : trackReleases.get(0);
+	}
+	
+	public static List<TrackRelease> getProductionTrackReleases(App app) {
+		app.getAppContext().setTrackType(TrackType.PRODUCTION);
+		return getTrackReleases(app);
+	}
+	
+	public static TrackRelease getStagedRolloutTrackRelease(App app) {
+		app.getAppContext().setTrackType(TrackType.PRODUCTION);
+		for (TrackRelease trackRelease : getTrackReleases(app)) {
+			if (trackRelease.getStatus().equals(TrackReleaseStatus.IN_PROGRESS.getKey())) {
+				return trackRelease;
+			}
+		}
+		return null;
+	}
+	
+	private static List<TrackRelease> getTrackReleases(App app) {
+		Track track = getTrack(app);
+		if (track != null) {
+			return track.getReleases() != null ? track.getReleases() : Lists.newArrayList();
+		} else {
+			return Lists.newArrayList();
 		}
 	}
 	
