@@ -1,5 +1,17 @@
 # Change Log
 
+## [v2.0.0](https://github.com/maxirosson/jdroid-googleplay-publisher/tree/v2.0.0) (2018-06-09)
+[Full Changelog](https://github.com/maxirosson/jdroid-googleplay-publisher/compare/v1.1.0...v2.0.0)
+
+**Implemented enhancements:**
+
+- Add privateKeyJsonFilePath support [\#28](https://github.com/maxirosson/jdroid-googleplay-publisher/issues/28)
+- Migrate configuration properties to an extension [\#22](https://github.com/maxirosson/jdroid-googleplay-publisher/issues/22)
+
+**Closed issues:**
+
+- Upgrade to Android Publisher SDK v3 [\#27](https://github.com/maxirosson/jdroid-googleplay-publisher/issues/27)
+
 ## [v1.1.0](https://github.com/maxirosson/jdroid-googleplay-publisher/tree/v1.1.0) (2018-05-12)
 [Full Changelog](https://github.com/maxirosson/jdroid-googleplay-publisher/compare/v1.0.0...v1.1.0)
 
