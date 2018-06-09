@@ -88,15 +88,19 @@ public class GooglePlayPublisher {
 		}
 	}
 	
-	private static Credential authorizeWithServiceAccount(AppContext appContext) throws IOException {
+	private static Credential authorizeWithServiceAccount(AppContext appContext) {
 
 		if (StringUtils.isEmpty(appContext.getPrivateKeyJsonFilePath())) {
 			throw new UnexpectedException("The private key json file path is required");
 		}
 		
-		InputStream serviceAccountStream = new FileInputStream(appContext.getPrivateKeyJsonFilePath());
-		GoogleCredential credential = GoogleCredential.fromStream(serviceAccountStream, HTTP_TRANSPORT, JSON_FACTORY);
-		return credential.createScoped(Collections.singleton(AndroidPublisherScopes.ANDROIDPUBLISHER));
+		try {
+			InputStream serviceAccountStream = new FileInputStream(appContext.getPrivateKeyJsonFilePath());
+			GoogleCredential credential = GoogleCredential.fromStream(serviceAccountStream, HTTP_TRANSPORT, JSON_FACTORY);
+			return credential.createScoped(Collections.singleton(AndroidPublisherScopes.ANDROIDPUBLISHER));
+		} catch (IOException e) {
+			throw new UnexpectedException(e);
+		}
 	}
 	
 	/**
@@ -267,7 +271,7 @@ public class GooglePlayPublisher {
 		}
 	}
 	
-	private static void setDefaultUserFraction(App app, Edits edits, String editId) throws IOException {
+	private static void setDefaultUserFraction(App app, Edits edits, String editId) {
 		if (app.getAppContext().getTrackType().equals(TrackType.PRODUCTION)) {
 			TrackRelease currentRolloutTrackRelease = getInProgressRollout(app, edits, editId);
 			if (currentRolloutTrackRelease != null && app.getAppContext().getUserFraction() == null) {
@@ -443,7 +447,7 @@ public class GooglePlayPublisher {
 		}
 	}
 	
-	private static TrackRelease getHaltedRollout(App app, Edits edits, String editId) throws IOException {
+	private static TrackRelease getHaltedRollout(App app, Edits edits, String editId) {
 		Track currentRolloutTrack = getTrack(app, TrackType.PRODUCTION, edits, editId);
 		if (currentRolloutTrack != null && currentRolloutTrack.getReleases() != null) {
 			for (TrackRelease trackRelease : currentRolloutTrack.getReleases()) {
@@ -455,7 +459,7 @@ public class GooglePlayPublisher {
 		return null;
 	}
 	
-	private static TrackRelease getInProgressRollout(App app, Edits edits, String editId) throws IOException {
+	private static TrackRelease getInProgressRollout(App app, Edits edits, String editId) {
 		Track currentRolloutTrack = getTrack(app, TrackType.PRODUCTION, edits, editId);
 		if (currentRolloutTrack != null && currentRolloutTrack.getReleases() != null) {
 			for (TrackRelease trackRelease : currentRolloutTrack.getReleases()) {
@@ -467,8 +471,18 @@ public class GooglePlayPublisher {
 		return null;
 	}
 	
-	private static Track getTrack(App app, TrackType trackType, Edits edits, String editId) throws IOException {
-		return edits.tracks().get(app.getApplicationId(), editId, trackType.getKey()).execute();
+	private static Track getTrack(App app, TrackType trackType, Edits edits, String editId) {
+		try {
+			return edits.tracks().get(app.getApplicationId(), editId, trackType.getKey()).execute();
+		} catch (GoogleJsonResponseException ex) {
+			if (ex.getDetails().getCode() == 404) {
+				return null;
+			} else {
+				throw new UnexpectedException(ex.getDetails().getMessage(), ex);
+			}
+		} catch (IOException ex) {
+			throw new UnexpectedException("Exception was thrown while promoting from rollout to production", ex);
+		}
 	}
 	
 	public static void increaseStagedRollout(App app) {
@@ -696,15 +710,9 @@ public class GooglePlayPublisher {
 	}
 	
 	public static Track getTrack(App app) {
-		try {
-			Edits edits = init(app.getAppContext()).edits();
-			AppEdit edit = createEdit(app, edits);
-			return edits.tracks().get(app.getApplicationId(), edit.getId(), app.getAppContext().getTrackType().getKey()).execute();
-		} catch (GoogleJsonResponseException ex) {
-			throw new UnexpectedException(ex.getDetails().getMessage(), ex);
-		} catch (IOException ex) {
-			throw new UnexpectedException("Exception was thrown while getting track", ex);
-		}
+		Edits edits = init(app.getAppContext()).edits();
+		AppEdit edit = createEdit(app, edits);
+		return getTrack(app, app.getAppContext().getTrackType(), edits, edit.getId());
 	}
 	
 	public static TrackRelease getInternalTrackRelease(App app) {
@@ -748,15 +756,27 @@ public class GooglePlayPublisher {
 		}
 	}
 	
-	private static AppEdit createEdit(App app, Edits edits) throws IOException {
-		// Create a new edit to make changes.
-		AppEdit edit = edits.insert(app.getApplicationId(), null).execute();
-		System.out.println(String.format("Created edit with id: %s", edit.getId()));
-		return edit;
+	private static AppEdit createEdit(App app, Edits edits) {
+		try {
+			// Create a new edit to make changes.
+			AppEdit edit = edits.insert(app.getApplicationId(), null).execute();
+			System.out.println(String.format("Created edit with id: %s", edit.getId()));
+			return edit;
+		} catch (GoogleJsonResponseException ex) {
+			throw new UnexpectedException(ex.getDetails().getMessage(), ex);
+		} catch (IOException ex) {
+			throw new UnexpectedException("Exception was thrown while creating edit", ex);
+		}
 	}
 	
-	private static void commitEdit(App app, Edits edits, AppEdit edit) throws IOException {
-		AppEdit appEdit = edits.commit(app.getApplicationId(), edit.getId()).execute();
-		System.out.println(String.format("App edit with id %s has been comitted", appEdit.getId()));
+	private static void commitEdit(App app, Edits edits, AppEdit edit) {
+		try {
+			AppEdit appEdit = edits.commit(app.getApplicationId(), edit.getId()).execute();
+			System.out.println(String.format("App edit with id %s has been comitted", appEdit.getId()));
+		} catch (GoogleJsonResponseException ex) {
+			throw new UnexpectedException(ex.getDetails().getMessage(), ex);
+		} catch (IOException ex) {
+			throw new UnexpectedException("Exception was thrown while commiting edit", ex);
+		}
 	}
 }
