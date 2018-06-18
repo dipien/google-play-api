@@ -39,7 +39,7 @@ public abstract class BaseTask extends AbstractTask {
 		appContext.setBundleDir(extension.getBundleDir());
 		
 		appContext.setTrackType(TrackType.findByKey(extension.getTrack()));
-		appContext.setUserFraction(extension.getUserFraction());
+		appContext.setUserPercentage(extension.getUserPercentage());
 
 		appContext.setFailOnApkUpgradeVersionConflict(extension.getFailOnApkUpgradeVersionConflict());
 

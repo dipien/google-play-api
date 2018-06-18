@@ -143,9 +143,9 @@ Upload new APK for your app and assign it to a release track.
     // Acceptable values are: TrackType.INTERNAL, TrackType.ALPHA, TrackType.BETA or TrackType.PRODUCTION
     appContext.setTrackType(TrackType.PRODUCTION);
     
-    // Fraction of users who are eligible to receive the release. 0 <= fraction < 1
-    // Only used if trackType is TrackType.PRODUCTION. Default value: the previous rollout user fraction (if any) or 100%
-    appContext.setUserFraction(0.1);
+    // Percentage of users who are eligible to receive the release.
+    // Only used if trackType is TrackType.PRODUCTION. 0 < percentage < 100. Default value: the previous rollout user percentage (if any) or 100%
+    appContext.setUserPercentage(20);
     
     // Whether the task should fail if the uploaded APK specifies a version code that has already been used. Default value: true
     appContext.setFailOnApkUpgradeVersionConflict(false);
@@ -189,8 +189,8 @@ Promote a current internal to beta
 
 Promote a current internal to production
 
-    // Fraction of users who are eligible to receive the release. 0 <= fraction < 1. Default value: the previous rollout user fraction (if any) or 100%
-    appContext.setUserFraction(0.2);
+    // Percentage of users who are eligible to receive the release. 0 < percentage < 100. Default value: the previous rollout user percentage (if any) or 100%
+    appContext.setUserPercentage(20);
 
     GooglePlayPublisher.promoteFromInternalToProduction(new App(appContext));
     
@@ -210,8 +210,8 @@ Promote a current alpha to production
     // Set a release name if you have more than one alpha track and you need to promote just one
     appContext.setReleaseName("My release");
 
-    // Fraction of users who are eligible to receive the release. 0 <= fraction < 1. Default value: the previous rollout user fraction (if any) or 100%
-    appContext.setUserFraction(0.2);
+    // Percentage of users who are eligible to receive the release. 0 < percentage < 100. Default value: the previous rollout user percentage (if any) or 100%
+    appContext.setUserPercentage(20);
 
     GooglePlayPublisher.promoteFromAlphaToProduction(new App(appContext));
 
@@ -219,18 +219,18 @@ Promote a current alpha to production
 
 Promote a current beta to production
 
-    // Fraction of users who are eligible to receive the release. 0 <= fraction < 1. Default value: the previous rollout user fraction (if any) or 100%
-    appContext.setUserFraction(0.2);
+    // Percentage of users who are eligible to receive the release. 0 < percentage < 100. Default value: the previous rollout user percentage (if any) or 100%
+    appContext.setUserPercentage(20);
 
     GooglePlayPublisher.promoteFromBetaToProduction(new App(appContext));
     
 #### Increase Staged Rollout
 
-Increase the fraction of users who should get the current staged rollout
+Increase the percentage of users who should get the current staged rollout
 
-    // Fraction of users who are eligible to receive the release. 0 <= fraction < 1. Default value: 0.005 (0.5%)
-    appContext.setUserFraction(0.2);
-    
+    // Percentage of users who are eligible to receive the release. 0 < percentage < 100. Default value: 0.005 (0.5%)
+    appContext.setUserPercentage(20);
+
     GooglePlayPublisher.increaseStagedRollout(new App(appContext));
 
 #### Halt Staged Rollout

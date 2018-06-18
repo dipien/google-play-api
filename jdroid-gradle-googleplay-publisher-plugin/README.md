@@ -219,13 +219,13 @@ The release track that you're assigning APKs to. Acceptable values are: **intern
 
     track = production
     
-###### User Fraction
+###### User Percentage
 
-Fraction of users who are eligible to receive the release. 0 <= fraction < 1
-Only used if **track** is **production**. Default value: the previous rollout user fraction (if any) or 100%
+Percentage of users who are eligible to receive the release.
+Only used if **track** is **production**. 0 < percentage < 100. Default value: the previous rollout user percentage (if any) or 100%
     
-    userFraction = 0.1
-    
+    userPercentage = 10
+
 ###### Release Notes
 
 Create files with the release notes. For example:
@@ -269,11 +269,11 @@ Promote a current internal to production
 
     ./gradlew googlePlayPromoteFromInternalToProduction
 
-###### User Fraction
+###### User Percentage
 
-Fraction of users who are eligible to receive the release. 0 <= fraction < 1. Default value: the previous rollout user fraction (if any) or 100%
+Percentage of users who are eligible to receive the release. 0 < percentage < 100. Default value: the previous rollout user percentage (if any) or 100%
 
-    userFraction = 0.2
+    userPercentage = 20
 
 #### Promote from Alpha to Beta
 
@@ -293,11 +293,11 @@ Promote a current alpha to production
 
     ./gradlew googlePlayPromoteFromAlphaToProduction
 
-###### User Fraction
+###### User Percentage
 
-Fraction of users who are eligible to receive the release. 0 <= fraction < 1. Default value: the previous rollout user fraction (if any) or 100%
+Percentage of users who are eligible to receive the release. 0 < percentage < 100. Default value: the previous rollout user percentage (if any) or 100%
 
-    userFraction = 0.2
+    userPercentage = 20
 
 ###### Release Name
 
@@ -311,11 +311,11 @@ Promote a current beta to production
 
     ./gradlew googlePlayPromoteFromBetaToProduction
 
-###### User Fraction
+###### User Percentage
 
-Fraction of users who are eligible to receive the release. 0 <= fraction < 1. Default value: the previous rollout user fraction (if any) or 100%
+Percentage of users who are eligible to receive the release. 0 < percentage < 100. Default value: the previous rollout user percentage (if any) or 100%
 
-    userFraction = 0.2
+    userPercentage = 20
     
 #### Increase Staged Rollout
 
@@ -323,11 +323,11 @@ Increase the fraction of users who should get the current staged rollout
 
     ./gradlew googlePlayIncreaseStagedRollout
 
-###### User Fraction
+###### User Percentage
 
-Fraction of users who are eligible to receive the release. 0 <= fraction < 1.
+Percentage of users who are eligible to receive the release. 0 < percentage < 100
     
-    userFraction = 0.2
+    userPercentage = 20
 
 #### Halt Staged Rollout
 

@@ -20,7 +20,7 @@ public class GooglePlayPublisherPluginExtension {
 	private String bundleDir;
 	
 	private String track;
-	private Double userFraction;
+	private Double userPercentage;
 	private Boolean draft;
 	private String releaseName;
 	
@@ -51,7 +51,7 @@ public class GooglePlayPublisherPluginExtension {
 		bundleDir = propertyResolver.getStringProp("bundleDir");
 		
 		track = propertyResolver.getStringProp("track");
-		userFraction = propertyResolver.getDoubleProp("userFraction");
+		userPercentage = propertyResolver.getDoubleProp("userPercentage");
 		draft = propertyResolver.getBooleanProp("draft");
 		releaseName = propertyResolver.getStringProp("releaseName");
 		
@@ -122,14 +122,6 @@ public class GooglePlayPublisherPluginExtension {
 	
 	public void setTrack(String track) {
 		this.track = track;
-	}
-	
-	public Double getUserFraction() {
-		return userFraction;
-	}
-	
-	public void setUserFraction(Double userFraction) {
-		this.userFraction = userFraction;
 	}
 	
 	public Boolean getDraft() {
@@ -242,5 +234,13 @@ public class GooglePlayPublisherPluginExtension {
 	
 	public void setBundleDir(String bundleDir) {
 		this.bundleDir = bundleDir;
+	}
+	
+	public Double getUserPercentage() {
+		return userPercentage;
+	}
+	
+	public void setUserPercentage(Double userPercentage) {
+		this.userPercentage = userPercentage;
 	}
 }

@@ -160,12 +160,20 @@ public class AppContext {
 		this.trackType = trackType;
 	}
 	
-	public Double getUserFraction() {
+	protected Double getUserFraction() {
 		return userFraction;
 	}
 	
-	public void setUserFraction(Double userFraction) {
+	public Double getUserPercentage() {
+		return userFraction * 100;
+	}
+	
+	protected void setUserFraction(Double userFraction) {
 		this.userFraction = userFraction;
+	}
+	
+	public void setUserPercentage(Double userPercentage) {
+		this.userFraction = userPercentage / 100;
 	}
 	
 	public Boolean failOnApkUpgradeVersionConflict() {
