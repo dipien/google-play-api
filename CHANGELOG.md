@@ -1,5 +1,12 @@
 # Change Log
 
+## [v3.0.0](https://github.com/maxirosson/jdroid-googleplay-publisher/tree/v3.0.0) (2018-06-18)
+[Full Changelog](https://github.com/maxirosson/jdroid-googleplay-publisher/compare/v2.0.0...v3.0.0)
+
+**Implemented enhancements:**
+
+- Replaced userFraction by userPercentage [\#30](https://github.com/maxirosson/jdroid-googleplay-publisher/issues/30)
+
 ## [v2.0.0](https://github.com/maxirosson/jdroid-googleplay-publisher/tree/v2.0.0) (2018-06-09)
 [Full Changelog](https://github.com/maxirosson/jdroid-googleplay-publisher/compare/v1.1.0...v2.0.0)
 
