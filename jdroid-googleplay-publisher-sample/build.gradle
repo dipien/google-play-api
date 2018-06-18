@@ -14,8 +14,8 @@ buildscript {
 	}
 
 	dependencies {
-		classpath 'com.android.tools.build:gradle:3.1.2'
-		classpath 'com.jdroidtools:jdroid-gradle-googleplay-publisher-plugin:2.0.0-SNAPSHOT'
+		classpath 'com.android.tools.build:gradle:3.1.3'
+		classpath 'com.jdroidtools:jdroid-gradle-googleplay-publisher-plugin:3.0.0-SNAPSHOT'
 	}
 }
 
@@ -32,8 +32,8 @@ android {
 		applicationId "com.jdroid.googleplay.publisher.sample"
 		minSdkVersion 19
 		targetSdkVersion 27
-		versionCode 190060019
-		versionName "6.0.19"
+		versionCode 190060020
+		versionName "6.0.20"
 	}
 
 	signingConfigs {

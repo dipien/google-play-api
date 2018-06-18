@@ -165,7 +165,7 @@ public class AppContext {
 	}
 	
 	public Double getUserPercentage() {
-		return userFraction * 100;
+		return userFraction != null ? userFraction * 100 : null;
 	}
 	
 	protected void setUserFraction(Double userFraction) {
@@ -173,7 +173,11 @@ public class AppContext {
 	}
 	
 	public void setUserPercentage(Double userPercentage) {
-		this.userFraction = userPercentage / 100;
+		if (userPercentage != null) {
+			this.userFraction = userPercentage / 100;
+		} else {
+			this.userFraction = null;
+		}
 	}
 	
 	public Boolean failOnApkUpgradeVersionConflict() {
