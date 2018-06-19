@@ -1,5 +1,12 @@
 # Change Log
 
+## [v3.0.1](https://github.com/maxirosson/jdroid-googleplay-publisher/tree/v3.0.1) (2018-06-19)
+[Full Changelog](https://github.com/maxirosson/jdroid-googleplay-publisher/compare/v3.0.0...v3.0.1)
+
+**Fixed bugs:**
+
+- Fix production track release methods [\#31](https://github.com/maxirosson/jdroid-googleplay-publisher/issues/31)
+
 ## [v3.0.0](https://github.com/maxirosson/jdroid-googleplay-publisher/tree/v3.0.0) (2018-06-18)
 [Full Changelog](https://github.com/maxirosson/jdroid-googleplay-publisher/compare/v2.0.0...v3.0.0)
 
