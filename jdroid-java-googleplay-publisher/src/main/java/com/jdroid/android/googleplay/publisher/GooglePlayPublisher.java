@@ -732,15 +732,30 @@ public class GooglePlayPublisher {
 		return trackReleases.isEmpty() ? null : trackReleases.get(0);
 	}
 	
-	public static List<TrackRelease> getProductionTrackReleases(App app) {
+	public static TrackRelease getCompletedProductionTrackRelease(App app) {
 		app.getAppContext().setTrackType(TrackType.PRODUCTION);
-		return getTrackReleases(app);
+		for (TrackRelease trackRelease : getTrackReleases(app)) {
+			if (trackRelease.getStatus().equals(TrackReleaseStatus.COMPLETED.getKey())) {
+				return trackRelease;
+			}
+		}
+		return null;
 	}
 	
 	public static TrackRelease getStagedRolloutTrackRelease(App app) {
 		app.getAppContext().setTrackType(TrackType.PRODUCTION);
 		for (TrackRelease trackRelease : getTrackReleases(app)) {
 			if (trackRelease.getStatus().equals(TrackReleaseStatus.IN_PROGRESS.getKey())) {
+				return trackRelease;
+			}
+		}
+		return null;
+	}
+	
+	public static TrackRelease getHaltedProductionTrackRelease(App app) {
+		app.getAppContext().setTrackType(TrackType.PRODUCTION);
+		for (TrackRelease trackRelease : getTrackReleases(app)) {
+			if (trackRelease.getStatus().equals(TrackReleaseStatus.HALTED.getKey())) {
 				return trackRelease;
 			}
 		}
