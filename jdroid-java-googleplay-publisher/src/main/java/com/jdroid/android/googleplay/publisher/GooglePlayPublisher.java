@@ -68,7 +68,7 @@ public class GooglePlayPublisher {
 	private static AndroidPublisher init(AppContext appContext) {
 
 		if (StringUtils.isEmpty(appContext.getApplicationId())) {
-			throw new UnexpectedException("The application id is required");
+			throw new RuntimeException("The application id is required");
 		}
 		
 		try {
@@ -84,14 +84,14 @@ public class GooglePlayPublisher {
 			return new AndroidPublisher.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential).setApplicationName(
 				appContext.getApplicationId()).build();
 		} catch (GeneralSecurityException | IOException e) {
-			throw new UnexpectedException(e);
+			throw new RuntimeException(e);
 		}
 	}
 	
 	private static Credential authorizeWithServiceAccount(AppContext appContext) {
 
 		if (StringUtils.isEmpty(appContext.getPrivateKeyJsonFilePath())) {
-			throw new UnexpectedException("The private key json file path is required");
+			throw new RuntimeException("The private key json file path is required");
 		}
 		
 		try {
@@ -99,7 +99,7 @@ public class GooglePlayPublisher {
 			GoogleCredential credential = GoogleCredential.fromStream(serviceAccountStream, HTTP_TRANSPORT, JSON_FACTORY);
 			return credential.createScoped(Collections.singleton(AndroidPublisherScopes.ANDROIDPUBLISHER));
 		} catch (IOException e) {
-			throw new UnexpectedException(e);
+			throw new RuntimeException(e);
 		}
 	}
 	
@@ -119,9 +119,9 @@ public class GooglePlayPublisher {
 			
 			return apksResponse.getApks() != null ? apksResponse.getApks() : Lists.newArrayList();
 		} catch (GoogleJsonResponseException ex) {
-			throw new UnexpectedException(ex.getDetails().getMessage(), ex);
+			throw new RuntimeException(ex.getDetails().getMessage(), ex);
 		} catch (IOException ex) {
-			throw new UnexpectedException("Exception was thrown while getting APKs list", ex);
+			throw new RuntimeException(ex);
 		}
 	}
 	
@@ -141,9 +141,9 @@ public class GooglePlayPublisher {
 			
 			return bundlesListResponse.getBundles() != null ? bundlesListResponse.getBundles() : Lists.newArrayList();
 		} catch (GoogleJsonResponseException ex) {
-			throw new UnexpectedException(ex.getDetails().getMessage(), ex);
+			throw new RuntimeException(ex.getDetails().getMessage(), ex);
 		} catch (IOException ex) {
-			throw new UnexpectedException("Exception was thrown while getting bundle list", ex);
+			throw new RuntimeException(ex);
 		}
 	}
 	
@@ -265,9 +265,9 @@ public class GooglePlayPublisher {
 			commitEdit(app, edits, edit);
 			
 		} catch (GoogleJsonResponseException ex) {
-			throw new UnexpectedException(ex.getDetails().getMessage(), ex);
+			throw new RuntimeException(ex.getDetails().getMessage(), ex);
 		} catch (IOException ex) {
-			throw new UnexpectedException("Exception was thrown while updating listing", ex);
+			throw new RuntimeException(ex);
 		}
 	}
 	
@@ -357,10 +357,10 @@ public class GooglePlayPublisher {
 			if (!app.getAppContext().failOnApkUpgradeVersionConflict() && ex.getDetails().getCode() == 403 && ex.getDetails().getMessage().equals("APK specifies a version code that has already been used.")) {
 				System.out.println("WARNING | apkUpgradeVersionConflict: APK specifies a version code that has already been used.");
 			} else {
-				throw new UnexpectedException(ex.getDetails().getMessage(), ex);
+				throw new RuntimeException(ex.getDetails().getMessage(), ex);
 			}
 		} catch (IOException ex) {
-			throw new UnexpectedException("Exception was thrown while uploading apk and updating recent changes", ex);
+			throw new RuntimeException(ex);
 		}
 	}
 	
@@ -441,9 +441,9 @@ public class GooglePlayPublisher {
 			commitEdit(app, edits, edit);
 			
 		} catch (GoogleJsonResponseException ex) {
-			throw new UnexpectedException(ex.getDetails().getMessage(), ex);
+			throw new RuntimeException(ex.getDetails().getMessage(), ex);
 		} catch (IOException ex) {
-			throw new UnexpectedException("Exception was thrown while uploading bundle and updating recent changes", ex);
+			throw new RuntimeException(ex);
 		}
 	}
 	
@@ -478,10 +478,10 @@ public class GooglePlayPublisher {
 			if (ex.getDetails().getCode() == 404) {
 				return null;
 			} else {
-				throw new UnexpectedException(ex.getDetails().getMessage(), ex);
+				throw new RuntimeException(ex.getDetails().getMessage(), ex);
 			}
 		} catch (IOException ex) {
-			throw new UnexpectedException("Exception was thrown while promoting from rollout to production", ex);
+			throw new RuntimeException(ex);
 		}
 	}
 	
@@ -489,7 +489,7 @@ public class GooglePlayPublisher {
 		try {
 			
 			if (app.getAppContext().getUserFraction() == null) {
-				throw new UnexpectedException("userFraction cannot be null or empty!");
+				throw new RuntimeException("userFraction cannot be null or empty!");
 			}
 			
 			app.getAppContext().setTrackType(TrackType.PRODUCTION);
@@ -518,9 +518,9 @@ public class GooglePlayPublisher {
 			commitEdit(app, edits, edit);
 			
 		} catch (GoogleJsonResponseException ex) {
-			throw new UnexpectedException(ex.getDetails().getMessage(), ex);
+			throw new RuntimeException(ex.getDetails().getMessage(), ex);
 		} catch (IOException ex) {
-			throw new UnexpectedException("Exception was thrown while increasing the staged rollout", ex);
+			throw new RuntimeException(ex);
 		}
 	}
 	
@@ -553,9 +553,9 @@ public class GooglePlayPublisher {
 			commitEdit(app, edits, edit);
 			
 		} catch (GoogleJsonResponseException ex) {
-			throw new UnexpectedException(ex.getDetails().getMessage(), ex);
+			throw new RuntimeException(ex.getDetails().getMessage(), ex);
 		} catch (IOException ex) {
-			throw new UnexpectedException("Exception was thrown while halting the staged rollout", ex);
+			throw new RuntimeException(ex);
 		}
 	}
 	
@@ -588,9 +588,9 @@ public class GooglePlayPublisher {
 			commitEdit(app, edits, edit);
 			
 		} catch (GoogleJsonResponseException ex) {
-			throw new UnexpectedException(ex.getDetails().getMessage(), ex);
+			throw new RuntimeException(ex.getDetails().getMessage(), ex);
 		} catch (IOException ex) {
-			throw new UnexpectedException("Exception was thrown while resuming the staged rollout", ex);
+			throw new RuntimeException(ex);
 		}
 	}
 	
@@ -641,9 +641,9 @@ public class GooglePlayPublisher {
 			commitEdit(app, edits, edit);
 			
 		} catch (GoogleJsonResponseException ex) {
-			throw new UnexpectedException(ex.getDetails().getMessage(), ex);
+			throw new RuntimeException(ex.getDetails().getMessage(), ex);
 		} catch (IOException ex) {
-			throw new UnexpectedException("Exception was thrown while promoting from rollout to production", ex);
+			throw new RuntimeException(ex);
 		}
 	}
 	
@@ -691,9 +691,9 @@ public class GooglePlayPublisher {
 			commitEdit(app, edits, edit);
 			
 		} catch (GoogleJsonResponseException ex) {
-			throw new UnexpectedException(ex.getDetails().getMessage(), ex);
+			throw new RuntimeException(ex.getDetails().getMessage(), ex);
 		} catch (IOException ex) {
-			throw new UnexpectedException("Exception was thrown while promoting from " + fromTrackType.getKey() + " to " + toTrackType.getKey(), ex);
+			throw new RuntimeException(ex);
 		}
 	}
 	
@@ -703,9 +703,9 @@ public class GooglePlayPublisher {
 			AppEdit edit = createEdit(app, edits);
 			return edits.tracks().list(app.getApplicationId(), edit.getId()).execute().getTracks();
 		} catch (GoogleJsonResponseException ex) {
-			throw new UnexpectedException(ex.getDetails().getMessage(), ex);
+			throw new RuntimeException(ex.getDetails().getMessage(), ex);
 		} catch (IOException ex) {
-			throw new UnexpectedException("Exception was thrown while getting track", ex);
+			throw new RuntimeException(ex);
 		}
 	}
 	
@@ -778,9 +778,9 @@ public class GooglePlayPublisher {
 			System.out.println(String.format("Created edit with id: %s", edit.getId()));
 			return edit;
 		} catch (GoogleJsonResponseException ex) {
-			throw new UnexpectedException(ex.getDetails().getMessage(), ex);
+			throw new RuntimeException(ex.getDetails().getMessage(), ex);
 		} catch (IOException ex) {
-			throw new UnexpectedException("Exception was thrown while creating edit", ex);
+			throw new RuntimeException(ex);
 		}
 	}
 	
@@ -789,9 +789,9 @@ public class GooglePlayPublisher {
 			AppEdit appEdit = edits.commit(app.getApplicationId(), edit.getId()).execute();
 			System.out.println(String.format("App edit with id %s has been comitted", appEdit.getId()));
 		} catch (GoogleJsonResponseException ex) {
-			throw new UnexpectedException(ex.getDetails().getMessage(), ex);
+			throw new RuntimeException(ex.getDetails().getMessage(), ex);
 		} catch (IOException ex) {
-			throw new UnexpectedException("Exception was thrown while commiting edit", ex);
+			throw new RuntimeException(ex);
 		}
 	}
 }
