@@ -222,7 +222,7 @@ The release track that you're assigning APKs to. Acceptable values are: **intern
 ###### User Percentage
 
 Percentage of users who are eligible to receive the release.
-Only used if **track** is **production**. 0 < percentage < 100. Default value: the previous rollout user percentage (if any) or 100%
+Only used if **track** is **production**. 0 < percentage <= 100. Default value: the previous rollout user percentage (if any) or 100%
     
     userPercentage = 10
 
@@ -271,7 +271,7 @@ Promote a current internal to production
 
 ###### User Percentage
 
-Percentage of users who are eligible to receive the release. 0 < percentage < 100. Default value: the previous rollout user percentage (if any) or 100%
+Percentage of users who are eligible to receive the release. 0 < percentage <= 100. Default value: the previous rollout user percentage (if any) or 100%
 
     userPercentage = 20
 
@@ -295,7 +295,7 @@ Promote a current alpha to production
 
 ###### User Percentage
 
-Percentage of users who are eligible to receive the release. 0 < percentage < 100. Default value: the previous rollout user percentage (if any) or 100%
+Percentage of users who are eligible to receive the release. 0 < percentage <= 100. Default value: the previous rollout user percentage (if any) or 100%
 
     userPercentage = 20
 
@@ -313,7 +313,7 @@ Promote a current beta to production
 
 ###### User Percentage
 
-Percentage of users who are eligible to receive the release. 0 < percentage < 100. Default value: the previous rollout user percentage (if any) or 100%
+Percentage of users who are eligible to receive the release. 0 < percentage <= 100. Default value: the previous rollout user percentage (if any) or 100%
 
     userPercentage = 20
     
@@ -325,7 +325,7 @@ Increase the fraction of users who should get the current staged rollout
 
 ###### User Percentage
 
-Percentage of users who are eligible to receive the release. 0 < percentage < 100
+Percentage of users who are eligible to receive the release. 0 < percentage <= 100
     
     userPercentage = 20
 

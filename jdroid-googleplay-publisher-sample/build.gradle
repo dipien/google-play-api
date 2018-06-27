@@ -32,8 +32,8 @@ android {
 		applicationId "com.jdroid.googleplay.publisher.sample"
 		minSdkVersion 19
 		targetSdkVersion 27
-		versionCode 190060200
-		versionName "6.2.0"
+		versionCode 190060204
+		versionName "6.2.4"
 	}
 
 	signingConfigs {

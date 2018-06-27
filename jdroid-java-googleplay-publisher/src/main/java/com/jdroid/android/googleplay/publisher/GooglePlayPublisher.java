@@ -273,9 +273,15 @@ public class GooglePlayPublisher {
 	
 	private static void setDefaultUserFraction(App app, Edits edits, String editId) {
 		if (app.getAppContext().getTrackType().equals(TrackType.PRODUCTION)) {
-			TrackRelease currentRolloutTrackRelease = getInProgressRollout(app, edits, editId);
-			if (currentRolloutTrackRelease != null && app.getAppContext().getUserFraction() == null) {
-				app.getAppContext().setUserFraction(currentRolloutTrackRelease.getUserFraction());
+			if (app.getAppContext().getUserFraction() == null) {
+				TrackRelease currentRolloutTrackRelease = getInProgressRollout(app, edits, editId);
+				if (currentRolloutTrackRelease != null) {
+					app.getAppContext().setUserFraction(currentRolloutTrackRelease.getUserFraction());
+				}
+			} else {
+				if (app.getAppContext().getUserFraction().equals(1D)) {
+					app.getAppContext().setUserFraction(null);
+				}
 			}
 		}
 	}
@@ -489,34 +495,37 @@ public class GooglePlayPublisher {
 		try {
 			
 			if (app.getAppContext().getUserFraction() == null) {
-				throw new RuntimeException("userFraction cannot be null or empty!");
+				throw new RuntimeException("userFraction cannot be null");
 			}
 			
-			app.getAppContext().setTrackType(TrackType.PRODUCTION);
-			
-			Edits edits = init(app.getAppContext()).edits();
-			AppEdit edit = createEdit(app, edits);
-			
-			Track track = new Track();
-			track.setTrack(TrackType.PRODUCTION.getKey());
-			
-			TrackRelease currentRolloutRelease = getInProgressRollout(app, edits, edit.getId());
-			if (currentRolloutRelease == null) {
-				throw new UnexpectedException("No in progress staged rollout release found");
+			if (app.getAppContext().getUserFraction().equals(1D)) {
+				completeStagedRollout(app);
+			} else {
+				app.getAppContext().setTrackType(TrackType.PRODUCTION);
+				
+				Edits edits = init(app.getAppContext()).edits();
+				AppEdit edit = createEdit(app, edits);
+				
+				Track track = new Track();
+				track.setTrack(TrackType.PRODUCTION.getKey());
+				
+				TrackRelease currentRolloutRelease = getInProgressRollout(app, edits, edit.getId());
+				if (currentRolloutRelease == null) {
+					throw new UnexpectedException("No in progress staged rollout release found");
+				}
+				
+				TrackRelease trackRelease = new TrackRelease();
+				trackRelease.setStatus(TrackReleaseStatus.IN_PROGRESS.getKey());
+				trackRelease.setUserFraction(app.getAppContext().getUserFraction());
+				trackRelease.setVersionCodes(currentRolloutRelease.getVersionCodes());
+				track.setReleases(Collections.singletonList(trackRelease));
+				
+				Track updatedTrack = edits.tracks().patch(app.getApplicationId(), edit.getId(), track.getTrack(), track).execute();
+				System.out.println(String.format("Track %s has been updated.", updatedTrack.getTrack()));
+				
+				// Commit changes for edit.
+				commitEdit(app, edits, edit);
 			}
-			
-			TrackRelease trackRelease = new TrackRelease();
-			trackRelease.setStatus(TrackReleaseStatus.IN_PROGRESS.getKey());
-			trackRelease.setUserFraction(app.getAppContext().getUserFraction());
-			trackRelease.setVersionCodes(currentRolloutRelease.getVersionCodes());
-			track.setReleases(Collections.singletonList(trackRelease));
-			
-			Track updatedTrack = edits.tracks().patch(app.getApplicationId(), edit.getId(), track.getTrack(), track).execute();
-			System.out.println(String.format("Track %s has been updated.", updatedTrack.getTrack()));
-			
-			// Commit changes for edit.
-			commitEdit(app, edits, edit);
-			
 		} catch (GoogleJsonResponseException ex) {
 			throw new RuntimeException(ex.getDetails().getMessage(), ex);
 		} catch (IOException ex) {
