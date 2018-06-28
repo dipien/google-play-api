@@ -150,6 +150,9 @@ Upload new APK for your app and assign it to a release track.
     // Whether the task should fail if the uploaded APK specifies a version code that has already been used. Default value: true
     appContext.setFailOnApkUpgradeVersionConflict(false);
 
+    // The path where the release notes will be located. This property is optional
+    appContext.setMetadataPath("/path/to/the/metadata");
+
     GooglePlayPublisher.publishApk(new App(appContext));
     // or
     GooglePlayPublisher.publishBundle(new App(appContext));

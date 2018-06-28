@@ -226,6 +226,12 @@ Only used if **track** is **production**. 0 < percentage <= 100. Default value: 
     
     userPercentage = 10
 
+###### Metadata path
+
+The path where the release notes will be located. The default value is the path of the gradle project where the plugin is applied
+
+    metadataPath = /path/to/the/metadata
+
 ###### Release Notes
 
 Create files with the release notes. For example:
