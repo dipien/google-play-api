@@ -1,5 +1,13 @@
 # Change Log
 
+## [v3.1.0](https://github.com/maxirosson/jdroid-googleplay-publisher/tree/v3.1.0) (2018-06-28)
+[Full Changelog](https://github.com/maxirosson/jdroid-googleplay-publisher/compare/v3.0.1...v3.1.0)
+
+**Implemented enhancements:**
+
+- Support userPercentage = 100 [\#33](https://github.com/maxirosson/jdroid-googleplay-publisher/issues/33)
+- Improved error messages [\#32](https://github.com/maxirosson/jdroid-googleplay-publisher/issues/32)
+
 ## [v3.0.1](https://github.com/maxirosson/jdroid-googleplay-publisher/tree/v3.0.1) (2018-06-19)
 [Full Changelog](https://github.com/maxirosson/jdroid-googleplay-publisher/compare/v3.0.0...v3.0.1)
 
