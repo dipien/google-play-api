@@ -294,7 +294,7 @@ public class GooglePlayPublisher {
 			}
 			
 			if (app.getAppContext().getTrackType() == null) {
-				throw new UnexpectedException("trackType cannot be null or empty!");
+				throw new UnexpectedException("trackType cannot be null");
 			}
 			
 			Edits edits = init(app.getAppContext()).edits();
@@ -378,7 +378,7 @@ public class GooglePlayPublisher {
 			}
 			
 			if (app.getAppContext().getTrackType() == null) {
-				throw new UnexpectedException("trackType cannot be null or empty!");
+				throw new UnexpectedException("trackType cannot be null");
 			}
 			
 			Edits edits = init(app.getAppContext()).edits();
