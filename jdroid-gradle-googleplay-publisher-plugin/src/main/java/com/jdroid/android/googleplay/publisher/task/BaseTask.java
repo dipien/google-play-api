@@ -20,6 +20,8 @@ public abstract class BaseTask extends AbstractTask {
 		appContext.setLocales(StringUtils.splitWithCommaSeparator(extension.getLocales()));
 		appContext.setReleaseName(extension.getReleaseName());
 		appContext.setDraft(extension.getDraft());
+		
+		appContext.setDryRun(extension.getDryRun());
 
 		appContext.setMetadataPath(extension.getMetadataPath());
 

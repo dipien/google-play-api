@@ -24,6 +24,8 @@ public class GooglePlayPublisherPluginExtension {
 	private Boolean draft;
 	private String releaseName;
 	
+	private Boolean dryRun;
+	
 	private Boolean releaseNotesRequired;
 	private Boolean videoRequired;
 	private Boolean promoGraphicRequired;
@@ -54,6 +56,8 @@ public class GooglePlayPublisherPluginExtension {
 		userPercentage = propertyResolver.getDoubleProp("userPercentage");
 		draft = propertyResolver.getBooleanProp("draft");
 		releaseName = propertyResolver.getStringProp("releaseName");
+		
+		dryRun = propertyResolver.getBooleanProp("dryRun");
 		
 		releaseNotesRequired = propertyResolver.getBooleanProp("releaseNotesRequired");
 		videoRequired = propertyResolver.getBooleanProp("videoRequired");
@@ -242,5 +246,13 @@ public class GooglePlayPublisherPluginExtension {
 	
 	public void setUserPercentage(Double userPercentage) {
 		this.userPercentage = userPercentage;
+	}
+	
+	public Boolean getDryRun() {
+		return dryRun;
+	}
+	
+	public void setDryRun(Boolean dryRun) {
+		this.dryRun = dryRun;
 	}
 }

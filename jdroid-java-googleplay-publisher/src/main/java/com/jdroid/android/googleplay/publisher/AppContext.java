@@ -25,6 +25,8 @@ public class AppContext {
 	private Boolean draft = false;
 	private String releaseName;
 	
+	private Boolean dryRun = false;
+	
 	// Validations
 	private Boolean releaseNotesRequired = false;
 	private Boolean videoRequired = false;
@@ -248,5 +250,15 @@ public class AppContext {
 	
 	public void setBundleDir(String bundleDir) {
 		this.bundleDir = bundleDir;
+	}
+	
+	public Boolean isDryRun() {
+		return dryRun;
+	}
+	
+	public void setDryRun(Boolean dryRun) {
+		if (dryRun != null) {
+			this.dryRun = dryRun;
+		}
 	}
 }

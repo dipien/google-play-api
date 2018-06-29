@@ -1,5 +1,5 @@
 # Java Google Play Publisher
-Java Library to publish android APKs and listings on Google Play
+Java Library to publish android APKs/bundles and listings on Google Play
 
 ## Setup
 
@@ -22,6 +22,10 @@ Create an **AppContext** instance:
     
     // Path to the private key json file. This property is required.
     appContext.setPrivateKeyJsonFilePath("/credentials/googleplay/key.json");
+
+    // Whether the dry run mode is enabled or not. When enabled, the library disables all the transactions commits,
+    // so the state on Google Play is never changed. Dry run is disabled by default.
+    appContext.setDryRun(true);
 
 ## Usage
 

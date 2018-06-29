@@ -1,5 +1,5 @@
 # Google Play Publisher Gradle Plugin
-Gradle Plugin to publish android APKs and listings on Google Play
+Gradle Plugin to publish android APKs/bundles and listings on Google Play
 
 ## Setup
 
@@ -55,6 +55,15 @@ Path to the private key json file. This property is required.
 For example:
 
     privateKeyJsonFilePath = '/credentials/googleplay/key.json'
+
+###### Dry Run
+
+Whether the dry run mode is enabled or not. When enabled, the plugin disables all the transactions commits,
+so the state on Google Play is never changed. Dry run is disabled by default.
+
+For example:
+
+    dryRun = true
 
 ## Usage
 

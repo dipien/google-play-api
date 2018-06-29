@@ -627,35 +627,6 @@ public class GooglePlayPublisher {
 		promote(app, TrackType.BETA, TrackType.PRODUCTION);
 	}
 	
-	public static void completeStagedRollout(App app) {
-		try {
-			Edits edits = init(app.getAppContext()).edits();
-			AppEdit edit = createEdit(app, edits);
-			
-			TrackRelease currentRolloutRelease = getInProgressRollout(app, edits, edit.getId());
-			if (currentRolloutRelease == null) {
-				throw new UnexpectedException("No in progress staged rollout release found");
-			}
-			currentRolloutRelease.setStatus(TrackReleaseStatus.COMPLETED.getKey());
-			currentRolloutRelease.setUserFraction(null);
-			
-			Track productionTrack = new Track();
-			productionTrack.setTrack(TrackType.PRODUCTION.getKey());
-			productionTrack.setReleases(Collections.singletonList(currentRolloutRelease));
-			
-			Track updatedTrack = edits.tracks().update(app.getApplicationId(), edit.getId(), productionTrack.getTrack(), productionTrack).execute();
-			System.out.println(String.format("Track %s has been updated.", updatedTrack.getTrack()));
-			
-			// Commit changes for edit.
-			commitEdit(app, edits, edit);
-			
-		} catch (GoogleJsonResponseException ex) {
-			throw new RuntimeException(ex.getDetails().getMessage(), ex);
-		} catch (IOException ex) {
-			throw new RuntimeException(ex);
-		}
-	}
-	
 	private static void promote(App app, TrackType fromTrackType, TrackType toTrackType) {
 		try {
 			
@@ -694,6 +665,35 @@ public class GooglePlayPublisher {
 			toTrack.setReleases(toTrackReleases);
 			
 			Track updatedTrack = edits.tracks().update(app.getApplicationId(), edit.getId(), toTrack.getTrack(), toTrack).execute();
+			System.out.println(String.format("Track %s has been updated.", updatedTrack.getTrack()));
+			
+			// Commit changes for edit.
+			commitEdit(app, edits, edit);
+			
+		} catch (GoogleJsonResponseException ex) {
+			throw new RuntimeException(ex.getDetails().getMessage(), ex);
+		} catch (IOException ex) {
+			throw new RuntimeException(ex);
+		}
+	}
+	
+	public static void completeStagedRollout(App app) {
+		try {
+			Edits edits = init(app.getAppContext()).edits();
+			AppEdit edit = createEdit(app, edits);
+			
+			TrackRelease currentRolloutRelease = getInProgressRollout(app, edits, edit.getId());
+			if (currentRolloutRelease == null) {
+				throw new UnexpectedException("No in progress staged rollout release found");
+			}
+			currentRolloutRelease.setStatus(TrackReleaseStatus.COMPLETED.getKey());
+			currentRolloutRelease.setUserFraction(null);
+			
+			Track productionTrack = new Track();
+			productionTrack.setTrack(TrackType.PRODUCTION.getKey());
+			productionTrack.setReleases(Collections.singletonList(currentRolloutRelease));
+			
+			Track updatedTrack = edits.tracks().update(app.getApplicationId(), edit.getId(), productionTrack.getTrack(), productionTrack).execute();
 			System.out.println(String.format("Track %s has been updated.", updatedTrack.getTrack()));
 			
 			// Commit changes for edit.
@@ -794,13 +794,17 @@ public class GooglePlayPublisher {
 	}
 	
 	private static void commitEdit(App app, Edits edits, AppEdit edit) {
-		try {
-			AppEdit appEdit = edits.commit(app.getApplicationId(), edit.getId()).execute();
-			System.out.println(String.format("App edit with id %s has been comitted", appEdit.getId()));
-		} catch (GoogleJsonResponseException ex) {
-			throw new RuntimeException(ex.getDetails().getMessage(), ex);
-		} catch (IOException ex) {
-			throw new RuntimeException(ex);
+		if (app.getAppContext().isDryRun()) {
+			System.out.println(String.format("Dry run mode enabled. App edit with id %s NOT comitted", edit.getId()));
+		} else {
+			try {
+				AppEdit appEdit = edits.commit(app.getApplicationId(), edit.getId()).execute();
+				System.out.println(String.format("App edit with id %s has been comitted", appEdit.getId()));
+			} catch (GoogleJsonResponseException ex) {
+				throw new RuntimeException(ex.getDetails().getMessage(), ex);
+			} catch (IOException ex) {
+				throw new RuntimeException(ex);
+			}
 		}
 	}
 }
