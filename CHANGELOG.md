@@ -1,5 +1,12 @@
 # Change Log
 
+## [v3.2.1](https://github.com/maxirosson/jdroid-googleplay-publisher/tree/v3.2.1) (2018-06-29)
+[Full Changelog](https://github.com/maxirosson/jdroid-googleplay-publisher/compare/v3.2.0...v3.2.1)
+
+**Fixed bugs:**
+
+- Include release notes on verify metadata method [\#35](https://github.com/maxirosson/jdroid-googleplay-publisher/issues/35)
+
 ## [v3.2.0](https://github.com/maxirosson/jdroid-googleplay-publisher/tree/v3.2.0) (2018-06-29)
 [Full Changelog](https://github.com/maxirosson/jdroid-googleplay-publisher/compare/v3.1.0...v3.2.0)
 
