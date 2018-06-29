@@ -148,10 +148,10 @@ public class GooglePlayPublisher {
 	}
 	
 	public static void verifyMetadata(App app) {
-		System.out.println(("Verifying the content to upload to Google Play on " + app.getAppContext().getMetadataPath()));
+		System.out.println("Verifying the content to upload to Google Play on " + app.getAppContext().getMetadataPath());
 		
 		for (LocaleListing each : app.getLocaleListings()) {
-			System.out.println(("Verifying locale " + each.getLanguageTag()));
+			System.out.println("Verifying locale " + each.getLanguageTag());
 			app.getTitle(each);
 			app.getFullDescription(each);
 			app.getShortDescription(each);
@@ -166,6 +166,8 @@ public class GooglePlayPublisher {
 			app.getTvBanner(each);
 			app.getTvScreenshots(each);
 			app.getWearScreenshots(each);
+			app.getReleaseNotes(each, 0);
+			System.out.println("Successful verification on locale " + each.getLanguageTag());
 		}
 	}
 	
