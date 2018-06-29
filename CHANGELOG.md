@@ -1,5 +1,12 @@
 # Change Log
 
+## [v3.2.0](https://github.com/maxirosson/jdroid-googleplay-publisher/tree/v3.2.0) (2018-06-29)
+[Full Changelog](https://github.com/maxirosson/jdroid-googleplay-publisher/compare/v3.1.0...v3.2.0)
+
+**Implemented enhancements:**
+
+- Dry run mode [\#34](https://github.com/maxirosson/jdroid-googleplay-publisher/issues/34)
+
 ## [v3.1.0](https://github.com/maxirosson/jdroid-googleplay-publisher/tree/v3.1.0) (2018-06-28)
 [Full Changelog](https://github.com/maxirosson/jdroid-googleplay-publisher/compare/v3.0.1...v3.1.0)
 
