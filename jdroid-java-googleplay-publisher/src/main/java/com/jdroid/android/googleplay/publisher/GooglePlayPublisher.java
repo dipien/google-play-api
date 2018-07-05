@@ -285,6 +285,8 @@ public class GooglePlayPublisher {
 					app.getAppContext().setUserFraction(null);
 				}
 			}
+		} else {
+			app.getAppContext().setUserFraction(null);
 		}
 	}
 	
