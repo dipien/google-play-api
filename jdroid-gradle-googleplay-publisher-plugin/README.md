@@ -215,7 +215,9 @@ Whether the release should be created on draft mode. Default value: false
     
 ###### APK path/dir or Bundle path/dir
 
-The path to the APK / Bundle to publish
+The path to the APK / Bundle to publish.
+The default value for the APK dir is the '/build/outputs/apk/release' directory of the gradle project where the plugin is applied.
+The default value for the Bundle dir is the '/build/outputs/bundle/release' directory of the gradle project where the plugin is applied.
 
     apkPath = /path/to/apk/file.apk
     // apkDir = /path/to/bundle/

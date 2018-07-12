@@ -48,9 +48,11 @@ public class GooglePlayPublisherPluginExtension {
 		locales = propertyResolver.getStringProp("locales");
 		
 		apkPath = propertyResolver.getStringProp("apkPath");
-		apkDir = propertyResolver.getStringProp("apkDir");
+		apkDir = propertyResolver.getStringProp("apkDir", project.getProjectDir().getAbsolutePath() + java.io.File.separator + "build" +
+				java.io.File.separator + "outputs" + java.io.File.separator + "apk" + java.io.File.separator + "release");
 		bundlePath = propertyResolver.getStringProp("bundlePath");
-		bundleDir = propertyResolver.getStringProp("bundleDir");
+		bundleDir = propertyResolver.getStringProp("bundleDir", project.getProjectDir().getAbsolutePath() + java.io.File.separator + "build" +
+						java.io.File.separator + "outputs" + java.io.File.separator + "bundle" + java.io.File.separator + "release");
 		
 		track = propertyResolver.getStringProp("track");
 		userPercentage = propertyResolver.getDoubleProp("userPercentage");

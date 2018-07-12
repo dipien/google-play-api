@@ -38,6 +38,7 @@ import java.security.GeneralSecurityException;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 /**
@@ -305,21 +306,31 @@ public class GooglePlayPublisher {
 			AppEdit edit = createEdit(app, edits);
 			
 			// Upload new apk to developer console
-			if (app.getAppContext().getApkDir() != null) {
-				Stream<Path> pathStream = Files.list(Paths.get(app.getAppContext().getApkDir())).filter(new Predicate<Path>() {
-					@Override
-					public boolean test(Path path) {
-						return path.getFileName().endsWith(".apk") && !path.getFileName().endsWith("unaligned.apk");
+			if (Strings.isNullOrEmpty(app.getAppContext().getApkPath())) {
+				if (!Strings.isNullOrEmpty(app.getAppContext().getApkDir())) {
+					Supplier<Stream<Path>> streamSupplier = () -> {
+						try {
+							return Files.list(Paths.get(app.getAppContext().getApkDir())).filter(new Predicate<Path>() {
+								@Override
+								public boolean test(Path path) {
+									return path.getFileName().toString().endsWith(".apk") && !path.getFileName().toString().endsWith("unaligned.apk");
+								}
+							});
+						} catch (IOException e) {
+							throw new RuntimeException(e);
+						}
+					};
+					long count = streamSupplier.get().count();
+					if (count == 1) {
+						app.getAppContext().setApkPath(streamSupplier.get().findAny().get().toAbsolutePath().toString());
+					} else if (count == 0) {
+						throw new UnexpectedException("APK not found");
+					} else {
+						throw new UnexpectedException("More than one APK found at the specified directory");
 					}
-				});
-				if (pathStream.count() == 1) {
-					app.getAppContext().setApkPath(pathStream.findAny().get().toAbsolutePath().toString());
-				} else if (pathStream.count() == 0) {
-					throw new UnexpectedException("APK not found");
-				} else {
-					throw new UnexpectedException("More than one APK found at the specified path");
 				}
 			}
+			
 			AbstractInputStreamContent apkFile = new FileContent(APK_MIME_TYPE, new File(app.getAppContext().getApkPath()));
 			Apk apk = edits.apks().upload(app.getApplicationId(), edit.getId(), apkFile).execute();
 			System.out.println(String.format("Version code %d has been uploaded", apk.getVersionCode()));
@@ -389,19 +400,28 @@ public class GooglePlayPublisher {
 			AppEdit edit = createEdit(app, edits);
 			
 			// Upload new bundle to developer console
-			if (app.getAppContext().getBundleDir() != null) {
-				Stream<Path> pathStream = Files.list(Paths.get(app.getAppContext().getBundleDir())).filter(new Predicate<Path>() {
-					@Override
-					public boolean test(Path path) {
-						return path.getFileName().endsWith(".aab") && !path.getFileName().endsWith("unaligned.aab");
+			if (Strings.isNullOrEmpty(app.getAppContext().getBundlePath())) {
+				if (!Strings.isNullOrEmpty(app.getAppContext().getBundleDir())) {
+					Supplier<Stream<Path>> streamSupplier = () -> {
+						try {
+							return Files.list(Paths.get(app.getAppContext().getBundleDir())).filter(new Predicate<Path>() {
+								@Override
+								public boolean test(Path path) {
+									return path.getFileName().toString().endsWith(".aab") && !path.getFileName().toString().endsWith("unaligned.aab");
+								}
+							});
+						} catch (IOException e) {
+							throw new RuntimeException(e);
+						}
+					};
+					long count = streamSupplier.get().count();
+					if (count == 1) {
+						app.getAppContext().setBundlePath(streamSupplier.get().findAny().get().toAbsolutePath().toString());
+					} else if (count == 0) {
+						throw new UnexpectedException("Bundle not found");
+					} else {
+						throw new UnexpectedException("More than one Bundle found at the specified path");
 					}
-				});
-				if (pathStream.count() == 1) {
-					app.getAppContext().setBundlePath(pathStream.findAny().get().toAbsolutePath().toString());
-				} else if (pathStream.count() == 0) {
-					throw new UnexpectedException("Bundle not found");
-				} else {
-					throw new UnexpectedException("More than one Bundle found at the specified path");
 				}
 			}
 			
