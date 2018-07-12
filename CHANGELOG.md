@@ -1,5 +1,12 @@
 # Change Log
 
+## [v3.3.0](https://github.com/maxirosson/jdroid-googleplay-publisher/tree/v3.3.0) (2018-07-12)
+[Full Changelog](https://github.com/maxirosson/jdroid-googleplay-publisher/compare/v3.2.1...v3.3.0)
+
+**Implemented enhancements:**
+
+- Support default APK/Bundle dir value on publisher plugin [\#36](https://github.com/maxirosson/jdroid-googleplay-publisher/issues/36)
+
 ## [v3.2.1](https://github.com/maxirosson/jdroid-googleplay-publisher/tree/v3.2.1) (2018-06-29)
 [Full Changelog](https://github.com/maxirosson/jdroid-googleplay-publisher/compare/v3.2.0...v3.2.1)
 
