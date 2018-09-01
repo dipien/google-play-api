@@ -1,4 +1,4 @@
-version = '3.4.0'
+version = '3.5.0'
 
 ext.JDROID_GITHUB_REPOSITORY_NAME = 'jdroid-googleplay-publisher'
 
