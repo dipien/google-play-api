@@ -1,5 +1,13 @@
 # Change Log
 
+## [v3.4.0](https://github.com/maxirosson/jdroid-googleplay-publisher/tree/v3.4.0) (2018-09-01)
+[Full Changelog](https://github.com/maxirosson/jdroid-googleplay-publisher/compare/v3.3.0...v3.4.0)
+
+**Closed issues:**
+
+- Upgrade to jdroid-java-core:2.0.0 [\#38](https://github.com/maxirosson/jdroid-googleplay-publisher/issues/38)
+- Upgrade to google-api-services-androidpublisher:v3-rev19-1.25.0 [\#37](https://github.com/maxirosson/jdroid-googleplay-publisher/issues/37)
+
 ## [v3.3.0](https://github.com/maxirosson/jdroid-googleplay-publisher/tree/v3.3.0) (2018-07-12)
 [Full Changelog](https://github.com/maxirosson/jdroid-googleplay-publisher/compare/v3.2.1...v3.3.0)
 
