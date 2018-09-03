@@ -5,7 +5,6 @@ Gradle Plugin & Java Library for Google Play API
 |Branch|Status|Workflows|Insights|
 | ------------- | ------------- | ------------- | ------------- |
 |master|[![CircleCI](https://circleci.com/gh/maxirosson/jdroid-googleplay-publisher/tree/master.svg?style=svg)](https://circleci.com/gh/maxirosson/jdroid-googleplay-publisher/tree/master)|[Workflows](https://circleci.com/gh/maxirosson/workflows/jdroid-googleplay-publisher/tree/master)|[Insights](https://circleci.com/build-insights/gh/maxirosson/jdroid-googleplay-publisher/master)|
-|staging|[![CircleCI](https://circleci.com/gh/maxirosson/jdroid-googleplay-publisher/tree/staging.svg?style=svg)](https://circleci.com/gh/maxirosson/jdroid-googleplay-publisher/tree/staging)|[Workflows](https://circleci.com/gh/maxirosson/workflows/jdroid-googleplay-publisher/tree/staging)|[Insights](https://circleci.com/build-insights/gh/maxirosson/jdroid-googleplay-publisher/staging)|
 |production|[![CircleCI](https://circleci.com/gh/maxirosson/jdroid-googleplay-publisher/tree/production.svg?style=svg)](https://circleci.com/gh/maxirosson/jdroid-googleplay-publisher/tree/production)|[Workflows](https://circleci.com/gh/maxirosson/workflows/jdroid-googleplay-publisher/tree/production)|[Insights](https://circleci.com/build-insights/gh/maxirosson/jdroid-googleplay-publisher/production)|
 
 ## Setup
