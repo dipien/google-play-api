@@ -1,5 +1,12 @@
 # Change Log
 
+## [v3.5.0](https://github.com/maxirosson/jdroid-googleplay-publisher/tree/v3.5.0) (2018-09-27)
+[Full Changelog](https://github.com/maxirosson/jdroid-googleplay-publisher/compare/v3.4.0...v3.5.0)
+
+**Closed issues:**
+
+- Upgrade to google-api-services-androidpublisher:v3-rev27-1.25.0 [\#40](https://github.com/maxirosson/jdroid-googleplay-publisher/issues/40)
+
 ## [v3.4.0](https://github.com/maxirosson/jdroid-googleplay-publisher/tree/v3.4.0) (2018-09-01)
 [Full Changelog](https://github.com/maxirosson/jdroid-googleplay-publisher/compare/v3.3.0...v3.4.0)
 
