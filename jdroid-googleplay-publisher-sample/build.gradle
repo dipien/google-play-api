@@ -6,16 +6,20 @@ buildscript {
 		google()
 		mavenCentral()
 		jcenter()
-		String localMavenRepo = project.hasProperty('LOCAL_MAVEN_REPO') ? project.ext.get('LOCAL_MAVEN_REPO') : System.getenv('LOCAL_MAVEN_REPO')
-		if (localMavenRepo != null) {
-			maven { url localMavenRepo }
+		String localMavenRepoEnabled = project.hasProperty('LOCAL_MAVEN_REPO_ENABLED') ? project.ext.get('LOCAL_MAVEN_REPO_ENABLED') : System.getenv('LOCAL_MAVEN_REPO_EMABLED')
+		boolean isLocalMavenRepoEnabled = localMavenRepoEnabled != null && localMavenRepoEnabled == "true"
+		if (isLocalMavenRepoEnabled) {
+			String localMavenRepo = project.hasProperty('LOCAL_MAVEN_REPO') ? project.ext.get('LOCAL_MAVEN_REPO') : System.getenv('LOCAL_MAVEN_REPO')
+			if (localMavenRepo != null) {
+				maven { url localMavenRepo }
+			}
 		}
 		maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
 	}
 
 	dependencies {
-		classpath 'com.android.tools.build:gradle:3.2.0-beta03'
-		classpath 'com.jdroidtools:jdroid-gradle-googleplay-publisher-plugin:3.4.0-SNAPSHOT'
+		classpath 'com.android.tools.build:gradle:3.2.0'
+		classpath 'com.jdroidtools:jdroid-gradle-googleplay-publisher-plugin:3.5.0-SNAPSHOT'
 	}
 }
 
@@ -26,14 +30,14 @@ repositories {
 }
 
 android {
-	compileSdkVersion 27
+	compileSdkVersion 28
 
 	defaultConfig {
 		applicationId "com.jdroid.googleplay.publisher.sample"
 		minSdkVersion 19
-		targetSdkVersion 27
-		versionCode 190060801
-		versionName "6.8.1"
+		targetSdkVersion 28
+		versionCode 190060901
+		versionName "6.9.1"
 	}
 
 	signingConfigs {
@@ -54,7 +58,7 @@ android {
 }
 
 dependencies {
-	implementation 'com.android.support:appcompat-v7:27.1.1'
+	implementation 'com.android.support:appcompat-v7:28.0.0'
 }
 
 jdroidGooglePlayPublisher {
