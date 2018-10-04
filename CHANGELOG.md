@@ -1,5 +1,12 @@
 # Change Log
 
+## [v3.6.0](https://github.com/maxirosson/jdroid-googleplay-publisher/tree/v3.6.0) (2018-10-04)
+[Full Changelog](https://github.com/maxirosson/jdroid-googleplay-publisher/compare/v3.5.0...v3.6.0)
+
+**Implemented enhancements:**
+
+- Support to upload Deobfuscation files [\#41](https://github.com/maxirosson/jdroid-googleplay-publisher/issues/41)
+
 ## [v3.5.0](https://github.com/maxirosson/jdroid-googleplay-publisher/tree/v3.5.0) (2018-09-27)
 [Full Changelog](https://github.com/maxirosson/jdroid-googleplay-publisher/compare/v3.4.0...v3.5.0)
 
