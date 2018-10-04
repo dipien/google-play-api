@@ -25,6 +25,9 @@ public abstract class BaseTask extends AbstractTask {
 
 		appContext.setMetadataPath(extension.getMetadataPath());
 
+		appContext.setDeobfuscationFilePath(extension.getDeobfuscationFilePath());
+		appContext.setDeobfuscationFileUploadEnabled(extension.isDeobfuscationFileUploadEnabled());
+
 		appContext.setReleaseNotesRequired(extension.getReleaseNotesRequired());
 		appContext.setVideoRequired(extension.getVideoRequired());
 		appContext.setPromoGraphicRequired(extension.getPromoGraphicRequired());

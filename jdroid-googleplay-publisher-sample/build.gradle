@@ -15,7 +15,7 @@ buildscript {
 
 	dependencies {
 		classpath 'com.android.tools.build:gradle:3.2.0'
-		classpath 'com.jdroidtools:jdroid-gradle-googleplay-publisher-plugin:3.5.0-SNAPSHOT'
+		classpath 'com.jdroidtools:jdroid-gradle-googleplay-publisher-plugin:3.6.0-SNAPSHOT'
 	}
 }
 
@@ -32,8 +32,8 @@ android {
 		applicationId "com.jdroid.googleplay.publisher.sample"
 		minSdkVersion 19
 		targetSdkVersion 28
-		versionCode 190060902
-		versionName "6.9.2"
+		versionCode 190060903
+		versionName "6.9.3"
 	}
 
 	signingConfigs {
@@ -48,6 +48,9 @@ android {
 	buildTypes {
 		release {
 			signingConfig signingConfigs.release
+			minifyEnabled true
+			proguardFiles getDefaultProguardFile('proguard-android.txt'),
+					'proguard-rules.pro'
 		}
 	}
 

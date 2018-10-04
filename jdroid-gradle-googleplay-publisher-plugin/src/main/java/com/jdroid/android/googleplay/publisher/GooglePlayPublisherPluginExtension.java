@@ -18,7 +18,10 @@ public class GooglePlayPublisherPluginExtension {
 	private String apkDir;
 	private String bundlePath;
 	private String bundleDir;
-	
+
+	private String deobfuscationFilePath;
+	private Boolean deobfuscationFileUploadEnabled;
+
 	private String track;
 	private Double userPercentage;
 	private Boolean draft;
@@ -53,7 +56,11 @@ public class GooglePlayPublisherPluginExtension {
 		bundlePath = propertyResolver.getStringProp("bundlePath");
 		bundleDir = propertyResolver.getStringProp("bundleDir", project.getProjectDir().getAbsolutePath() + java.io.File.separator + "build" +
 						java.io.File.separator + "outputs" + java.io.File.separator + "bundle" + java.io.File.separator + "release");
-		
+
+		deobfuscationFileUploadEnabled = propertyResolver.getBooleanProp("deobfuscationFileUploadEnabled", false);
+		deobfuscationFilePath = propertyResolver.getStringProp("deobfuscationFilePath", project.getProjectDir().getAbsolutePath() + java.io.File.separator + "build" +
+						java.io.File.separator + "outputs" + java.io.File.separator + "bundle" + java.io.File.separator + "release/mapping.txt");
+
 		track = propertyResolver.getStringProp("track");
 		userPercentage = propertyResolver.getDoubleProp("userPercentage");
 		draft = propertyResolver.getBooleanProp("draft");
@@ -256,5 +263,21 @@ public class GooglePlayPublisherPluginExtension {
 	
 	public void setDryRun(Boolean dryRun) {
 		this.dryRun = dryRun;
+	}
+
+	public Boolean isDeobfuscationFileUploadEnabled() {
+		return deobfuscationFileUploadEnabled;
+	}
+
+	public void setDeobfuscationFileUploadEnabled(Boolean deobfuscationFileUploadEnabled) {
+		this.deobfuscationFileUploadEnabled = deobfuscationFileUploadEnabled;
+	}
+
+	public String getDeobfuscationFilePath() {
+		return deobfuscationFilePath;
+	}
+
+	public void setDeobfuscationFilePath(String deobfuscationFilePath) {
+		this.deobfuscationFilePath = deobfuscationFilePath;
 	}
 }

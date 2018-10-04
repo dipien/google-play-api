@@ -19,7 +19,10 @@ public class AppContext {
 	private String apkDir;
 	private String bundlePath;
 	private String bundleDir;
-	
+
+	private String deobfuscationFilePath;
+	private Boolean deobfuscationFileUploadEnabled;
+
 	private TrackType trackType;
 	private Double userFraction;
 	private Boolean draft = false;
@@ -260,5 +263,23 @@ public class AppContext {
 		if (dryRun != null) {
 			this.dryRun = dryRun;
 		}
+	}
+
+	public Boolean isDeobfuscationFileUploadEnabled() {
+		return deobfuscationFileUploadEnabled;
+	}
+
+	public void setDeobfuscationFileUploadEnabled(Boolean deobfuscationFileUploadEnabled) {
+		if (deobfuscationFileUploadEnabled != null) {
+			this.deobfuscationFileUploadEnabled = deobfuscationFileUploadEnabled;
+		}
+	}
+
+	public String getDeobfuscationFilePath() {
+		return deobfuscationFilePath;
+	}
+
+	public void setDeobfuscationFilePath(String deobfuscationFilePath) {
+		this.deobfuscationFilePath = deobfuscationFilePath;
 	}
 }

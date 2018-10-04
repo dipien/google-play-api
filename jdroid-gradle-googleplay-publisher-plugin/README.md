@@ -267,6 +267,16 @@ Create files with the release notes. For example:
 Whether the task should fail if the uploaded APK specifies a version code that has already been used. Default value: **true**
     
     failOnApkUpgradeVersionConflict = false
+
+###### Deobfuscation File Upload
+
+Whether the obfuscation file should be uploaded or not. Default value: **false**
+
+###### Deobfuscation File Path
+
+The path to the deobfuscation file. Default value: '/build/outputs/bundle/release/mapping.txt'
+
+    deobfuscationFilePath = /path/to/deobfuscation/file
     
 #### Promote from Internal to Alpha
 

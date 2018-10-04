@@ -53,10 +53,12 @@ public class GooglePlayPublisher {
 
 	private static final String APK_MIME_TYPE = "application/vnd.android.package-archive";
 	private static final String BUNDLE_MIME_TYPE = "application/octet-stream";
-	
+	private static final String DEOBFUSCATION_MIME_TYPE = "application/octet-stream";
+	private static final String DEOBFUSCATION_FILE_TYPE = "proguard";
+
 	/** Global instance of the JSON factory. */
 	private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
-	
+
 	/** Global instance of the HTTP transport. */
 	private static HttpTransport HTTP_TRANSPORT;
 	
@@ -301,6 +303,10 @@ public class GooglePlayPublisher {
 			if (app.getAppContext().getTrackType() == null) {
 				throw new UnexpectedException("trackType cannot be null");
 			}
+
+			if (app.getAppContext().isDeobfuscationFileUploadEnabled() && app.getAppContext().getDeobfuscationFilePath() == null) {
+				throw new UnexpectedException("deobfuscationFilePath cannot be null");
+			}
 			
 			Edits edits = init(app.getAppContext()).edits();
 			AppEdit edit = createEdit(app, edits);
@@ -370,7 +376,13 @@ public class GooglePlayPublisher {
 			
 			Track updatedTrack = edits.tracks().update(app.getApplicationId(), edit.getId(), track.getTrack(), track).execute();
 			System.out.println(String.format("Track %s has been updated.", updatedTrack.getTrack()));
-			
+
+			// Upload deobfuscation file
+			if (app.getAppContext().isDeobfuscationFileUploadEnabled()) {
+				AbstractInputStreamContent deobfuscationFile = new FileContent(DEOBFUSCATION_MIME_TYPE, new File(app.getAppContext().getDeobfuscationFilePath()));
+				edits.deobfuscationfiles().upload(app.getApplicationId(), edit.getId(), apk.getVersionCode(), DEOBFUSCATION_FILE_TYPE, deobfuscationFile);
+				System.out.println("Adding deobfuscation file " + app.getAppContext().getDeobfuscationFilePath());
+			}
 			
 			// Commit changes for edit.
 			commitEdit(app, edits, edit);
@@ -394,6 +406,10 @@ public class GooglePlayPublisher {
 			
 			if (app.getAppContext().getTrackType() == null) {
 				throw new UnexpectedException("trackType cannot be null");
+			}
+
+			if (app.getAppContext().isDeobfuscationFileUploadEnabled() && app.getAppContext().getDeobfuscationFilePath() == null) {
+				throw new UnexpectedException("deobfuscationFilePath cannot be null");
 			}
 			
 			Edits edits = init(app.getAppContext()).edits();
@@ -424,11 +440,11 @@ public class GooglePlayPublisher {
 					}
 				}
 			}
-			
+
 			AbstractInputStreamContent bundleFile = new FileContent(BUNDLE_MIME_TYPE, new File(app.getAppContext().getBundlePath()));
 			Bundle bundle = edits.bundles().upload(app.getApplicationId(), edit.getId(), bundleFile).execute();
 			System.out.println(String.format("Version code %d has been uploaded", bundle.getVersionCode()));
-			
+
 			setDefaultUserFraction(app, edits, edit.getId());
 			
 			// Assign bundle to track.
@@ -465,8 +481,14 @@ public class GooglePlayPublisher {
 			
 			Track updatedTrack = edits.tracks().update(app.getApplicationId(), edit.getId(), track.getTrack(), track).execute();
 			System.out.println(String.format("Track %s has been updated.", updatedTrack.getTrack()));
-			
-			
+
+			// Upload deobfuscation file
+			if (app.getAppContext().isDeobfuscationFileUploadEnabled()) {
+				AbstractInputStreamContent deobfuscationFile = new FileContent(DEOBFUSCATION_MIME_TYPE, new File(app.getAppContext().getDeobfuscationFilePath()));
+				edits.deobfuscationfiles().upload(app.getApplicationId(), edit.getId(), bundle.getVersionCode(), DEOBFUSCATION_FILE_TYPE, deobfuscationFile);
+				System.out.println("Adding deobfuscation file " + app.getAppContext().getDeobfuscationFilePath());
+			}
+
 			// Commit changes for edit.
 			commitEdit(app, edits, edit);
 			

@@ -151,8 +151,14 @@ Upload new APK for your app and assign it to a release track.
     // Only used if trackType is TrackType.PRODUCTION. 0 < percentage <= 100. Default value: the previous rollout user percentage (if any) or 100%
     appContext.setUserPercentage(20);
     
-    // Whether the task should fail if the uploaded APK specifies a version code that has already been used. Default value: true
+    // Whether the task should fail if the uploaded APK/bundle specifies a version code that has already been used. Default value: true
     appContext.setFailOnApkUpgradeVersionConflict(false);
+
+    // Whether the obfuscation file should be uploaded or not. Default value: false
+    appContext.setDeobfuscationFileUploadEnabled(true);
+
+    // The path to the deobfuscation file. If setDeobfuscationFileUploadEnabled(true), this property is required
+    appContext.setDeobfuscationFilePath("/path/to/deobfuscation/file");
 
     // The path where the release notes will be located. This property is optional
     appContext.setMetadataPath("/path/to/the/metadata");
