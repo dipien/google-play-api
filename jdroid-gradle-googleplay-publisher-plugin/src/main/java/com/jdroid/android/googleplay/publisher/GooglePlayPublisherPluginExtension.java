@@ -59,7 +59,7 @@ public class GooglePlayPublisherPluginExtension {
 
 		deobfuscationFileUploadEnabled = propertyResolver.getBooleanProp("deobfuscationFileUploadEnabled", false);
 		deobfuscationFilePath = propertyResolver.getStringProp("deobfuscationFilePath", project.getProjectDir().getAbsolutePath() + java.io.File.separator + "build" +
-						java.io.File.separator + "outputs" + java.io.File.separator + "bundle" + java.io.File.separator + "release/mapping.txt");
+						java.io.File.separator + "outputs" + java.io.File.separator + "mapping" + java.io.File.separator + "release" + java.io.File.separator + "mapping.txt");
 
 		track = propertyResolver.getStringProp("track");
 		userPercentage = propertyResolver.getDoubleProp("userPercentage");

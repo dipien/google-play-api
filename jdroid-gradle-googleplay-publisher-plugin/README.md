@@ -274,7 +274,7 @@ Whether the obfuscation file should be uploaded or not. Default value: **false**
 
 ###### Deobfuscation File Path
 
-The path to the deobfuscation file. Default value: '/build/outputs/bundle/release/mapping.txt'
+The path to the deobfuscation file. Default value: '/build/outputs/mapping/release/mapping.txt'
 
     deobfuscationFilePath = /path/to/deobfuscation/file
     
