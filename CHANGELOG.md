@@ -1,5 +1,12 @@
 # Change Log
 
+## [v3.6.1](https://github.com/maxirosson/jdroid-googleplay-publisher/tree/v3.6.1) (2018-10-10)
+[Full Changelog](https://github.com/maxirosson/jdroid-googleplay-publisher/compare/v3.6.0...v3.6.1)
+
+**Fixed bugs:**
+
+- Fix default deobfuscationFilePath [\#42](https://github.com/maxirosson/jdroid-googleplay-publisher/issues/42)
+
 ## [v3.6.0](https://github.com/maxirosson/jdroid-googleplay-publisher/tree/v3.6.0) (2018-10-04)
 [Full Changelog](https://github.com/maxirosson/jdroid-googleplay-publisher/compare/v3.5.0...v3.6.0)
 
