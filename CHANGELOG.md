@@ -1,5 +1,16 @@
 # Change Log
 
+## [v3.6.2](https://github.com/maxirosson/jdroid-googleplay-publisher/tree/v3.6.2) (2018-10-11)
+[Full Changelog](https://github.com/maxirosson/jdroid-googleplay-publisher/compare/v3.6.1...v3.6.2)
+
+**Implemented enhancements:**
+
+- Add support to configure read and connect timeouts [\#43](https://github.com/maxirosson/jdroid-googleplay-publisher/issues/43)
+
+**Fixed bugs:**
+
+- Increase the default timeouts to 100 seconds [\#44](https://github.com/maxirosson/jdroid-googleplay-publisher/issues/44)
+
 ## [v3.6.1](https://github.com/maxirosson/jdroid-googleplay-publisher/tree/v3.6.1) (2018-10-10)
 [Full Changelog](https://github.com/maxirosson/jdroid-googleplay-publisher/compare/v3.6.0...v3.6.1)
 
