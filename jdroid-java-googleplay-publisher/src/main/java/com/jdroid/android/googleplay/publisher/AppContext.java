@@ -42,7 +42,10 @@ public class AppContext {
 	private Boolean tvBannerRequired = false;
 	
 	private Boolean failOnApkUpgradeVersionConflict = true;
-	
+
+	private Integer readTimeout = 100000;
+	private Integer connectTimeout = 100000;
+
 	public String getApplicationId() {
 		return applicationId;
 	}
@@ -281,5 +284,25 @@ public class AppContext {
 
 	public void setDeobfuscationFilePath(String deobfuscationFilePath) {
 		this.deobfuscationFilePath = deobfuscationFilePath;
+	}
+
+	public Integer getReadTimeout() {
+		return readTimeout;
+	}
+
+	public void setReadTimeout(Integer readTimeout) {
+		if (readTimeout != null) {
+			this.readTimeout = readTimeout;
+		}
+	}
+
+	public Integer getConnectTimeout() {
+		return connectTimeout;
+	}
+
+	public void setConnectTimeout(Integer connectTimeout) {
+		if (connectTimeout != null) {
+			this.connectTimeout = connectTimeout;
+		}
 	}
 }

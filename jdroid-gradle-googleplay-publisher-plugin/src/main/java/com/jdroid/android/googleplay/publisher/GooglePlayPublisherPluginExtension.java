@@ -40,6 +40,9 @@ public class GooglePlayPublisherPluginExtension {
 	private Boolean tvBannerRequired;
 	
 	private Boolean failOnApkUpgradeVersionConflict;
+
+	private Integer readTimeout;
+	private Integer connectTimeout;
 	
 	public GooglePlayPublisherPluginExtension(Project project) {
 		propertyResolver = new PropertyResolver(project);
@@ -79,6 +82,9 @@ public class GooglePlayPublisherPluginExtension {
 		tvBannerRequired = propertyResolver.getBooleanProp("tvBannerRequired");
 		
 		failOnApkUpgradeVersionConflict = propertyResolver.getBooleanProp("failOnApkUpgradeVersionConflict");
+
+		readTimeout = propertyResolver.getIntegerProp("readTimeout");
+		connectTimeout = propertyResolver.getIntegerProp("connectTimeout");
 	}
 	
 	public void setApplicationId(String applicationId) {

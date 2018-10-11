@@ -4,9 +4,7 @@ import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
-import com.google.api.client.http.AbstractInputStreamContent;
-import com.google.api.client.http.FileContent;
-import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.*;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.repackaged.com.google.common.base.Strings;
@@ -84,8 +82,16 @@ public class GooglePlayPublisher {
 			Credential credential = authorizeWithServiceAccount(appContext);
 			
 			// Set up and return API client.
-			return new AndroidPublisher.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential).setApplicationName(
-				appContext.getApplicationId()).build();
+			AndroidPublisher.Builder builder = new AndroidPublisher.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential);
+			builder.setApplicationName(appContext.getApplicationId());
+			builder.setHttpRequestInitializer(new HttpRequestInitializer() {
+				@Override
+				public void initialize(HttpRequest request) throws IOException {
+					request.setConnectTimeout(appContext.getConnectTimeout());
+					request.setReadTimeout(appContext.getReadTimeout());
+				}
+			});
+			return builder.build();
 		} catch (GeneralSecurityException | IOException e) {
 			throw new RuntimeException(e);
 		}

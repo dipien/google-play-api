@@ -23,6 +23,12 @@ Create an **AppContext** instance:
     // Path to the private key json file. This property is required.
     appContext.setPrivateKeyJsonFilePath("/credentials/googleplay/key.json");
 
+    // The connect timeout (in milliseconds) when executing requests against the Google API. The default value is 100 seconds
+    appContext.setConnectTimeout(200000)
+
+    // The read timeout (in milliseconds) when executing requests against the Google API. The default value is 100 seconds
+    appContext.setReadTimeout(200000)
+
     // Whether the dry run mode is enabled or not. When enabled, the library disables all the transactions commits,
     // so the state on Google Play is never changed. Dry run is disabled by default.
     appContext.setDryRun(true);

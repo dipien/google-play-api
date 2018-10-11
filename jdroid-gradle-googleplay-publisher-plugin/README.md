@@ -56,6 +56,20 @@ For example:
 
     privateKeyJsonFilePath = '/credentials/googleplay/key.json'
 
+###### Connect Timeout
+
+The connect timeout (in milliseconds) when executing requests against the Google API. The default value is 100 seconds
+
+For example:
+
+    connectTimeout = 200000
+
+###### Read Timeout
+
+The read timeout (in milliseconds) when executing requests against the Google API. The default value is 100 seconds
+
+    readTimeout = 200000
+
 ###### Dry Run
 
 Whether the dry run mode is enabled or not. When enabled, the plugin disables all the transactions commits,
