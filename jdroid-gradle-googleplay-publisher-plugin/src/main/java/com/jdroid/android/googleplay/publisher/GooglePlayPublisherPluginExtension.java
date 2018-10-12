@@ -286,4 +286,24 @@ public class GooglePlayPublisherPluginExtension {
 	public void setDeobfuscationFilePath(String deobfuscationFilePath) {
 		this.deobfuscationFilePath = deobfuscationFilePath;
 	}
+
+	public Boolean getDeobfuscationFileUploadEnabled() {
+		return deobfuscationFileUploadEnabled;
+	}
+
+	public Integer getReadTimeout() {
+		return readTimeout;
+	}
+
+	public void setReadTimeout(Integer readTimeout) {
+		this.readTimeout = readTimeout;
+	}
+
+	public Integer getConnectTimeout() {
+		return connectTimeout;
+	}
+
+	public void setConnectTimeout(Integer connectTimeout) {
+		this.connectTimeout = connectTimeout;
+	}
 }

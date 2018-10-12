@@ -79,22 +79,27 @@ public class GooglePlayPublisher {
 			}
 			
 			// Authorization.
-			Credential credential = authorizeWithServiceAccount(appContext);
-			
+			HttpRequestInitializer credential = authorizeWithServiceAccount(appContext);
+			credential = setHttpTimeout(appContext, credential);
+
 			// Set up and return API client.
 			AndroidPublisher.Builder builder = new AndroidPublisher.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential);
 			builder.setApplicationName(appContext.getApplicationId());
-			builder.setHttpRequestInitializer(new HttpRequestInitializer() {
-				@Override
-				public void initialize(HttpRequest request) throws IOException {
-					request.setConnectTimeout(appContext.getConnectTimeout());
-					request.setReadTimeout(appContext.getReadTimeout());
-				}
-			});
 			return builder.build();
 		} catch (GeneralSecurityException | IOException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	private static HttpRequestInitializer setHttpTimeout(AppContext appContext, HttpRequestInitializer requestInitializer) {
+		return new HttpRequestInitializer() {
+			@Override
+			public void initialize(HttpRequest httpRequest) throws IOException {
+				requestInitializer.initialize(httpRequest);
+				httpRequest.setConnectTimeout(appContext.getConnectTimeout());
+                httpRequest.setReadTimeout(appContext.getReadTimeout());
+            }
+		};
 	}
 	
 	private static Credential authorizeWithServiceAccount(AppContext appContext) {
@@ -157,10 +162,10 @@ public class GooglePlayPublisher {
 	}
 	
 	public static void verifyMetadata(App app) {
-		System.out.println("Verifying the content to upload to Google Play on " + app.getAppContext().getMetadataPath());
+		log("Verifying the content to upload to Google Play on " + app.getAppContext().getMetadataPath());
 		
 		for (LocaleListing each : app.getLocaleListings()) {
-			System.out.println("Verifying locale " + each.getLanguageTag());
+			log("Verifying locale " + each.getLanguageTag());
 			app.getTitle(each);
 			app.getFullDescription(each);
 			app.getShortDescription(each);
@@ -176,7 +181,7 @@ public class GooglePlayPublisher {
 			app.getTvScreenshots(each);
 			app.getWearScreenshots(each);
 			app.getReleaseNotes(each, 0);
-			System.out.println("Successful verification on locale " + each.getLanguageTag());
+			log("Successful verification on locale " + each.getLanguageTag());
 		}
 	}
 	
@@ -197,79 +202,79 @@ public class GooglePlayPublisher {
 				listing.setShortDescription(app.getShortDescription(each));
 				listing.setVideo(app.getVideo(each));
 				Listing updatedListing = edits.listings().update(app.getApplicationId(), edit.getId(), localeString, listing).execute();
-				System.out.println(String.format("Created new " + localeString + " app listing with title: %s", updatedListing.getTitle()));
+				log(String.format("Created new " + localeString + " app listing with title: %s", updatedListing.getTitle()));
 
 				// Feature Graphic
 				AbstractInputStreamContent featureGraphic = app.getFeatureGraphic(each);
 				ImagesUploadResponse response = edits.images().upload(app.getApplicationId(), edit.getId(),
 						localeString, ImageType.FEATURE_GRAPHIC.getKey(), featureGraphic).execute();
-				System.out.println(String.format("Feature graphic %s has been updated.", response.getImage()));
+				log(String.format("Feature graphic %s has been updated.", response.getImage()));
 
 				// Promo Graphic
 				AbstractInputStreamContent promoGraphic = app.getPromoGraphic(each);
 				if (promoGraphic != null) {
 					response = edits.images().upload(app.getApplicationId(), edit.getId(),
 							localeString, ImageType.PROMO_GRAPHIC.getKey(), promoGraphic).execute();
-					System.out.println(String.format("Promo graphic %s has been updated.", response.getImage()));
+					log(String.format("Promo graphic %s has been updated.", response.getImage()));
 				}
 
 				// High Resolution Icon
 				AbstractInputStreamContent highResolutionIcon = app.getHighResolutionIcon(each);
 				response = edits.images().upload(app.getApplicationId(), edit.getId(),
 						localeString, ImageType.ICON.getKey(), highResolutionIcon).execute();
-				System.out.println(String.format("High resolution icon %s has been updated.", response.getImage()));
+				log(String.format("High resolution icon %s has been updated.", response.getImage()));
 				
 				// High Resolution Icon
 				AbstractInputStreamContent tvBanner = app.getTvBanner(each);
 				if (tvBanner != null) {
 					response = edits.images().upload(app.getApplicationId(), edit.getId(),
 							localeString, ImageType.TV_BANNER.getKey(), tvBanner).execute();
-					System.out.println(String.format("Tv banner %s has been updated.", response.getImage()));
+					log(String.format("Tv banner %s has been updated.", response.getImage()));
 				}
 
 				// Phone Screenshots
 				edits.images().deleteall(app.getApplicationId(), edit.getId(), localeString, ImageType.PHONE_SCREENSHOTS.getKey()).execute();
-				System.out.println("Phone screenshots has been deleted.");
+				log("Phone screenshots has been deleted.");
 				for (AbstractInputStreamContent content : app.getPhoneScreenshots(each)) {
 					response = edits.images().upload(app.getApplicationId(), edit.getId(),
 							localeString, ImageType.PHONE_SCREENSHOTS.getKey(), content).execute();
-					System.out.println(String.format("Phone screenshot %s has been updated.", response.getImage()));
+					log(String.format("Phone screenshot %s has been updated.", response.getImage()));
 				}
 
 				// 7-inch Screenshots
 				edits.images().deleteall(app.getApplicationId(), edit.getId(), localeString, ImageType.SEVEN_INCH_SCREENSHOTS.getKey()).execute();
-				System.out.println("Seven inch screenshots has been deleted.");
+				log("Seven inch screenshots has been deleted.");
 				for (AbstractInputStreamContent content : app.getSevenInchScreenshots(each)) {
 					response = edits.images().upload(app.getApplicationId(), edit.getId(),
 							localeString, ImageType.SEVEN_INCH_SCREENSHOTS.getKey(), content).execute();
-					System.out.println(String.format("Seven inch screenshot %s has been updated.", response.getImage()));
+					log(String.format("Seven inch screenshot %s has been updated.", response.getImage()));
 				}
 
 				// 10-inch Screenshots
 				edits.images().deleteall(app.getApplicationId(), edit.getId(), localeString, ImageType.TEN_INCH_SCREENSHOTS.getKey()).execute();
-				System.out.println("Ten inch screenshots has been deleted.");
+				log("Ten inch screenshots has been deleted.");
 				for (AbstractInputStreamContent content : app.getTenInchScreenshots(each)) {
 					response = edits.images().upload(app.getApplicationId(), edit.getId(),
 							localeString, ImageType.TEN_INCH_SCREENSHOTS.getKey(), content).execute();
-					System.out.println(String.format("Ten inch screenshot %s has been updated.", response.getImage()));
+					log(String.format("Ten inch screenshot %s has been updated.", response.getImage()));
 				}
 				
 				// Tv Screenshots
 				edits.images().deleteall(app.getApplicationId(), edit.getId(), localeString, ImageType.TV_SCREENSHOTS.getKey()).execute();
-				System.out.println("Tv screenshots has been deleted.");
+				log("Tv screenshots has been deleted.");
 				for (AbstractInputStreamContent content : app.getTvScreenshots(each)) {
 					response = edits.images().upload(app.getApplicationId(), edit.getId(),
 							localeString, ImageType.TV_SCREENSHOTS.getKey(), content).execute();
-					System.out.println(String.format("Tv screenshot %s has been updated.", response.getImage()));
+					log(String.format("Tv screenshot %s has been updated.", response.getImage()));
 				}
 				
 				// Wear Screenshots
 				edits.images().deleteall(app.getApplicationId(), edit.getId(), localeString, ImageType.WEAR_SCREENSHOTS.getKey()).execute();
-				System.out.println("Wear screenshots has been deleted.");
+				log("Wear screenshots has been deleted.");
 				for (AbstractInputStreamContent content : app.getWearScreenshots(each)) {
 					response = edits.images().upload(app.getApplicationId(), edit.getId(),
 							localeString, ImageType.WEAR_SCREENSHOTS.getKey(), content).execute();
-					System.out.println(String.format("Wear screenshot %s has been updated.", response.getImage()));
+					log(String.format("Wear screenshot %s has been updated.", response.getImage()));
 				}
 			}
 
@@ -345,7 +350,7 @@ public class GooglePlayPublisher {
 			
 			AbstractInputStreamContent apkFile = new FileContent(APK_MIME_TYPE, new File(app.getAppContext().getApkPath()));
 			Apk apk = edits.apks().upload(app.getApplicationId(), edit.getId(), apkFile).execute();
-			System.out.println(String.format("Version code %d has been uploaded", apk.getVersionCode()));
+			log(String.format("Version code %d has been uploaded", apk.getVersionCode()));
 			
 			setDefaultUserFraction(app, edits, edit.getId());
 			
@@ -381,20 +386,20 @@ public class GooglePlayPublisher {
 			track.setReleases(Collections.singletonList(trackRelease));
 			
 			Track updatedTrack = edits.tracks().update(app.getApplicationId(), edit.getId(), track.getTrack(), track).execute();
-			System.out.println(String.format("Track %s has been updated.", updatedTrack.getTrack()));
+			log(String.format("Track %s has been updated.", updatedTrack.getTrack()));
 
 			// Upload deobfuscation file
 			if (app.getAppContext().isDeobfuscationFileUploadEnabled()) {
 				AbstractInputStreamContent deobfuscationFile = new FileContent(DEOBFUSCATION_MIME_TYPE, new File(app.getAppContext().getDeobfuscationFilePath()));
 				edits.deobfuscationfiles().upload(app.getApplicationId(), edit.getId(), apk.getVersionCode(), DEOBFUSCATION_FILE_TYPE, deobfuscationFile);
-				System.out.println("Adding deobfuscation file " + app.getAppContext().getDeobfuscationFilePath());
+				log("Adding deobfuscation file " + app.getAppContext().getDeobfuscationFilePath());
 			}
 			
 			// Commit changes for edit.
 			commitEdit(app, edits, edit);
 		} catch (GoogleJsonResponseException ex) {
 			if (!app.getAppContext().failOnApkUpgradeVersionConflict() && ex.getDetails().getCode() == 403 && ex.getDetails().getMessage().equals("APK specifies a version code that has already been used.")) {
-				System.out.println("WARNING | apkUpgradeVersionConflict: APK specifies a version code that has already been used.");
+				log("WARNING | apkUpgradeVersionConflict: APK specifies a version code that has already been used.");
 			} else {
 				throw new RuntimeException(ex.getDetails().getMessage(), ex);
 			}
@@ -449,7 +454,7 @@ public class GooglePlayPublisher {
 
 			AbstractInputStreamContent bundleFile = new FileContent(BUNDLE_MIME_TYPE, new File(app.getAppContext().getBundlePath()));
 			Bundle bundle = edits.bundles().upload(app.getApplicationId(), edit.getId(), bundleFile).execute();
-			System.out.println(String.format("Version code %d has been uploaded", bundle.getVersionCode()));
+			log(String.format("Version code %d has been uploaded", bundle.getVersionCode()));
 
 			setDefaultUserFraction(app, edits, edit.getId());
 			
@@ -479,20 +484,20 @@ public class GooglePlayPublisher {
 					releaseNote.setLanguage(each.getLanguageTag());
 					releaseNote.setText(releaseNoteText);
 					releaseNotes.add(releaseNote);
-					System.out.println("Adding release notes for locale " + each.getLanguageTag());
+					log("Adding release notes for locale " + each.getLanguageTag());
 				}
 			}
 			trackRelease.setReleaseNotes(releaseNotes);
 			track.setReleases(Collections.singletonList(trackRelease));
 			
 			Track updatedTrack = edits.tracks().update(app.getApplicationId(), edit.getId(), track.getTrack(), track).execute();
-			System.out.println(String.format("Track %s has been updated.", updatedTrack.getTrack()));
+			log(String.format("Track %s has been updated.", updatedTrack.getTrack()));
 
 			// Upload deobfuscation file
 			if (app.getAppContext().isDeobfuscationFileUploadEnabled()) {
 				AbstractInputStreamContent deobfuscationFile = new FileContent(DEOBFUSCATION_MIME_TYPE, new File(app.getAppContext().getDeobfuscationFilePath()));
 				edits.deobfuscationfiles().upload(app.getApplicationId(), edit.getId(), bundle.getVersionCode(), DEOBFUSCATION_FILE_TYPE, deobfuscationFile);
-				System.out.println("Adding deobfuscation file " + app.getAppContext().getDeobfuscationFilePath());
+				log("Adding deobfuscation file " + app.getAppContext().getDeobfuscationFilePath());
 			}
 
 			// Commit changes for edit.
@@ -573,7 +578,7 @@ public class GooglePlayPublisher {
 				track.setReleases(Collections.singletonList(trackRelease));
 				
 				Track updatedTrack = edits.tracks().patch(app.getApplicationId(), edit.getId(), track.getTrack(), track).execute();
-				System.out.println(String.format("Track %s has been updated.", updatedTrack.getTrack()));
+				log(String.format("Track %s has been updated.", updatedTrack.getTrack()));
 				
 				// Commit changes for edit.
 				commitEdit(app, edits, edit);
@@ -608,7 +613,7 @@ public class GooglePlayPublisher {
 			track.setReleases(Collections.singletonList(trackRelease));
 			
 			Track updatedTrack = edits.tracks().patch(app.getApplicationId(), edit.getId(), track.getTrack(), track).execute();
-			System.out.println(String.format("Track %s has been updated.", updatedTrack.getTrack()));
+			log(String.format("Track %s has been updated.", updatedTrack.getTrack()));
 			
 			// Commit changes for edit.
 			commitEdit(app, edits, edit);
@@ -643,7 +648,7 @@ public class GooglePlayPublisher {
 			track.setReleases(Collections.singletonList(trackRelease));
 			
 			Track updatedTrack = edits.tracks().patch(app.getApplicationId(), edit.getId(), track.getTrack(), track).execute();
-			System.out.println(String.format("Track %s has been updated.", updatedTrack.getTrack()));
+			log(String.format("Track %s has been updated.", updatedTrack.getTrack()));
 			
 			// Commit changes for edit.
 			commitEdit(app, edits, edit);
@@ -717,7 +722,7 @@ public class GooglePlayPublisher {
 			toTrack.setReleases(toTrackReleases);
 			
 			Track updatedTrack = edits.tracks().update(app.getApplicationId(), edit.getId(), toTrack.getTrack(), toTrack).execute();
-			System.out.println(String.format("Track %s has been updated.", updatedTrack.getTrack()));
+			log(String.format("Track %s has been updated.", updatedTrack.getTrack()));
 			
 			// Commit changes for edit.
 			commitEdit(app, edits, edit);
@@ -746,7 +751,7 @@ public class GooglePlayPublisher {
 			productionTrack.setReleases(Collections.singletonList(currentRolloutRelease));
 			
 			Track updatedTrack = edits.tracks().update(app.getApplicationId(), edit.getId(), productionTrack.getTrack(), productionTrack).execute();
-			System.out.println(String.format("Track %s has been updated.", updatedTrack.getTrack()));
+			log(String.format("Track %s has been updated.", updatedTrack.getTrack()));
 			
 			// Commit changes for edit.
 			commitEdit(app, edits, edit);
@@ -836,10 +841,10 @@ public class GooglePlayPublisher {
 		try {
 			// Create a new edit to make changes.
 			AppEdit edit = edits.insert(app.getApplicationId(), null).execute();
-			System.out.println(String.format("Created edit with id: %s", edit.getId()));
+			log(String.format("Created edit with id: %s", edit.getId()));
 			return edit;
 		} catch (GoogleJsonResponseException ex) {
-			throw new RuntimeException(ex.getDetails().getMessage(), ex);
+			throw new RuntimeException(ex.getDetails() != null ? ex.getDetails().getMessage() : ex.getMessage(), ex);
 		} catch (IOException ex) {
 			throw new RuntimeException(ex);
 		}
@@ -847,11 +852,11 @@ public class GooglePlayPublisher {
 	
 	private static void commitEdit(App app, Edits edits, AppEdit edit) {
 		if (app.getAppContext().isDryRun()) {
-			System.out.println(String.format("Dry run mode enabled. App edit with id %s NOT comitted", edit.getId()));
+			log(String.format("Dry run mode enabled. App edit with id %s NOT comitted", edit.getId()));
 		} else {
 			try {
 				AppEdit appEdit = edits.commit(app.getApplicationId(), edit.getId()).execute();
-				System.out.println(String.format("App edit with id %s has been comitted", appEdit.getId()));
+				log(String.format("App edit with id %s has been comitted", appEdit.getId()));
 			} catch (GoogleJsonResponseException ex) {
 				throw new RuntimeException(ex.getDetails().getMessage(), ex);
 			} catch (IOException ex) {
@@ -859,4 +864,9 @@ public class GooglePlayPublisher {
 			}
 		}
 	}
+
+	private static void log(String message) {
+	    // TODO Use a logger
+        System.out.println(message);
+    }
 }

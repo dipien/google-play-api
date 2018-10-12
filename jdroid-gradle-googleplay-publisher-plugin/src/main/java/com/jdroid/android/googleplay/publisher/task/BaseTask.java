@@ -17,6 +17,9 @@ public abstract class BaseTask extends AbstractTask {
 		AppContext appContext = new AppContext();
 		appContext.setApplicationId(extension.getApplicationId());
 		appContext.setPrivateKeyJsonFilePath(extension.getPrivateKeyJsonFilePath());
+		appContext.setConnectTimeout(extension.getConnectTimeout());
+		appContext.setReadTimeout(extension.getReadTimeout());
+
 		appContext.setLocales(StringUtils.splitWithCommaSeparator(extension.getLocales()));
 		appContext.setReleaseName(extension.getReleaseName());
 		appContext.setDraft(extension.getDraft());
