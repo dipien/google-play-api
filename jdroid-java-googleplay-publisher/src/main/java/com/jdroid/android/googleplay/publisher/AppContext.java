@@ -21,7 +21,7 @@ public class AppContext {
 	private String bundleDir;
 
 	private String deobfuscationFilePath;
-	private Boolean deobfuscationFileUploadEnabled;
+	private Boolean deobfuscationFileUploadEnabled = false;
 
 	private TrackType trackType;
 	private Double userFraction;
