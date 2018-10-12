@@ -1,5 +1,12 @@
 # Change Log
 
+## [v3.6.4](https://github.com/maxirosson/jdroid-googleplay-publisher/tree/v3.6.4) (2018-10-12)
+[Full Changelog](https://github.com/maxirosson/jdroid-googleplay-publisher/compare/v3.6.3...v3.6.4)
+
+**Fixed bugs:**
+
+- Add missing deobfuscationFileUploadEnabled default value [\#46](https://github.com/maxirosson/jdroid-googleplay-publisher/issues/46)
+
 ## [v3.6.3](https://github.com/maxirosson/jdroid-googleplay-publisher/tree/v3.6.3) (2018-10-12)
 [Full Changelog](https://github.com/maxirosson/jdroid-googleplay-publisher/compare/v3.6.2...v3.6.3)
 
