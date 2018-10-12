@@ -1,5 +1,12 @@
 # Change Log
 
+## [v3.6.3](https://github.com/maxirosson/jdroid-googleplay-publisher/tree/v3.6.3) (2018-10-12)
+[Full Changelog](https://github.com/maxirosson/jdroid-googleplay-publisher/compare/v3.6.2...v3.6.3)
+
+**Fixed bugs:**
+
+- Publish logic not working due to the timeouts logic [\#45](https://github.com/maxirosson/jdroid-googleplay-publisher/issues/45)
+
 ## [v3.6.2](https://github.com/maxirosson/jdroid-googleplay-publisher/tree/v3.6.2) (2018-10-11)
 [Full Changelog](https://github.com/maxirosson/jdroid-googleplay-publisher/compare/v3.6.1...v3.6.2)
 
