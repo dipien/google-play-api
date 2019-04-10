@@ -390,9 +390,14 @@ public class GooglePlayPublisher {
 
 			// Upload deobfuscation file
 			if (app.getAppContext().isDeobfuscationFileUploadEnabled()) {
-				AbstractInputStreamContent deobfuscationFile = new FileContent(DEOBFUSCATION_MIME_TYPE, new File(app.getAppContext().getDeobfuscationFilePath()));
-				edits.deobfuscationfiles().upload(app.getApplicationId(), edit.getId(), apk.getVersionCode(), DEOBFUSCATION_FILE_TYPE, deobfuscationFile);
-				log("Adding deobfuscation file " + app.getAppContext().getDeobfuscationFilePath());
+				File deobfuscationFilePath = new File(app.getAppContext().getDeobfuscationFilePath());
+				if (deobfuscationFilePath.exists()) {
+					AbstractInputStreamContent deobfuscationFile = new FileContent(DEOBFUSCATION_MIME_TYPE, deobfuscationFilePath);
+					edits.deobfuscationfiles().upload(app.getApplicationId(), edit.getId(), apk.getVersionCode(), DEOBFUSCATION_FILE_TYPE, deobfuscationFile);
+					log("Adding deobfuscation file " + app.getAppContext().getDeobfuscationFilePath());
+				} else {
+					throw new RuntimeException(deobfuscationFilePath + " doesn't exist.");
+				}
 			}
 			
 			// Commit changes for edit.
@@ -495,9 +500,14 @@ public class GooglePlayPublisher {
 
 			// Upload deobfuscation file
 			if (app.getAppContext().isDeobfuscationFileUploadEnabled()) {
-				AbstractInputStreamContent deobfuscationFile = new FileContent(DEOBFUSCATION_MIME_TYPE, new File(app.getAppContext().getDeobfuscationFilePath()));
-				edits.deobfuscationfiles().upload(app.getApplicationId(), edit.getId(), bundle.getVersionCode(), DEOBFUSCATION_FILE_TYPE, deobfuscationFile);
-				log("Adding deobfuscation file " + app.getAppContext().getDeobfuscationFilePath());
+				File deobfuscationFilePath = new File(app.getAppContext().getDeobfuscationFilePath());
+				if (deobfuscationFilePath.exists()) {
+					AbstractInputStreamContent deobfuscationFile = new FileContent(DEOBFUSCATION_MIME_TYPE, deobfuscationFilePath);
+					edits.deobfuscationfiles().upload(app.getApplicationId(), edit.getId(), bundle.getVersionCode(), DEOBFUSCATION_FILE_TYPE, deobfuscationFile);
+					log("Adding deobfuscation file " + app.getAppContext().getDeobfuscationFilePath());
+				} else {
+					throw new RuntimeException(deobfuscationFilePath + " doesn't exist.");
+				}
 			}
 
 			// Commit changes for edit.
