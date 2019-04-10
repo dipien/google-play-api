@@ -286,6 +286,8 @@ Whether the task should fail if the uploaded APK specifies a version code that h
 
 Whether the obfuscation file should be uploaded or not. Default value: **false**
 
+    deobfuscationFileUploadEnabled = true
+
 ###### Deobfuscation File Path
 
 The path to the deobfuscation file. Default value: '/build/outputs/mapping/release/mapping.txt'

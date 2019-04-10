@@ -15,7 +15,7 @@ dependencies {
 
 	// https://developers.google.com/api-client-library/java/apis/androidpublisher/v3
 	// http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.google.apis%22%20AND%20a%3A%22google-api-services-androidpublisher%22
-	compile 'com.google.apis:google-api-services-androidpublisher:v3-rev31-1.25.0'
+	compile 'com.google.apis:google-api-services-androidpublisher:v3-rev74-1.25.0'
 
 	// Testing
 	testImplementation 'junit:junit:4.12'

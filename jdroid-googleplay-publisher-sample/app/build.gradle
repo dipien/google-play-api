@@ -3,7 +3,7 @@ apply plugin: 'com.jdroid.googleplay.publisher'
 
 buildscript {
 	dependencies {
-		classpath 'com.jdroidtools:jdroid-gradle-googleplay-publisher-plugin:3.6.4'
+		classpath 'com.jdroidtools:jdroid-gradle-googleplay-publisher-plugin:3.6.5-SNAPSHOT'
 	}
 }
 
@@ -14,8 +14,8 @@ android {
 		applicationId "com.jdroid.googleplay.publisher.sample"
 		minSdkVersion 19
 		targetSdkVersion 28
-		versionCode 190060912
-		versionName "6.9.12"
+		versionCode 190060919
+		versionName "6.9.19"
 	}
 
 	signingConfigs {
