@@ -1,5 +1,12 @@
 # Change Log
 
+## [v3.7.0](https://github.com/maxirosson/jdroid-googleplay-publisher/tree/v3.7.0) (2019-06-26)
+[Full Changelog](https://github.com/maxirosson/jdroid-googleplay-publisher/compare/v3.6.4...v3.7.0)
+
+**Implemented enhancements:**
+
+- Support upload bundle to Internal App Sharing [\#47](https://github.com/maxirosson/jdroid-googleplay-publisher/issues/47)
+
 ## [v3.6.4](https://github.com/maxirosson/jdroid-googleplay-publisher/tree/v3.6.4) (2018-10-12)
 [Full Changelog](https://github.com/maxirosson/jdroid-googleplay-publisher/compare/v3.6.3...v3.6.4)
 
