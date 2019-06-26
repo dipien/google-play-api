@@ -5,6 +5,7 @@ import com.google.api.client.http.AbstractInputStreamContent;
 import com.google.api.client.http.FileContent;
 import com.google.api.client.repackaged.com.google.common.base.Strings;
 import com.google.api.client.util.Lists;
+import com.google.api.services.androidpublisher.AndroidPublisher.Internalappsharingartifacts;
 import com.google.api.services.androidpublisher.AndroidPublisher.Edits;
 import com.google.api.services.androidpublisher.model.Apk;
 import com.google.api.services.androidpublisher.model.ApksListResponse;
@@ -12,6 +13,7 @@ import com.google.api.services.androidpublisher.model.AppEdit;
 import com.google.api.services.androidpublisher.model.Bundle;
 import com.google.api.services.androidpublisher.model.BundlesListResponse;
 import com.google.api.services.androidpublisher.model.ImagesUploadResponse;
+import com.google.api.services.androidpublisher.model.InternalAppSharingArtifact;
 import com.google.api.services.androidpublisher.model.Listing;
 import com.google.api.services.androidpublisher.model.LocalizedText;
 import com.google.api.services.androidpublisher.model.Track;
@@ -359,33 +361,7 @@ public class GooglePlayPublisher extends AbstractGooglePlayPublisher {
 			Edits edits = init(app.getAppContext()).edits();
 			AppEdit edit = createEdit(app, edits);
 			
-			// Upload new bundle to developer console
-			if (Strings.isNullOrEmpty(app.getAppContext().getBundlePath())) {
-				if (!Strings.isNullOrEmpty(app.getAppContext().getBundleDir())) {
-					Supplier<Stream<Path>> streamSupplier = () -> {
-						try {
-							return Files.list(Paths.get(app.getAppContext().getBundleDir())).filter(new Predicate<Path>() {
-								@Override
-								public boolean test(Path path) {
-									return path.getFileName().toString().endsWith(".aab") && !path.getFileName().toString().endsWith("unaligned.aab");
-								}
-							});
-						} catch (IOException e) {
-							throw new RuntimeException(e);
-						}
-					};
-					long count = streamSupplier.get().count();
-					if (count == 1) {
-						app.getAppContext().setBundlePath(streamSupplier.get().findAny().get().toAbsolutePath().toString());
-					} else if (count == 0) {
-						throw new UnexpectedException("Bundle not found");
-					} else {
-						throw new UnexpectedException("More than one Bundle found at the specified path");
-					}
-				}
-			}
-
-			AbstractInputStreamContent bundleFile = new FileContent(BUNDLE_MIME_TYPE, new File(app.getAppContext().getBundlePath()));
+			AbstractInputStreamContent bundleFile = getBundleFile(app);
 			Bundle bundle = edits.bundles().upload(app.getApplicationId(), edit.getId(), bundleFile).execute();
 			log(String.format("Version code %d has been uploaded", bundle.getVersionCode()));
 
@@ -774,32 +750,64 @@ public class GooglePlayPublisher extends AbstractGooglePlayPublisher {
 			return Lists.newArrayList();
 		}
 	}
-	
-	private static AppEdit createEdit(App app, Edits edits) {
+
+	public static InternalAppSharingArtifact uploadBundleToInternalAppSharing(App app) {
 		try {
-			// Create a new edit to make changes.
-			AppEdit edit = edits.insert(app.getApplicationId(), null).execute();
-			log(String.format("Created edit with id: %s", edit.getId()));
-			return edit;
+
+			if (Strings.isNullOrEmpty(app.getAppContext().getBundleDir()) && Strings.isNullOrEmpty(app.getAppContext().getBundlePath())) {
+				throw new UnexpectedException("bundleDir and bundlePath cannot be both null or empty!");
+			}
+
+			AbstractInputStreamContent bundleFile = getBundleFile(app);
+
+			Internalappsharingartifacts internalAppSharingArtifacts = init(app.getAppContext()).internalappsharingartifacts();
+			Internalappsharingartifacts.Uploadbundle uploadBundle = internalAppSharingArtifacts.uploadbundle(app.getApplicationId(), bundleFile);
+
+			if (app.getAppContext().isDryRun()) {
+				log("Dry run mode enabled. Bundle not uploaded to internal app sharing");
+				return null;
+			} else {
+				InternalAppSharingArtifact internalAppSharingArtifact = uploadBundle.execute();
+				log("Bundle uploaded to internal app sharing:");
+				log("- Certificate Fingerprint: " + internalAppSharingArtifact.getCertificateFingerprint());
+				log("- Download Url: " + internalAppSharingArtifact.getDownloadUrl());
+				return internalAppSharingArtifact;
+			}
+
 		} catch (GoogleJsonResponseException ex) {
-			throw new RuntimeException(ex.getDetails() != null ? ex.getDetails().getMessage() : ex.getMessage(), ex);
+			throw new RuntimeException(ex.getDetails().getMessage(), ex);
 		} catch (IOException ex) {
 			throw new RuntimeException(ex);
 		}
 	}
-	
-	private static void commitEdit(App app, Edits edits, AppEdit edit) {
-		if (app.getAppContext().isDryRun()) {
-			log(String.format("Dry run mode enabled. App edit with id %s NOT comitted", edit.getId()));
-		} else {
-			try {
-				AppEdit appEdit = edits.commit(app.getApplicationId(), edit.getId()).execute();
-				log(String.format("App edit with id %s has been comitted", appEdit.getId()));
-			} catch (GoogleJsonResponseException ex) {
-				throw new RuntimeException(ex.getDetails().getMessage(), ex);
-			} catch (IOException ex) {
-				throw new RuntimeException(ex);
+
+	private static AbstractInputStreamContent getBundleFile(App app) {
+		// Upload new bundle to developer console
+		if (Strings.isNullOrEmpty(app.getAppContext().getBundlePath())) {
+			if (!Strings.isNullOrEmpty(app.getAppContext().getBundleDir())) {
+				Supplier<Stream<Path>> streamSupplier = () -> {
+					try {
+						return Files.list(Paths.get(app.getAppContext().getBundleDir())).filter(new Predicate<Path>() {
+							@Override
+							public boolean test(Path path) {
+								return path.getFileName().toString().endsWith(".aab") && !path.getFileName().toString().endsWith("unaligned.aab");
+							}
+						});
+					} catch (IOException e) {
+						throw new RuntimeException(e);
+					}
+				};
+				long count = streamSupplier.get().count();
+				if (count == 1) {
+					app.getAppContext().setBundlePath(streamSupplier.get().findAny().get().toAbsolutePath().toString());
+				} else if (count == 0) {
+					throw new UnexpectedException("Bundle not found");
+				} else {
+					throw new UnexpectedException("More than one Bundle found at the specified path");
+				}
 			}
 		}
+
+		return new FileContent(BUNDLE_MIME_TYPE, new File(app.getAppContext().getBundlePath()));
 	}
 }

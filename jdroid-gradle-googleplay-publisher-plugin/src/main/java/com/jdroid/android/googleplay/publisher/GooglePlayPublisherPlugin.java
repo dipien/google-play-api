@@ -17,6 +17,7 @@ import com.jdroid.android.googleplay.publisher.task.PublishApkTask;
 import com.jdroid.android.googleplay.publisher.task.PublishBundleTask;
 import com.jdroid.android.googleplay.publisher.task.PublishMetadataTask;
 import com.jdroid.android.googleplay.publisher.task.ResumeStagedRolloutTask;
+import com.jdroid.android.googleplay.publisher.task.UploadBundleToInternalAppSharingTask;
 
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
@@ -37,6 +38,7 @@ public class GooglePlayPublisherPlugin implements Plugin<Project> {
 		project.getTasks().create("googlePlayListBundles", ListBundlesTask.class);
 		project.getTasks().create("googlePlayPublishAPK", PublishApkTask.class);
 		project.getTasks().create("googlePlayPublishBundle", PublishBundleTask.class);
+		project.getTasks().create("googlePlayUploadBundleToInternalAppSharing", UploadBundleToInternalAppSharingTask.class);
 		project.getTasks().create("googlePlayPromoteFromInternalToAlpha", PromoteFromInternalToAlphaTask.class);
 		project.getTasks().create("googlePlayPromoteFromInternalToBeta", PromoteFromInternalToBetaTask.class);
 		project.getTasks().create("googlePlayPromoteFromInternalToProduction", PromoteFromInternalToProductionTask.class);

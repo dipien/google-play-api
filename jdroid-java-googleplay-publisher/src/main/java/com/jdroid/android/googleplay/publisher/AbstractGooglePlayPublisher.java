@@ -3,6 +3,7 @@ package com.jdroid.android.googleplay.publisher;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
+import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpTransport;
@@ -10,6 +11,7 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.androidpublisher.AndroidPublisher;
 import com.google.api.services.androidpublisher.AndroidPublisherScopes;
+import com.google.api.services.androidpublisher.model.AppEdit;
 import com.jdroid.java.utils.StringUtils;
 
 import java.io.FileInputStream;
@@ -81,6 +83,35 @@ public class AbstractGooglePlayPublisher {
 			return credential.createScoped(Collections.singleton(AndroidPublisherScopes.ANDROIDPUBLISHER));
 		} catch (IOException e) {
 			throw new RuntimeException(e);
+		}
+	}
+
+
+	protected static AppEdit createEdit(App app, AndroidPublisher.Edits edits) {
+		try {
+			// Create a new edit to make changes.
+			AppEdit edit = edits.insert(app.getApplicationId(), null).execute();
+			log(String.format("Created edit with id: %s", edit.getId()));
+			return edit;
+		} catch (GoogleJsonResponseException ex) {
+			throw new RuntimeException(ex.getDetails() != null ? ex.getDetails().getMessage() : ex.getMessage(), ex);
+		} catch (IOException ex) {
+			throw new RuntimeException(ex);
+		}
+	}
+
+	protected static void commitEdit(App app, AndroidPublisher.Edits edits, AppEdit edit) {
+		if (app.getAppContext().isDryRun()) {
+			log(String.format("Dry run mode enabled. App edit with id %s NOT comitted", edit.getId()));
+		} else {
+			try {
+				AppEdit appEdit = edits.commit(app.getApplicationId(), edit.getId()).execute();
+				log(String.format("App edit with id %s has been comitted", appEdit.getId()));
+			} catch (GoogleJsonResponseException ex) {
+				throw new RuntimeException(ex.getDetails().getMessage(), ex);
+			} catch (IOException ex) {
+				throw new RuntimeException(ex);
+			}
 		}
 	}
 

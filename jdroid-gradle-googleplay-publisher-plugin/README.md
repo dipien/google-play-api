@@ -294,6 +294,20 @@ The path to the deobfuscation file. Default value: '/build/outputs/mapping/relea
 
     deobfuscationFilePath = /path/to/deobfuscation/file
     
+#### Upload Bundle to Internal App Sharing
+
+Upload new Bundle to Internal App Sharing
+
+    ./gradlew googlePlayUploadBundleToInternalAppSharing    
+    
+###### Bundle path/dir
+
+The path to the Bundle to upload.
+The default value for the Bundle dir is the '/build/outputs/bundle/release' directory of the gradle project where the plugin is applied.
+
+    bundlePath = /path/to/bundle/file.aab
+    // bundleDir = /path/to/bundle/
+    
 #### Promote from Internal to Alpha
 
 Promote a current internal to alpha

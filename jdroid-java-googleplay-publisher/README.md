@@ -129,7 +129,7 @@ Get all the historical bundles uploaded.
 
 #### Publish APK / Bundle
 
-Upload new APK for your app and assign it to a release track.
+Upload new APK / Bundle for your app and assign it to a release track.
 
     // List of supported locales on Google Play. This property is required if you need to upload release notes
     List<String> locales = new ArrayList<String>();
@@ -191,6 +191,17 @@ Create files with the release notes. For example:
 
     // Release notes for any locale and version code
     {METADATA_PATH}/googleplay/default/release_notes/default_release_notes.txt
+
+#### Upload Bundle to Internal App Sharing
+
+Upload new Bundle to Internal App Sharing
+
+    // The path to the Bundle to publish
+    appContext.setBundlePath("/path/to/bundle/file.aab");
+    // appContext.setBundleDir("/path/to/bundle/");
+
+    GooglePlayPublisher.uploadBundleToInternalAppSharing(new App(appContext));
+
 
 #### Promote from Internal to Alpha
 
