@@ -29,7 +29,7 @@ buildscript {
 	dependencies {
 
 		// https://github.com/maxirosson/jdroid-component-builder/releases
-		classpath 'com.jdroidtools:jdroid-component-builder:1.1.0-SNAPSHOT'
+		classpath 'com.jdroidtools:jdroid-component-builder:1.1.0'
 
 		// https://github.com/maxirosson/jdroid-gradle-plugin/releases
 		classpath 'com.jdroidtools:jdroid-gradle-root-plugin:1.1.0'
