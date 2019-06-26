@@ -1,17 +1,11 @@
 package com.jdroid.android.googleplay.publisher;
 
-import com.google.api.client.auth.oauth2.Credential;
-import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
-import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
-import com.google.api.client.http.*;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.http.AbstractInputStreamContent;
+import com.google.api.client.http.FileContent;
 import com.google.api.client.repackaged.com.google.common.base.Strings;
 import com.google.api.client.util.Lists;
-import com.google.api.services.androidpublisher.AndroidPublisher;
 import com.google.api.services.androidpublisher.AndroidPublisher.Edits;
-import com.google.api.services.androidpublisher.AndroidPublisherScopes;
 import com.google.api.services.androidpublisher.model.Apk;
 import com.google.api.services.androidpublisher.model.ApksListResponse;
 import com.google.api.services.androidpublisher.model.AppEdit;
@@ -26,13 +20,10 @@ import com.jdroid.java.exception.UnexpectedException;
 import com.jdroid.java.utils.StringUtils;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.security.GeneralSecurityException;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
@@ -47,76 +38,13 @@ import java.util.stream.Stream;
  * secret setup properly in resources/client_secrets.json and authorize this client against the API.
  * </p>
  */
-public class GooglePlayPublisher {
+public class GooglePlayPublisher extends AbstractGooglePlayPublisher {
 
 	private static final String APK_MIME_TYPE = "application/vnd.android.package-archive";
 	private static final String BUNDLE_MIME_TYPE = "application/octet-stream";
 	private static final String DEOBFUSCATION_MIME_TYPE = "application/octet-stream";
 	private static final String DEOBFUSCATION_FILE_TYPE = "proguard";
 
-	/** Global instance of the JSON factory. */
-	private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
-
-	/** Global instance of the HTTP transport. */
-	private static HttpTransport HTTP_TRANSPORT;
-	
-	/**
-	 * Performs all necessary setup steps for running requests against the API.
-	 * 
-	 * @param appContext the {@link AppContext}
-	 * @return the {@link AndroidPublisher} service
-	 */
-	private static AndroidPublisher init(AppContext appContext) {
-
-		if (StringUtils.isEmpty(appContext.getApplicationId())) {
-			throw new RuntimeException("The application id is required");
-		}
-		
-		try {
-			
-			if (HTTP_TRANSPORT == null) {
-				HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-			}
-			
-			// Authorization.
-			HttpRequestInitializer credential = authorizeWithServiceAccount(appContext);
-			credential = setHttpTimeout(appContext, credential);
-
-			// Set up and return API client.
-			AndroidPublisher.Builder builder = new AndroidPublisher.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential);
-			builder.setApplicationName(appContext.getApplicationId());
-			return builder.build();
-		} catch (GeneralSecurityException | IOException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	private static HttpRequestInitializer setHttpTimeout(AppContext appContext, HttpRequestInitializer requestInitializer) {
-		return new HttpRequestInitializer() {
-			@Override
-			public void initialize(HttpRequest httpRequest) throws IOException {
-				requestInitializer.initialize(httpRequest);
-				httpRequest.setConnectTimeout(appContext.getConnectTimeout());
-                httpRequest.setReadTimeout(appContext.getReadTimeout());
-            }
-		};
-	}
-	
-	private static Credential authorizeWithServiceAccount(AppContext appContext) {
-
-		if (StringUtils.isEmpty(appContext.getPrivateKeyJsonFilePath())) {
-			throw new RuntimeException("The private key json file path is required");
-		}
-		
-		try {
-			InputStream serviceAccountStream = new FileInputStream(appContext.getPrivateKeyJsonFilePath());
-			GoogleCredential credential = GoogleCredential.fromStream(serviceAccountStream, HTTP_TRANSPORT, JSON_FACTORY);
-			return credential.createScoped(Collections.singleton(AndroidPublisherScopes.ANDROIDPUBLISHER));
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-	}
-	
 	/**
 	 * Retrieve all the apks for a given app.
 	 *
@@ -874,9 +802,4 @@ public class GooglePlayPublisher {
 			}
 		}
 	}
-
-	private static void log(String message) {
-	    // TODO Use a logger
-        System.out.println(message);
-    }
 }
