@@ -59,7 +59,7 @@ jobs:
           destination: jars
 
   verify:
-    <<: *defaults
+    <<: *jdk_config
     steps:
       - checkout
       - *restore_cache
@@ -86,7 +86,7 @@ jobs:
           destination: jdroid-java-googleplay-publisher/tests
 
   deploy:
-    <<: *defaults
+    <<: *jdk_config
     steps:
       - checkout
       - *restore_cache
