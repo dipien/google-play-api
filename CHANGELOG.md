@@ -1,6 +1,6 @@
 # Change Log
 
-## [v3.7.0](https://github.com/maxirosson/jdroid-googleplay-publisher/tree/v3.7.0) (2019-06-26)
+## [v3.7.0](https://github.com/maxirosson/jdroid-googleplay-publisher/tree/v3.7.0) (2019-06-28)
 [Full Changelog](https://github.com/maxirosson/jdroid-googleplay-publisher/compare/v3.6.4...v3.7.0)
 
 **Implemented enhancements:**
