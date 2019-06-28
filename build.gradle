@@ -8,6 +8,8 @@ ext.JDROID_GRADLE_PLUGIN_VERSION = '2.0.0-SNAPSHOT'
 // https://github.com/maxirosson/jdroid-java/releases
 ext.JDROID_JAVA_VERSION = '2.0.0'
 
+ext.KOTLIN_ENABLED = false
+
 apply plugin: 'com.jdroid.root'
 apply plugin: 'com.jdroid.component.builder'
 buildscript {
