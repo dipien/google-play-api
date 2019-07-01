@@ -17,12 +17,16 @@ public enum TrackType {
 		return key;
 	}
 	
-	public static TrackType findByKey(String key) {
+	public static TrackType findByKey(String key, TrackType defaulTrackType) {
 		for (TrackType each : TrackType.values()) {
 			if (each.getKey().equals(key)) {
 				return each;
 			}
 		}
-		return null;
+		return defaulTrackType;
+	}
+
+	public static TrackType findByKey(String key) {
+		return findByKey(key, null);
 	}
 }

@@ -2,7 +2,7 @@ ext.PROJECT_NAME = 'Jdroid Google Play Publisher Plugin'
 description = 'Gradle Plugin for Google Play API'
 ext.ARTIFACT_ID = 'jdroid-gradle-googleplay-publisher-plugin'
 
-apply plugin: 'com.jdroid.gradle.plugin'
+apply plugin: 'com.jdroidtools.gradle.plugin'
 //apply plugin: 'com.gradle.plugin-publish'
 
 buildscript {

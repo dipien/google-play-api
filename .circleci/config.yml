@@ -85,7 +85,7 @@ jobs:
           path: ./jdroid-java-googleplay-publisher/build/reports/tests/test
           destination: jdroid-java-googleplay-publisher/tests
 
-  deploy:
+  publish:
     <<: *jdk_config
     steps:
       - checkout
@@ -103,6 +103,6 @@ workflows:
       - verify:
           requires:
             - build
-      - deploy:
+      - publish:
           requires:
             - verify

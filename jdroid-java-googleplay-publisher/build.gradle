@@ -2,7 +2,7 @@ ext.PROJECT_NAME = 'Jdroid Google Play Publisher Library'
 description = 'Java Connector for Google Play API'
 ext.ARTIFACT_ID = 'jdroid-java-googleplay-publisher'
 
-apply plugin: 'com.jdroid.java.library'
+apply plugin: 'com.jdroidtools.java.library'
 
 buildscript {
 	dependencies {
