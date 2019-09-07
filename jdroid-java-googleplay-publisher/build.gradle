@@ -6,17 +6,14 @@ apply plugin: 'com.jdroidtools.java.library'
 
 buildscript {
 	dependencies {
-		classpath 'com.jdroidtools:jdroid-gradle-java-plugin:' + JDROID_GRADLE_PLUGIN_VERSION
+		classpath(BuildLibs.jdroid_gradle_java_plugin)
 	}
 }
 
 dependencies {
-	compile 'com.jdroidtools:jdroid-java-core:' + JDROID_JAVA_VERSION
-
-	// https://developers.google.com/api-client-library/java/apis/androidpublisher/v3
-	// http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.google.apis%22%20AND%20a%3A%22google-api-services-androidpublisher%22
-	compile 'com.google.apis:google-api-services-androidpublisher:v3-rev95-1.25.0'
+	compile(Libs.jdroid_java_core)
+	compile(Libs.android_publisher)
 
 	// Testing
-	testImplementation 'junit:junit:4.12'
+	testImplementation(Libs.junit)
 }

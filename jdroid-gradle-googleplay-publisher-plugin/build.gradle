@@ -10,13 +10,12 @@ buildscript {
 		// https://plugins.gradle.org/plugin/com.gradle.plugin-publish
 		//classpath "com.gradle.publish:plugin-publish-plugin:0.10.0"
 
-		classpath 'com.jdroidtools:jdroid-gradle-project-plugin:' + JDROID_GRADLE_PLUGIN_VERSION
+		classpath(BuildLibs.jdroid_gradle_project_plugin)
 	}
 }
 
 dependencies {
 	compile project(path: ":jdroid-java-googleplay-publisher")
-	compile 'com.jdroidtools:jdroid-java-core:' + JDROID_JAVA_VERSION
 }
 
 gradlePlugin {
