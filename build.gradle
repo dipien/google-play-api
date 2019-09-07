@@ -3,15 +3,13 @@ version = '3.8.0'
 ext.JDROID_GITHUB_REPOSITORY_NAME = 'jdroid-googleplay-publisher'
 
 // https://github.com/maxirosson/jdroid-gradle-plugin/releases
-ext.JDROID_GRADLE_PLUGIN_VERSION = '2.0.0'
+ext.JDROID_GRADLE_PLUGIN_VERSION = '2.2.0'
 
 // https://github.com/maxirosson/jdroid-java/releases
 ext.JDROID_JAVA_VERSION = '2.0.0'
 
-ext.KOTLIN_ENABLED = false
-
-apply plugin: 'com.jdroidtools.root'
 apply plugin: 'com.jdroidtools.component.builder'
+apply plugin: 'com.jdroidtools.root'
 buildscript {
 	repositories {
 		jcenter()
@@ -30,10 +28,10 @@ buildscript {
 	dependencies {
 
 		// https://github.com/maxirosson/jdroid-component-builder/releases
-		classpath 'com.jdroidtools:jdroid-component-builder:2.0.0'
+		classpath 'com.jdroidtools:jdroid-component-builder:2.2.0'
 
 		// https://github.com/maxirosson/jdroid-gradle-plugin/releases
-		classpath 'com.jdroidtools:jdroid-gradle-root-plugin:2.0.0'
+		classpath 'com.jdroidtools:jdroid-gradle-root-plugin:2.2.0'
 	}
 }
 
