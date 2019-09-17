@@ -20,8 +20,8 @@ buildscript {
 		gradlePluginPortal()
 	}
 	dependencies {
-		classpath(BuildLibs.jdroid_component_builder)
-		classpath(BuildLibs.jdroid_gradle_root_plugin)
+		classpath(BuildLibs.JDROID_COMPONENT_BUILDER)
+		classpath(BuildLibs.JDROID_GRADLE_ROOT_PLUGIN)
 	}
 }
 

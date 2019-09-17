@@ -43,8 +43,8 @@ public class AppContext {
 	
 	private Boolean failOnApkUpgradeVersionConflict = true;
 
-	private Integer readTimeout = 100000;
-	private Integer connectTimeout = 100000;
+	private Integer readTimeout = 120000;
+	private Integer connectTimeout = 120000;
 
 	public String getApplicationId() {
 		return applicationId;

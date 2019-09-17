@@ -10,7 +10,7 @@ buildscript {
 		// https://plugins.gradle.org/plugin/com.gradle.plugin-publish
 		//classpath "com.gradle.publish:plugin-publish-plugin:0.10.0"
 
-		classpath(BuildLibs.jdroid_gradle_project_plugin)
+		classpath(BuildLibs.JDROID_GRADLE_PROJECT_PLUGIN)
 	}
 }
 

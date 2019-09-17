@@ -6,14 +6,14 @@ apply plugin: 'com.jdroidtools.java.library'
 
 buildscript {
 	dependencies {
-		classpath(BuildLibs.jdroid_gradle_java_plugin)
+		classpath(BuildLibs.JDROID_GRADLE_JAVA_PLUGIN)
 	}
 }
 
 dependencies {
-	compile(Libs.jdroid_java_core)
-	compile(Libs.android_publisher)
+	compile(Libs.JDROID_JAVA_CORE)
+	compile(Libs.ANDROID_PUBLISHER)
 
 	// Testing
-	testImplementation(Libs.junit)
+	testImplementation(Libs.JUNIT)
 }
