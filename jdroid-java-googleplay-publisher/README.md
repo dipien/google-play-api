@@ -189,7 +189,7 @@ Create files with the release notes. For example:
     // Release notes for any locale and VERSION_CODE_2
     {METADATA_PATH}/googleplay/default/release_notes/{VERSION_CODE_2}.txt
 
-    // Release notes for any locale and version code
+    // Release notes for any locale and version code (used if there isn't any other match)
     {METADATA_PATH}/googleplay/default/release_notes/default_release_notes.txt
 
 #### Upload Bundle to Internal App Sharing
