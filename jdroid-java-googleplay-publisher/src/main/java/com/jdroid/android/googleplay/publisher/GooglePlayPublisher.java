@@ -3,7 +3,6 @@ package com.jdroid.android.googleplay.publisher;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.AbstractInputStreamContent;
 import com.google.api.client.http.FileContent;
-import com.google.api.client.repackaged.com.google.common.base.Strings;
 import com.google.api.client.util.Lists;
 import com.google.api.services.androidpublisher.AndroidPublisher.Internalappsharingartifacts;
 import com.google.api.services.androidpublisher.AndroidPublisher.Edits;
