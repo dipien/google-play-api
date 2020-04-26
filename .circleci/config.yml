@@ -41,7 +41,6 @@ jobs:
           name: Download dependencies
           command: ./gradlew dependencies --stacktrace
       - save_gradle_cache
-      - persist_gradle_build_cache
 
   ktlint:
     executor: jdk_executor
