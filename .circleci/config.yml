@@ -1,73 +1,98 @@
-version: 2
+version: 2.1
 
 references:
 
-  ## Workspace
+  working_dir: &working_dir
+                 ~/project
 
-  workspace: &workspace
-    ~/workspace
-
-  ## Cache
-
-  cache_key: &cache_key
-    key: cache-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}-{{ checksum "build.gradle" }}
-  restore_cache: &restore_cache
-    restore_cache:
-      <<: *cache_key
-  save_cache: &save_cache
-    save_cache:
-      <<: *cache_key
-      paths:
-        - ~/.gradle
-        - ~/.m2
-
-  ## Docker image configurations
-
-  jdk_config: &jdk_config
-    working_directory: *workspace
+executors:
+  jdk_executor:
+    working_directory: *working_dir
     docker:
       - image: circleci/openjdk:8-jdk
     environment:
       JVM_OPTS: -Xmx3200m
       GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.caching=false
 
+commands:
+  restore_gradle_cache:
+    steps:
+      - restore_cache:
+          keys:
+            - v2-gradle_cache-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}-{{ .Branch }}-{{ checksum "buildSrc/src/main/kotlin/Libs.kt" }}-{{ checksum "buildSrc/src/main/kotlin/BuildLibs.kt" }}
+            - v2-gradle_cache-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}-{{ .Branch }}
+            - v2-gradle_cache-
+
+  save_gradle_cache:
+    steps:
+      - save_cache:
+          key: v2-gradle_cache-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}-{{ .Branch }}-{{ checksum "buildSrc/src/main/kotlin/Libs.kt" }}-{{ checksum "buildSrc/src/main/kotlin/BuildLibs.kt" }}
+          paths:
+            - ~/.gradle
+
 jobs:
-  build:
-    <<: *jdk_config
+
+  gradleCache:
+    executor: jdk_executor
     steps:
       - checkout
-
-      - *restore_cache
+      - restore_gradle_cache
       - run:
           name: Download dependencies
-          command: ./gradlew dependencies --refresh-dependencies --stacktrace
-      - *save_cache
+          command: ./gradlew dependencies --stacktrace
+      - save_gradle_cache
+      - persist_gradle_build_cache
 
+  ktlint:
+    executor: jdk_executor
+    steps:
+      - checkout
+      - restore_gradle_cache
+      - run:
+          name: Ktlint
+          command: ./gradlew ktlint --stacktrace
+
+  security:
+    executor: jdk_executor
+    steps:
+      - checkout
+      - restore_gradle_cache
+      - run:
+          name: Verify the integrity of the Gradle Wrapper JAR
+          command: |
+            # https://docs.gradle.org/current/userguide/gradle_wrapper.html#wrapper_checksum_verification
+            cd gradle/wrapper
+            gradleVersion=$(grep "distributionUrl" gradle-wrapper.properties | grep -Po "(\d+\.)+\d+")
+            curl --location --output gradle-wrapper.jar.sha256 https://services.gradle.org/distributions/gradle-${gradleVersion}-wrapper.jar.sha256
+            echo "  gradle-wrapper.jar" >> gradle-wrapper.jar.sha256
+            sha256sum --check gradle-wrapper.jar.sha256
+
+  build:
+    executor: jdk_executor
+    steps:
+      - checkout
+      - restore_gradle_cache
       - run:
           name: Assembling
-          command: ./gradlew assemble --refresh-dependencies --stacktrace --scan
-
+          command: ./gradlew assemble --stacktrace
       - run:
           name: Saving jars
           command: |
             mkdir -p ~/jars/
             find . -type f -regex ".*/build/libs/.*jar" -exec cp {} ~/jars/ \;
           when: always
-
       - store_artifacts:
           path: ~/jars
           destination: jars
 
   verify:
-    <<: *jdk_config
+    executor: jdk_executor
     steps:
       - checkout
-      - *restore_cache
-
+      - restore_gradle_cache
       - run:
           name: Verifying
           command: ./gradlew check --stacktrace
-
       - run:
           name: Saving test results
           command: |
@@ -76,7 +101,6 @@ jobs:
           when: always
       - store_test_results:
           path: ~/junit
-
       - store_artifacts:
           path: ./jdroid-gradle-googleplay-publisher-plugin/build/reports/tests/test
           destination: jdroid-gradle-googleplay-publisher-plugin/tests
@@ -86,28 +110,34 @@ jobs:
           destination: jdroid-java-googleplay-publisher/tests
 
   publish:
-    <<: *jdk_config
+    executor: jdk_executor
     steps:
       - checkout
-      - *restore_cache
-
+      - restore_gradle_cache
       - run:
           name: Uploading to Nexus Sonatype
           command: ./gradlew uploadArchives -PLOCAL_UPLOAD=false --stacktrace
 
   upgradeDependencies:
-    <<: *jdk_config
+    executor: jdk_executor
     steps:
       - checkout
+      - restore_gradle_cache
       - run:
           name: Upgrade Dependencies
           command: ./gradlew upgradeDependencies -PpullRequestEnabled=true --stacktrace
 
 workflows:
-  version: 2
   commit:
     jobs:
-      - build
+      - gradleCache
+      - security
+      - build:
+          requires:
+            - gradleCache
+      - ktlint:
+          requires:
+            - build
       - verify:
           requires:
             - build
@@ -118,6 +148,8 @@ workflows:
                 - master
           requires:
             - verify
+            - ktlint
+            - security
   weekly:
     triggers:
       - schedule:
