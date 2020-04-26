@@ -1,6 +1,5 @@
 package com.jdroid.android.googleplay.publisher.commons
 
-import com.jdroid.java.utils.TypeUtils
 import org.gradle.api.Project
 
 class PropertyResolver(private val project: Project) {
@@ -24,7 +23,7 @@ class PropertyResolver(private val project: Project) {
         return if (value == null) {
             defaultValue
         } else {
-            TypeUtils.getBoolean(value.toString())
+            value.toString().toBoolean()
         }
     }
 

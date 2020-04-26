@@ -11,8 +11,8 @@ buildscript {
 }
 
 dependencies {
-	compile(Libs.JDROID_JAVA_CORE)
-	compile(Libs.ANDROID_PUBLISHER)
+	implementation(Libs.JDROID_JAVA_CORE)
+	api(Libs.ANDROID_PUBLISHER)
 
 	// Testing
 	testImplementation(Libs.JUNIT)

@@ -4,7 +4,6 @@ import com.jdroid.android.googleplay.publisher.App
 import com.jdroid.android.googleplay.publisher.AppContext
 import com.jdroid.android.googleplay.publisher.TrackType
 import com.jdroid.android.googleplay.publisher.commons.AbstractTask
-import com.jdroid.java.utils.StringUtils
 
 abstract class BaseTask : AbstractTask() {
 
@@ -15,7 +14,7 @@ abstract class BaseTask : AbstractTask() {
         appContext.privateKeyJsonFilePath = extension.privateKeyJsonFilePath
         appContext.connectTimeout = extension.connectTimeout
         appContext.readTimeout = extension.readTimeout
-        appContext.locales = StringUtils.splitWithCommaSeparator(extension.locales)
+        appContext.locales = extension.locales.orEmpty().split(",")
         appContext.releaseName = extension.releaseName
         appContext.isDraft = extension.draft
         appContext.isDryRun = extension.dryRun
@@ -35,11 +34,11 @@ abstract class BaseTask : AbstractTask() {
         appContext.apkDir = extension.apkDir
         appContext.bundlePath = extension.bundlePath
         appContext.bundleDir = extension.bundleDir
-        appContext.trackType = TrackType.findByKey(extension.track)
+        appContext.trackType = TrackType.findByKey(extension.track!!)
         appContext.userPercentage = extension.userPercentage
         appContext.setFailOnApkUpgradeVersionConflict(extension.failOnApkUpgradeVersionConflict)
         onExecute(App(appContext))
     }
 
-    protected abstract fun onExecute(app: App?)
+    protected abstract fun onExecute(app: App)
 }
