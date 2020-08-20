@@ -8,5 +8,4 @@ class VoidedPurchasesService : AbstractGooglePlayPublisher() {
         val listResponse = init(app.appContext).purchases().voidedpurchases().list(app.applicationId).execute()
         return listResponse.voidedPurchases
     }
-
 }
