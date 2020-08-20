@@ -8,7 +8,7 @@ enum class TrackType(val key: String) {
     PRODUCTION("production");
 
     companion object {
-        fun findByKey(key: String, defaulTrackType: TrackType? = null): TrackType? {
+        fun findByKey(key: String?, defaulTrackType: TrackType? = null): TrackType? {
             for (each in values()) {
                 if (each.key == key) {
                     return each
