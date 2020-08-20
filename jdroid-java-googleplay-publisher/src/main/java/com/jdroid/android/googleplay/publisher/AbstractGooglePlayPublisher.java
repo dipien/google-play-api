@@ -7,7 +7,6 @@ import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpTransport;
-import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.androidpublisher.AndroidPublisher;
 import com.google.api.services.androidpublisher.AndroidPublisherScopes;
@@ -22,9 +21,6 @@ import java.util.Collections;
 
 
 public class AbstractGooglePlayPublisher {
-
-	/** Global instance of the JSON factory. */
-	private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
 
 	/** Global instance of the HTTP transport. */
 	private static HttpTransport HTTP_TRANSPORT;
@@ -52,7 +48,7 @@ public class AbstractGooglePlayPublisher {
 			credential = setHttpTimeout(appContext, credential);
 
 			// Set up and return API client.
-			AndroidPublisher.Builder builder = new AndroidPublisher.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential);
+			AndroidPublisher.Builder builder = new AndroidPublisher.Builder(HTTP_TRANSPORT, JacksonFactory.getDefaultInstance(), credential);
 			builder.setApplicationName(appContext.getApplicationId());
 			return builder.build();
 		} catch (GeneralSecurityException | IOException e) {
@@ -71,7 +67,7 @@ public class AbstractGooglePlayPublisher {
 		};
 	}
 
-	private static Credential authorizeWithServiceAccount(AppContext appContext) {
+	private static HttpRequestInitializer authorizeWithServiceAccount(AppContext appContext) {
 
 		if (StringUtils.isEmpty(appContext.getPrivateKeyJsonFilePath())) {
 			throw new RuntimeException("The private key json file path is required");
