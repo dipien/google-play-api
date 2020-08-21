@@ -1,5 +1,15 @@
 # Change Log
 
+## [v3.8.0](https://github.com/maxirosson/jdroid-googleplay-publisher/tree/v3.8.0) (2020-08-20)
+[Full Changelog](https://github.com/maxirosson/jdroid-googleplay-publisher/compare/v3.7.0...v3.8.0)
+
+**Implemented enhancements:**
+
+- Support get Voided Purchases API [\#56](https://github.com/maxirosson/jdroid-googleplay-publisher/issues/56)
+- Support get reviews API [\#55](https://github.com/maxirosson/jdroid-googleplay-publisher/issues/55)
+- Increment default timeout to 2 minutes [\#49](https://github.com/maxirosson/jdroid-googleplay-publisher/issues/49)
+- Upgrade to google-api-services-androidpublisher:v3-rev103-1.25. [\#48](https://github.com/maxirosson/jdroid-googleplay-publisher/issues/48)
+
 ## [v3.7.0](https://github.com/maxirosson/jdroid-googleplay-publisher/tree/v3.7.0) (2019-06-28)
 [Full Changelog](https://github.com/maxirosson/jdroid-googleplay-publisher/compare/v3.6.4...v3.7.0)
 
