@@ -4,7 +4,7 @@ import com.jdroid.android.googleplay.publisher.commons.PropertyResolver
 import org.gradle.api.Project
 import java.io.File
 
-class GooglePlayPublisherPluginExtension(project: Project) {
+open class GooglePlayPublisherPluginExtension(project: Project) {
 
     private val propertyResolver: PropertyResolver = PropertyResolver(project)
 
