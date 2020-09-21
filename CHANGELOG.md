@@ -1,11 +1,18 @@
 # Change Log
 
+## [v3.9.1](https://github.com/maxirosson/jdroid-googleplay-publisher/tree/v3.9.1) (2020-09-21)
+[Full Changelog](https://github.com/maxirosson/jdroid-googleplay-publisher/compare/v3.9.0...v3.9.1)
+
+**Fixed bugs:**
+
+- Fix extension usage [\#59](https://github.com/maxirosson/jdroid-googleplay-publisher/issues/59)
+
 ## [v3.9.0](https://github.com/maxirosson/jdroid-googleplay-publisher/tree/v3.9.0) (2020-08-26)
 [Full Changelog](https://github.com/maxirosson/jdroid-googleplay-publisher/compare/v3.8.0...v3.9.0)
 
 **Implemented enhancements:**
 
-- Support filtered reviewa [\#57](https://github.com/maxirosson/jdroid-googleplay-publisher/issues/57)
+- Support filtered reviews [\#57](https://github.com/maxirosson/jdroid-googleplay-publisher/issues/57)
 
 ## [v3.8.0](https://github.com/maxirosson/jdroid-googleplay-publisher/tree/v3.8.0) (2020-08-20)
 [Full Changelog](https://github.com/maxirosson/jdroid-googleplay-publisher/compare/v3.7.0...v3.8.0)
