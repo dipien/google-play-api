@@ -22,6 +22,7 @@ buildscript {
 	dependencies {
 		classpath(BuildLibs.JDROID_COMPONENT_BUILDER)
 		classpath(BuildLibs.JDROID_GRADLE_ROOT_PLUGIN)
+		classpath(BuildLibs.RELEASES_HUB_GRADLE_PLUGIN)
 	}
 }
 
