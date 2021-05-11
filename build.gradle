@@ -1,6 +1,6 @@
 version = '4.0.0'
 
-ext.GITHUB_REPOSITORY_NAME = "googleplay-api-client"
+ext.GITHUB_REPOSITORY_NAME = "google-play-api"
 
 apply plugin: "com.dipien.component.builder"
 apply plugin: 'com.jdroidtools.root'
