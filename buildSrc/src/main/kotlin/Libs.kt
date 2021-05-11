@@ -1,4 +1,5 @@
 object Libs {
+
     const val JDROID_JAVA_CORE = "com.jdroidtools:jdroid-java-core:3.1.0"
 
     // https://developers.google.com/api-client-library/java/apis/androidpublisher/v3

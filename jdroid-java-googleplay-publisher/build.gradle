@@ -1,6 +1,6 @@
-ext.PROJECT_NAME = 'Jdroid Google Play Publisher Library'
-description = 'Java Connector for Google Play API'
-ext.ARTIFACT_ID = 'jdroid-java-googleplay-publisher'
+ext.PROJECT_NAME = 'Google Play API Kotlin Client'
+description = 'Kotlin Client for Google Play API'
+ext.ARTIFACT_ID = 'googleplay-api-kotlin'
 
 apply plugin: 'com.jdroidtools.java.library'
 

@@ -1,15 +1,14 @@
-ext.PROJECT_NAME = 'Jdroid Google Play Publisher Plugin'
-description = 'Gradle Plugin for Google Play API'
-ext.ARTIFACT_ID = 'jdroid-gradle-googleplay-publisher-plugin'
+ext.PROJECT_NAME = "Google Play API Gradle Plugin"
+description = "Gradle Plugin for Google Play API"
+ext.ARTIFACT_ID = "googleplay-api-plugin"
+ext.GRADLE_PLUGIN_ID = "com.dipien.googleplay.api"
+ext.GRADLE_PLUGIN_IMPLEMENTATION_CLASS = "com.jdroid.android.googleplay.publisher.GooglePlayPublisherPlugin"
+ext.GRADLE_PLUGIN_PORTAL_TAGS = ["gradle", "plugin", "google play"]
 
 apply plugin: 'com.jdroidtools.gradle.plugin'
-//apply plugin: 'com.gradle.plugin-publish'
 
 buildscript {
 	dependencies {
-		// https://plugins.gradle.org/plugin/com.gradle.plugin-publish
-		//classpath "com.gradle.publish:plugin-publish-plugin:0.10.0"
-
 		classpath(BuildLibs.JDROID_GRADLE_PROJECT_PLUGIN)
 	}
 }
@@ -17,32 +16,3 @@ buildscript {
 dependencies {
 	compile project(path: ":jdroid-java-googleplay-publisher")
 }
-
-gradlePlugin {
-	plugins {
-		publisherPlugin {
-			id = 'com.jdroid.googleplay.publisher'
-			implementationClass = 'com.jdroid.android.googleplay.publisher.GooglePlayPublisherPlugin'
-		}
-	}
-}
-
-// Configuration to publish your plugin to the plugin portal
-//pluginBundle {
-//	website = 'http://jdroidtools.com/'
-//	vcsUrl = 'https://github.com/maxirosson/jdroid-googleplay-publisher'
-//
-//	plugins {
-//		GooglePlayPublisherPlugin {
-//			id = 'com.jdroid.googleplay.publisher'
-//			displayName = 'Jdroid Google Play Publisher Gradle Plugin'
-//			description = 'Gradle Plugin to publish android APKs and listings on Google Play'
-//			tags = ['jdroid', 'android', 'google play']
-//		}
-//	}
-//
-//	mavenCoordinates {
-//		groupId = "com.jdroidtools"
-//		artifactId = "jdroid-google-publisher-plugin"
-//	}
-//}
