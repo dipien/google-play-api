@@ -14,5 +14,5 @@ buildscript {
 }
 
 dependencies {
-	compile project(path: ":jdroid-java-googleplay-publisher")
+	compile project(path: ":googleplay-api-kotlin")
 }
