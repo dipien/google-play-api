@@ -21,9 +21,9 @@ Add the following configuration to your `build.gradle`, replacing X.Y.Z by the [
 
 All the plugin configuration properties can be added using any of the following ways:
 
-* Using the **jdroidGooglePlayPublisher** extension on the build.gradle. For example:
+* Using the **googlePlay** extension on the build.gradle. For example:
 
-      jdroidGooglePlayPublisher {
+      googlePlay {
           applicationId 'com.sample'
       }
 

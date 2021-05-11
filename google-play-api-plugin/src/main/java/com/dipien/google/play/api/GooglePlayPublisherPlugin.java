@@ -24,7 +24,7 @@ import org.gradle.api.Project;
 
 public class GooglePlayPublisherPlugin implements Plugin<Project> {
 	
-	public static final String EXTENSION_NAME = "jdroidGooglePlayPublisher";
+	public static final String EXTENSION_NAME = "googlePlay";
 	
 	@Override
 	public void apply(Project project) {
