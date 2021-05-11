@@ -2,7 +2,7 @@ ext.PROJECT_NAME = "Google Play API Gradle Plugin"
 description = "Gradle Plugin for Google Play API"
 ext.ARTIFACT_ID = "google-play-api-plugin"
 ext.GRADLE_PLUGIN_ID = "com.dipien.googleplay.api"
-ext.GRADLE_PLUGIN_IMPLEMENTATION_CLASS = "com.jdroid.android.googleplay.publisher.GooglePlayPublisherPlugin"
+ext.GRADLE_PLUGIN_IMPLEMENTATION_CLASS = "com.dipien.google.play.api.GooglePlayPublisherPlugin"
 ext.GRADLE_PLUGIN_PORTAL_TAGS = ["gradle", "plugin", "google play"]
 
 apply plugin: 'com.jdroidtools.gradle.plugin'

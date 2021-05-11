@@ -34,7 +34,7 @@ Setup up your Google Developers Service Account
 #### Gradle Plugin
 * [google-play-api-plugin](/google-play-api-plugin)
 
-#### Java Library
+#### Kotlin Client
 * [google-play-api-kotlin](/google-play-api-kotlin)
 
 ## Resources

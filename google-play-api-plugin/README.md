@@ -1,6 +1,6 @@
 [![Dipien](https://raw.githubusercontent.com/dipien/dipien-component-builder/master/.github/dipien_logo.png)](http://www.dipien.com)
 
-# Google Play Publisher Gradle Plugin
+# Google Play API Gradle Plugin
 Gradle Plugin to publish android APKs/bundles and listings on Google Play
 
 ## Setup
