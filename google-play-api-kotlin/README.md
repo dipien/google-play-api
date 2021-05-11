@@ -1,16 +1,18 @@
-# Java Google Play Publisher
-Java Library to publish android APKs/bundles and listings on Google Play
+[![Dipien](https://raw.githubusercontent.com/dipien/dipien-component-builder/master/.github/dipien_logo.png)](http://www.dipien.com)
+
+# Kotlin Client fot Google Play API
+Koltin Library to publish android APKs/bundles and listings on Google Play
 
 ## Setup
 
-Add the following configuration to your `build.gradle`, replacing X.Y.Z by the [latest version](https://github.com/maxirosson/jdroid-googleplay-publisher/releases/latest)
+Add the following configuration to your `build.gradle`, replacing X.Y.Z by the [latest version](https://github.com/dipien/google-play-api/releases/latest)
 
     repositories {
-        jcenter()
+        mavenCentral()
     }
     
     dependencies {
-       implementation 'com.jdroidtools:jdroid-java-googleplay-publisher:X.Y.Z'
+       implementation 'com.dipien:google-play-api-kotlin:X.Y.Z'
     }
     
 Create an **AppContext** instance:
@@ -288,6 +290,17 @@ Get all the assigned APKs for each release track
     GooglePlayPublisher.getTracks(new App(appContext));
 
 ## Donations
-Help us to continue with this project:
 
-[![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=2UEBTRTSCYA9L)
+Donations are greatly appreciated. You can help us to pay for our domain and this project development.
+
+* [Donate cryptocurrency](http://coinbase.dipien.com/)
+* [Donate with PayPal](http://paypal.dipien.com/)
+* [Donate on Patreon](http://patreon.dipien.com/)
+
+## Follow us
+* [Twitter](http://twitter.dipien.com)
+* [Medium](http://medium.dipien.com)
+* [Instagram](http://instagram.dipien.com)
+* [Pinterest](http://pinterest.dipien.com)
+* [GitHub](http://github.dipien.com)
+* [Blog](http://blog.dipien.com)

@@ -1,21 +1,23 @@
+[![Dipien](https://raw.githubusercontent.com/dipien/dipien-component-builder/master/.github/dipien_logo.png)](http://www.dipien.com)
+
 # Google Play Publisher Gradle Plugin
 Gradle Plugin to publish android APKs/bundles and listings on Google Play
 
 ## Setup
 
-Add the following configuration to your `build.gradle`, replacing X.Y.Z by the [latest version](https://github.com/maxirosson/jdroid-googleplay-publisher/releases/latest)
+Add the following configuration to your `build.gradle`, replacing X.Y.Z by the [latest version](https://github.com/dipien/google-play-api/releases/latest)
 
 
     buildscript {
       repositories {
-        jcenter()
+        mavenCentral()
       }
       dependencies {
-        classpath 'com.jdroidtools:jdroid-gradle-googleplay-publisher-plugin:X.Y.Z'
+        classpath 'com.dipien:google-play-api-plugin:X.Y.Z'
       }
     }
     
-    apply plugin: 'com.jdroid.googleplay.publisher'
+    apply plugin: 'com.dipien.googleplay.api'
 
 All the plugin configuration properties can be added using any of the following ways:
 
@@ -411,6 +413,17 @@ List all the assigned APKs for each release track
     ./gradlew googlePlayListTracks
 
 ## Donations
-Help us to continue with this project:
 
-[![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=2UEBTRTSCYA9L)
+Donations are greatly appreciated. You can help us to pay for our domain and this project development.
+
+* [Donate cryptocurrency](http://coinbase.dipien.com/)
+* [Donate with PayPal](http://paypal.dipien.com/)
+* [Donate on Patreon](http://patreon.dipien.com/)
+
+## Follow us
+* [Twitter](http://twitter.dipien.com)
+* [Medium](http://medium.dipien.com)
+* [Instagram](http://instagram.dipien.com)
+* [Pinterest](http://pinterest.dipien.com)
+* [GitHub](http://github.dipien.com)
+* [Blog](http://blog.dipien.com)

@@ -1,11 +1,13 @@
-# Google Play Publisher
-Gradle Plugin & Java Library for Google Play API
+[![Dipien](https://raw.githubusercontent.com/dipien/dipien-component-builder/master/.github/dipien_logo.png)](http://www.dipien.com)
+
+# Google Play API
+Gradle Plugin & Kotlin Library for Google Play API
 
 ## Continuous Integration
 |Branch|Status|Workflows|Insights|
 | ------------- | ------------- | ------------- | ------------- |
-|master|[![CircleCI](https://circleci.com/gh/maxirosson/jdroid-googleplay-publisher/tree/master.svg?style=svg)](https://circleci.com/gh/maxirosson/jdroid-googleplay-publisher/tree/master)|[Workflows](https://circleci.com/gh/maxirosson/workflows/jdroid-googleplay-publisher/tree/master)|[Insights](https://circleci.com/build-insights/gh/maxirosson/jdroid-googleplay-publisher/master)|
-|production|[![CircleCI](https://circleci.com/gh/maxirosson/jdroid-googleplay-publisher/tree/production.svg?style=svg)](https://circleci.com/gh/maxirosson/jdroid-googleplay-publisher/tree/production)|[Workflows](https://circleci.com/gh/maxirosson/workflows/jdroid-googleplay-publisher/tree/production)|[Insights](https://circleci.com/build-insights/gh/maxirosson/jdroid-googleplay-publisher/production)|
+|master|[![CircleCI](https://circleci.com/gh/dipien/google-play-api/tree/master.svg?style=svg)](https://circleci.com/gh/dipien/google-play-api/tree/master)|[Workflows](https://circleci.com/gh/dipien/workflows/google-play-api/tree/master)|[Insights](https://circleci.com/build-insights/gh/dipien/google-play-api/master)|
+|production|[![CircleCI](https://circleci.com/gh/dipien/google-play-api/tree/production.svg?style=svg)](https://circleci.com/gh/dipien/google-play-api/tree/production)|[Workflows](https://circleci.com/gh/dipien/workflows/google-play-api/tree/production)|[Insights](https://circleci.com/build-insights/gh/dipien/google-play-api/production)|
 
 ## Setup
 
@@ -30,10 +32,10 @@ Setup up your Google Developers Service Account
 ## Components
 
 #### Gradle Plugin
-* [jdroid-gradle-googleplay-publisher-plugin](/jdroid-gradle-googleplay-publisher-plugin)
+* [google-play-api-plugin](/google-play-api-plugin)
 
 #### Java Library
-* [jdroid-java-googleplay-publisher](/jdroid-java-googleplay-publisher)
+* [google-play-api-kotlin](/google-play-api-kotlin)
 
 ## Resources
 
@@ -42,6 +44,17 @@ Setup up your Google Developers Service Account
 * https://developer.android.com/distribute/best-practices/launch/feature-graphic.html
 
 ## Donations
-Help us to continue with this project:
 
-[![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=2UEBTRTSCYA9L)
+Donations are greatly appreciated. You can help us to pay for our domain and this project development.
+
+* [Donate cryptocurrency](http://coinbase.dipien.com/)
+* [Donate with PayPal](http://paypal.dipien.com/)
+* [Donate on Patreon](http://patreon.dipien.com/)
+
+## Follow us
+* [Twitter](http://twitter.dipien.com)
+* [Medium](http://medium.dipien.com)
+* [Instagram](http://instagram.dipien.com)
+* [Pinterest](http://pinterest.dipien.com)
+* [GitHub](http://github.dipien.com)
+* [Blog](http://blog.dipien.com)
