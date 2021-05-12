@@ -27,6 +27,10 @@ class PropertyResolver(private val project: Project) {
         }
     }
 
+    fun getRequiredBooleanProp(propertyName: String, defaultValue: Boolean): Boolean {
+        return getBooleanProp(propertyName, defaultValue)!!
+    }
+
     fun getStringProp(propertyName: String, defaultValue: String? = null): String? {
         val value = getProp(propertyName)
         return value?.toString() ?: defaultValue
@@ -39,6 +43,10 @@ class PropertyResolver(private val project: Project) {
         } else {
             Integer.parseInt(value.toString())
         }
+    }
+
+    fun getRequiredIntegerProp(propertyName: String, defaultValue: Int): Int {
+        return getIntegerProp(propertyName, defaultValue)!!
     }
 
     fun getLongProp(propertyName: String, defaultValue: Long? = null): Long? {

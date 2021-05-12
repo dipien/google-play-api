@@ -36,7 +36,7 @@ abstract class BaseTask : AbstractTask() {
         appContext.bundleDir = extension.bundleDir
         appContext.trackType = TrackType.findByKey(extension.track!!)
         appContext.userPercentage = extension.userPercentage
-        appContext.setFailOnApkUpgradeVersionConflict(extension.failOnApkUpgradeVersionConflict)
+        appContext.failOnApkUpgradeVersionConflict = extension.failOnApkUpgradeVersionConflict
         onExecute(App(appContext))
     }
 

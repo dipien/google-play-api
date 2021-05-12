@@ -332,7 +332,7 @@ public class GooglePlayPublisher extends AbstractGooglePlayPublisher {
 			// Commit changes for edit.
 			commitEdit(app, edits, edit);
 		} catch (GoogleJsonResponseException ex) {
-			if (!app.getAppContext().failOnApkUpgradeVersionConflict() && ex.getDetails().getCode() == 403 && ex.getDetails().getMessage().equals("APK specifies a version code that has already been used.")) {
+			if (!app.getAppContext().getFailOnApkUpgradeVersionConflict() && ex.getDetails().getCode() == 403 && ex.getDetails().getMessage().equals("APK specifies a version code that has already been used.")) {
 				log("WARNING | apkUpgradeVersionConflict: APK specifies a version code that has already been used.");
 			} else {
 				throw new RuntimeException(ex.getDetails().getMessage(), ex);
