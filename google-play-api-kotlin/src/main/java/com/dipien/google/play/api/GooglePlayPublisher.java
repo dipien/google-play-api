@@ -35,11 +35,11 @@ import java.util.stream.Stream;
  * Helper class to initialize the publisher APIs client library.
  * <p>
  * Before making any calls to the API through the client library you need to call the
- * {@link GooglePlayPublisher#init(AppContext)} method. This will run all precondition checks for for client id and
+ * {@link GooglePlayHelper#init(AppContext)} method. This will run all precondition checks for for client id and
  * secret setup properly in resources/client_secrets.json and authorize this client against the API.
  * </p>
  */
-public class GooglePlayPublisher extends AbstractGooglePlayPublisher {
+public class GooglePlayPublisher {
 
 	private static final String APK_MIME_TYPE = "application/vnd.android.package-archive";
 	private static final String BUNDLE_MIME_TYPE = "application/octet-stream";
@@ -54,8 +54,8 @@ public class GooglePlayPublisher extends AbstractGooglePlayPublisher {
 	public static List<Apk> getApks(App app) {
 		try {
 			
-			Edits edits = init(app.getAppContext()).edits();
-			AppEdit edit = createEdit(app, edits);
+			Edits edits = GooglePlayHelper.init(app.getAppContext()).edits();
+			AppEdit edit = GooglePlayHelper.createEdit(app, edits);
 			
 			// Get a list of apks.
 			ApksListResponse apksResponse = edits.apks().list(app.getApplicationId(), edit.getId()).execute();
@@ -76,8 +76,8 @@ public class GooglePlayPublisher extends AbstractGooglePlayPublisher {
 	public static List<Bundle> getBundles(App app) {
 		try {
 			
-			Edits edits = init(app.getAppContext()).edits();
-			AppEdit edit = createEdit(app, edits);
+			Edits edits = GooglePlayHelper.init(app.getAppContext()).edits();
+			AppEdit edit = GooglePlayHelper.createEdit(app, edits);
 			
 			// Get a list of bundles.
 			BundlesListResponse bundlesListResponse = edits.bundles().list(app.getApplicationId(), edit.getId()).execute();
@@ -91,10 +91,10 @@ public class GooglePlayPublisher extends AbstractGooglePlayPublisher {
 	}
 	
 	public static void verifyMetadata(App app) {
-		log("Verifying the content to upload to Google Play on " + app.getAppContext().getMetadataPath());
+		LoggerHelper.log("Verifying the content to upload to Google Play on " + app.getAppContext().getMetadataPath());
 		
 		for (LocaleListing each : app.getLocaleListings()) {
-			log("Verifying locale " + each.getLanguageTag());
+			LoggerHelper.log("Verifying locale " + each.getLanguageTag());
 			app.getTitle(each);
 			app.getFullDescription(each);
 			app.getShortDescription(each);
@@ -110,15 +110,15 @@ public class GooglePlayPublisher extends AbstractGooglePlayPublisher {
 			app.getTvScreenshots(each);
 			app.getWearScreenshots(each);
 			app.getReleaseNotes(each, 0);
-			log("Successful verification on locale " + each.getLanguageTag());
+			LoggerHelper.log("Successful verification on locale " + each.getLanguageTag());
 		}
 	}
 	
 	public static void publishMetadata(App app) {
 		try {
 
-			Edits edits = init(app.getAppContext()).edits();
-			AppEdit edit = createEdit(app, edits);
+			Edits edits = GooglePlayHelper.init(app.getAppContext()).edits();
+			AppEdit edit = GooglePlayHelper.createEdit(app, edits);
 			
 			// Update listing for each locale of the application.
 			for (LocaleListing each : app.getLocaleListings()) {
@@ -131,83 +131,83 @@ public class GooglePlayPublisher extends AbstractGooglePlayPublisher {
 				listing.setShortDescription(app.getShortDescription(each));
 				listing.setVideo(app.getVideo(each));
 				Listing updatedListing = edits.listings().update(app.getApplicationId(), edit.getId(), localeString, listing).execute();
-				log(String.format("Created new " + localeString + " app listing with title: %s", updatedListing.getTitle()));
+				LoggerHelper.log(String.format("Created new " + localeString + " app listing with title: %s", updatedListing.getTitle()));
 
 				// Feature Graphic
 				AbstractInputStreamContent featureGraphic = app.getFeatureGraphic(each);
 				ImagesUploadResponse response = edits.images().upload(app.getApplicationId(), edit.getId(),
 						localeString, ImageType.FEATURE_GRAPHIC.getKey(), featureGraphic).execute();
-				log(String.format("Feature graphic %s has been updated.", response.getImage()));
+				LoggerHelper.log(String.format("Feature graphic %s has been updated.", response.getImage()));
 
 				// Promo Graphic
 				AbstractInputStreamContent promoGraphic = app.getPromoGraphic(each);
 				if (promoGraphic != null) {
 					response = edits.images().upload(app.getApplicationId(), edit.getId(),
 							localeString, ImageType.PROMO_GRAPHIC.getKey(), promoGraphic).execute();
-					log(String.format("Promo graphic %s has been updated.", response.getImage()));
+					LoggerHelper.log(String.format("Promo graphic %s has been updated.", response.getImage()));
 				}
 
 				// High Resolution Icon
 				AbstractInputStreamContent highResolutionIcon = app.getHighResolutionIcon(each);
 				response = edits.images().upload(app.getApplicationId(), edit.getId(),
 						localeString, ImageType.ICON.getKey(), highResolutionIcon).execute();
-				log(String.format("High resolution icon %s has been updated.", response.getImage()));
+				LoggerHelper.log(String.format("High resolution icon %s has been updated.", response.getImage()));
 				
 				// High Resolution Icon
 				AbstractInputStreamContent tvBanner = app.getTvBanner(each);
 				if (tvBanner != null) {
 					response = edits.images().upload(app.getApplicationId(), edit.getId(),
 							localeString, ImageType.TV_BANNER.getKey(), tvBanner).execute();
-					log(String.format("Tv banner %s has been updated.", response.getImage()));
+					LoggerHelper.log(String.format("Tv banner %s has been updated.", response.getImage()));
 				}
 
 				// Phone Screenshots
 				edits.images().deleteall(app.getApplicationId(), edit.getId(), localeString, ImageType.PHONE_SCREENSHOTS.getKey()).execute();
-				log("Phone screenshots has been deleted.");
+				LoggerHelper.log("Phone screenshots has been deleted.");
 				for (AbstractInputStreamContent content : app.getPhoneScreenshots(each)) {
 					response = edits.images().upload(app.getApplicationId(), edit.getId(),
 							localeString, ImageType.PHONE_SCREENSHOTS.getKey(), content).execute();
-					log(String.format("Phone screenshot %s has been updated.", response.getImage()));
+					LoggerHelper.log(String.format("Phone screenshot %s has been updated.", response.getImage()));
 				}
 
 				// 7-inch Screenshots
 				edits.images().deleteall(app.getApplicationId(), edit.getId(), localeString, ImageType.SEVEN_INCH_SCREENSHOTS.getKey()).execute();
-				log("Seven inch screenshots has been deleted.");
+				LoggerHelper.log("Seven inch screenshots has been deleted.");
 				for (AbstractInputStreamContent content : app.getSevenInchScreenshots(each)) {
 					response = edits.images().upload(app.getApplicationId(), edit.getId(),
 							localeString, ImageType.SEVEN_INCH_SCREENSHOTS.getKey(), content).execute();
-					log(String.format("Seven inch screenshot %s has been updated.", response.getImage()));
+					LoggerHelper.log(String.format("Seven inch screenshot %s has been updated.", response.getImage()));
 				}
 
 				// 10-inch Screenshots
 				edits.images().deleteall(app.getApplicationId(), edit.getId(), localeString, ImageType.TEN_INCH_SCREENSHOTS.getKey()).execute();
-				log("Ten inch screenshots has been deleted.");
+				LoggerHelper.log("Ten inch screenshots has been deleted.");
 				for (AbstractInputStreamContent content : app.getTenInchScreenshots(each)) {
 					response = edits.images().upload(app.getApplicationId(), edit.getId(),
 							localeString, ImageType.TEN_INCH_SCREENSHOTS.getKey(), content).execute();
-					log(String.format("Ten inch screenshot %s has been updated.", response.getImage()));
+					LoggerHelper.log(String.format("Ten inch screenshot %s has been updated.", response.getImage()));
 				}
 				
 				// Tv Screenshots
 				edits.images().deleteall(app.getApplicationId(), edit.getId(), localeString, ImageType.TV_SCREENSHOTS.getKey()).execute();
-				log("Tv screenshots has been deleted.");
+				LoggerHelper.log("Tv screenshots has been deleted.");
 				for (AbstractInputStreamContent content : app.getTvScreenshots(each)) {
 					response = edits.images().upload(app.getApplicationId(), edit.getId(),
 							localeString, ImageType.TV_SCREENSHOTS.getKey(), content).execute();
-					log(String.format("Tv screenshot %s has been updated.", response.getImage()));
+					LoggerHelper.log(String.format("Tv screenshot %s has been updated.", response.getImage()));
 				}
 				
 				// Wear Screenshots
 				edits.images().deleteall(app.getApplicationId(), edit.getId(), localeString, ImageType.WEAR_SCREENSHOTS.getKey()).execute();
-				log("Wear screenshots has been deleted.");
+				LoggerHelper.log("Wear screenshots has been deleted.");
 				for (AbstractInputStreamContent content : app.getWearScreenshots(each)) {
 					response = edits.images().upload(app.getApplicationId(), edit.getId(),
 							localeString, ImageType.WEAR_SCREENSHOTS.getKey(), content).execute();
-					log(String.format("Wear screenshot %s has been updated.", response.getImage()));
+					LoggerHelper.log(String.format("Wear screenshot %s has been updated.", response.getImage()));
 				}
 			}
 
-			commitEdit(app, edits, edit);
+			GooglePlayHelper.commitEdit(app, edits, edit);
 			
 		} catch (GoogleJsonResponseException ex) {
 			throw new RuntimeException(ex.getDetails().getMessage(), ex);
@@ -248,8 +248,8 @@ public class GooglePlayPublisher extends AbstractGooglePlayPublisher {
 				throw new UnexpectedException("deobfuscationFilePath cannot be null");
 			}
 			
-			Edits edits = init(app.getAppContext()).edits();
-			AppEdit edit = createEdit(app, edits);
+			Edits edits = GooglePlayHelper.init(app.getAppContext()).edits();
+			AppEdit edit = GooglePlayHelper.createEdit(app, edits);
 			
 			// Upload new apk to developer console
 			if (Strings.isNullOrEmpty(app.getAppContext().getApkPath())) {
@@ -279,7 +279,7 @@ public class GooglePlayPublisher extends AbstractGooglePlayPublisher {
 			
 			AbstractInputStreamContent apkFile = new FileContent(APK_MIME_TYPE, new File(app.getAppContext().getApkPath()));
 			Apk apk = edits.apks().upload(app.getApplicationId(), edit.getId(), apkFile).execute();
-			log(String.format("Version code %d has been uploaded", apk.getVersionCode()));
+			LoggerHelper.log(String.format("Version code %d has been uploaded", apk.getVersionCode()));
 			
 			setDefaultUserFraction(app, edits, edit.getId());
 			
@@ -315,7 +315,7 @@ public class GooglePlayPublisher extends AbstractGooglePlayPublisher {
 			track.setReleases(Collections.singletonList(trackRelease));
 			
 			Track updatedTrack = edits.tracks().update(app.getApplicationId(), edit.getId(), track.getTrack(), track).execute();
-			log(String.format("Track %s has been updated.", updatedTrack.getTrack()));
+			LoggerHelper.log(String.format("Track %s has been updated.", updatedTrack.getTrack()));
 
 			// Upload deobfuscation file
 			if (app.getAppContext().isDeobfuscationFileUploadEnabled()) {
@@ -323,17 +323,17 @@ public class GooglePlayPublisher extends AbstractGooglePlayPublisher {
 				if (deobfuscationFilePath.exists()) {
 					AbstractInputStreamContent deobfuscationFile = new FileContent(DEOBFUSCATION_MIME_TYPE, deobfuscationFilePath);
 					edits.deobfuscationfiles().upload(app.getApplicationId(), edit.getId(), apk.getVersionCode(), DEOBFUSCATION_FILE_TYPE, deobfuscationFile);
-					log("Adding deobfuscation file " + app.getAppContext().getDeobfuscationFilePath());
+					LoggerHelper.log("Adding deobfuscation file " + app.getAppContext().getDeobfuscationFilePath());
 				} else {
 					throw new RuntimeException(deobfuscationFilePath + " doesn't exist.");
 				}
 			}
 			
 			// Commit changes for edit.
-			commitEdit(app, edits, edit);
+			GooglePlayHelper.commitEdit(app, edits, edit);
 		} catch (GoogleJsonResponseException ex) {
 			if (!app.getAppContext().getFailOnApkUpgradeVersionConflict() && ex.getDetails().getCode() == 403 && ex.getDetails().getMessage().equals("APK specifies a version code that has already been used.")) {
-				log("WARNING | apkUpgradeVersionConflict: APK specifies a version code that has already been used.");
+				LoggerHelper.log("WARNING | apkUpgradeVersionConflict: APK specifies a version code that has already been used.");
 			} else {
 				throw new RuntimeException(ex.getDetails().getMessage(), ex);
 			}
@@ -357,12 +357,12 @@ public class GooglePlayPublisher extends AbstractGooglePlayPublisher {
 				throw new UnexpectedException("deobfuscationFilePath cannot be null");
 			}
 			
-			Edits edits = init(app.getAppContext()).edits();
-			AppEdit edit = createEdit(app, edits);
+			Edits edits = GooglePlayHelper.init(app.getAppContext()).edits();
+			AppEdit edit = GooglePlayHelper.createEdit(app, edits);
 			
 			AbstractInputStreamContent bundleFile = getBundleFile(app);
 			Bundle bundle = edits.bundles().upload(app.getApplicationId(), edit.getId(), bundleFile).execute();
-			log(String.format("Version code %d has been uploaded", bundle.getVersionCode()));
+			LoggerHelper.log(String.format("Version code %d has been uploaded", bundle.getVersionCode()));
 
 			setDefaultUserFraction(app, edits, edit.getId());
 			
@@ -392,14 +392,14 @@ public class GooglePlayPublisher extends AbstractGooglePlayPublisher {
 					releaseNote.setLanguage(each.getLanguageTag());
 					releaseNote.setText(releaseNoteText);
 					releaseNotes.add(releaseNote);
-					log("Adding release notes for locale " + each.getLanguageTag());
+					LoggerHelper.log("Adding release notes for locale " + each.getLanguageTag());
 				}
 			}
 			trackRelease.setReleaseNotes(releaseNotes);
 			track.setReleases(Collections.singletonList(trackRelease));
 			
 			Track updatedTrack = edits.tracks().update(app.getApplicationId(), edit.getId(), track.getTrack(), track).execute();
-			log(String.format("Track %s has been updated.", updatedTrack.getTrack()));
+			LoggerHelper.log(String.format("Track %s has been updated.", updatedTrack.getTrack()));
 
 			// Upload deobfuscation file
 			if (app.getAppContext().isDeobfuscationFileUploadEnabled()) {
@@ -407,14 +407,14 @@ public class GooglePlayPublisher extends AbstractGooglePlayPublisher {
 				if (deobfuscationFilePath.exists()) {
 					AbstractInputStreamContent deobfuscationFile = new FileContent(DEOBFUSCATION_MIME_TYPE, deobfuscationFilePath);
 					edits.deobfuscationfiles().upload(app.getApplicationId(), edit.getId(), bundle.getVersionCode(), DEOBFUSCATION_FILE_TYPE, deobfuscationFile);
-					log("Adding deobfuscation file " + app.getAppContext().getDeobfuscationFilePath());
+					LoggerHelper.log("Adding deobfuscation file " + app.getAppContext().getDeobfuscationFilePath());
 				} else {
 					throw new RuntimeException(deobfuscationFilePath + " doesn't exist.");
 				}
 			}
 
 			// Commit changes for edit.
-			commitEdit(app, edits, edit);
+			GooglePlayHelper.commitEdit(app, edits, edit);
 			
 		} catch (GoogleJsonResponseException ex) {
 			throw new RuntimeException(ex.getDetails().getMessage(), ex);
@@ -473,8 +473,8 @@ public class GooglePlayPublisher extends AbstractGooglePlayPublisher {
 			} else {
 				app.getAppContext().setTrackType(TrackType.PRODUCTION);
 				
-				Edits edits = init(app.getAppContext()).edits();
-				AppEdit edit = createEdit(app, edits);
+				Edits edits = GooglePlayHelper.init(app.getAppContext()).edits();
+				AppEdit edit = GooglePlayHelper.createEdit(app, edits);
 				
 				Track track = new Track();
 				track.setTrack(TrackType.PRODUCTION.getKey());
@@ -491,10 +491,10 @@ public class GooglePlayPublisher extends AbstractGooglePlayPublisher {
 				track.setReleases(Collections.singletonList(trackRelease));
 				
 				Track updatedTrack = edits.tracks().patch(app.getApplicationId(), edit.getId(), track.getTrack(), track).execute();
-				log(String.format("Track %s has been updated.", updatedTrack.getTrack()));
+				LoggerHelper.log(String.format("Track %s has been updated.", updatedTrack.getTrack()));
 				
 				// Commit changes for edit.
-				commitEdit(app, edits, edit);
+				GooglePlayHelper.commitEdit(app, edits, edit);
 			}
 		} catch (GoogleJsonResponseException ex) {
 			throw new RuntimeException(ex.getDetails().getMessage(), ex);
@@ -508,8 +508,8 @@ public class GooglePlayPublisher extends AbstractGooglePlayPublisher {
 			
 			app.getAppContext().setTrackType(TrackType.PRODUCTION);
 			
-			Edits edits = init(app.getAppContext()).edits();
-			AppEdit edit = createEdit(app, edits);
+			Edits edits = GooglePlayHelper.init(app.getAppContext()).edits();
+			AppEdit edit = GooglePlayHelper.createEdit(app, edits);
 			
 			Track track = new Track();
 			track.setTrack(TrackType.PRODUCTION.getKey());
@@ -526,10 +526,10 @@ public class GooglePlayPublisher extends AbstractGooglePlayPublisher {
 			track.setReleases(Collections.singletonList(trackRelease));
 			
 			Track updatedTrack = edits.tracks().patch(app.getApplicationId(), edit.getId(), track.getTrack(), track).execute();
-			log(String.format("Track %s has been updated.", updatedTrack.getTrack()));
+			LoggerHelper.log(String.format("Track %s has been updated.", updatedTrack.getTrack()));
 			
 			// Commit changes for edit.
-			commitEdit(app, edits, edit);
+			GooglePlayHelper.commitEdit(app, edits, edit);
 			
 		} catch (GoogleJsonResponseException ex) {
 			throw new RuntimeException(ex.getDetails().getMessage(), ex);
@@ -543,8 +543,8 @@ public class GooglePlayPublisher extends AbstractGooglePlayPublisher {
 			
 			app.getAppContext().setTrackType(TrackType.PRODUCTION);
 			
-			Edits edits = init(app.getAppContext()).edits();
-			AppEdit edit = createEdit(app, edits);
+			Edits edits = GooglePlayHelper.init(app.getAppContext()).edits();
+			AppEdit edit = GooglePlayHelper.createEdit(app, edits);
 			
 			Track track = new Track();
 			track.setTrack(TrackType.PRODUCTION.getKey());
@@ -561,10 +561,10 @@ public class GooglePlayPublisher extends AbstractGooglePlayPublisher {
 			track.setReleases(Collections.singletonList(trackRelease));
 			
 			Track updatedTrack = edits.tracks().patch(app.getApplicationId(), edit.getId(), track.getTrack(), track).execute();
-			log(String.format("Track %s has been updated.", updatedTrack.getTrack()));
+			LoggerHelper.log(String.format("Track %s has been updated.", updatedTrack.getTrack()));
 			
 			// Commit changes for edit.
-			commitEdit(app, edits, edit);
+			GooglePlayHelper.commitEdit(app, edits, edit);
 			
 		} catch (GoogleJsonResponseException ex) {
 			throw new RuntimeException(ex.getDetails().getMessage(), ex);
@@ -602,8 +602,8 @@ public class GooglePlayPublisher extends AbstractGooglePlayPublisher {
 			
 			app.getAppContext().setTrackType(toTrackType);
 			
-			Edits edits = init(app.getAppContext()).edits();
-			AppEdit edit = createEdit(app, edits);
+			Edits edits = GooglePlayHelper.init(app.getAppContext()).edits();
+			AppEdit edit = GooglePlayHelper.createEdit(app, edits);
 			
 			setDefaultUserFraction(app, edits, edit.getId());
 			
@@ -635,10 +635,10 @@ public class GooglePlayPublisher extends AbstractGooglePlayPublisher {
 			toTrack.setReleases(toTrackReleases);
 			
 			Track updatedTrack = edits.tracks().update(app.getApplicationId(), edit.getId(), toTrack.getTrack(), toTrack).execute();
-			log(String.format("Track %s has been updated.", updatedTrack.getTrack()));
+			LoggerHelper.log(String.format("Track %s has been updated.", updatedTrack.getTrack()));
 			
 			// Commit changes for edit.
-			commitEdit(app, edits, edit);
+			GooglePlayHelper.commitEdit(app, edits, edit);
 			
 		} catch (GoogleJsonResponseException ex) {
 			throw new RuntimeException(ex.getDetails().getMessage(), ex);
@@ -649,8 +649,8 @@ public class GooglePlayPublisher extends AbstractGooglePlayPublisher {
 	
 	public static void completeStagedRollout(App app) {
 		try {
-			Edits edits = init(app.getAppContext()).edits();
-			AppEdit edit = createEdit(app, edits);
+			Edits edits = GooglePlayHelper.init(app.getAppContext()).edits();
+			AppEdit edit = GooglePlayHelper.createEdit(app, edits);
 			
 			TrackRelease currentRolloutRelease = getInProgressRollout(app, edits, edit.getId());
 			if (currentRolloutRelease == null) {
@@ -664,10 +664,10 @@ public class GooglePlayPublisher extends AbstractGooglePlayPublisher {
 			productionTrack.setReleases(Collections.singletonList(currentRolloutRelease));
 			
 			Track updatedTrack = edits.tracks().update(app.getApplicationId(), edit.getId(), productionTrack.getTrack(), productionTrack).execute();
-			log(String.format("Track %s has been updated.", updatedTrack.getTrack()));
+			LoggerHelper.log(String.format("Track %s has been updated.", updatedTrack.getTrack()));
 			
 			// Commit changes for edit.
-			commitEdit(app, edits, edit);
+			GooglePlayHelper.commitEdit(app, edits, edit);
 			
 		} catch (GoogleJsonResponseException ex) {
 			throw new RuntimeException(ex.getDetails().getMessage(), ex);
@@ -678,8 +678,8 @@ public class GooglePlayPublisher extends AbstractGooglePlayPublisher {
 	
 	public static List<Track> getTracks(App app) {
 		try {
-			Edits edits = init(app.getAppContext()).edits();
-			AppEdit edit = createEdit(app, edits);
+			Edits edits = GooglePlayHelper.init(app.getAppContext()).edits();
+			AppEdit edit = GooglePlayHelper.createEdit(app, edits);
 			return edits.tracks().list(app.getApplicationId(), edit.getId()).execute().getTracks();
 		} catch (GoogleJsonResponseException ex) {
 			throw new RuntimeException(ex.getDetails().getMessage(), ex);
@@ -689,8 +689,8 @@ public class GooglePlayPublisher extends AbstractGooglePlayPublisher {
 	}
 	
 	public static Track getTrack(App app) {
-		Edits edits = init(app.getAppContext()).edits();
-		AppEdit edit = createEdit(app, edits);
+		Edits edits = GooglePlayHelper.init(app.getAppContext()).edits();
+		AppEdit edit = GooglePlayHelper.createEdit(app, edits);
 		return getTrack(app, app.getAppContext().getTrackType(), edits, edit.getId());
 	}
 	
@@ -759,17 +759,17 @@ public class GooglePlayPublisher extends AbstractGooglePlayPublisher {
 
 			AbstractInputStreamContent bundleFile = getBundleFile(app);
 
-			Internalappsharingartifacts internalAppSharingArtifacts = init(app.getAppContext()).internalappsharingartifacts();
+			Internalappsharingartifacts internalAppSharingArtifacts = GooglePlayHelper.init(app.getAppContext()).internalappsharingartifacts();
 			Internalappsharingartifacts.Uploadbundle uploadBundle = internalAppSharingArtifacts.uploadbundle(app.getApplicationId(), bundleFile);
 
 			if (app.getAppContext().isDryRun()) {
-				log("Dry run mode enabled. Bundle not uploaded to internal app sharing");
+				LoggerHelper.log("Dry run mode enabled. Bundle not uploaded to internal app sharing");
 				return null;
 			} else {
 				InternalAppSharingArtifact internalAppSharingArtifact = uploadBundle.execute();
-				log("Bundle uploaded to internal app sharing:");
-				log("- Certificate Fingerprint: " + internalAppSharingArtifact.getCertificateFingerprint());
-				log("- Download Url: " + internalAppSharingArtifact.getDownloadUrl());
+				LoggerHelper.log("Bundle uploaded to internal app sharing:");
+				LoggerHelper.log("- Certificate Fingerprint: " + internalAppSharingArtifact.getCertificateFingerprint());
+				LoggerHelper.log("- Download Url: " + internalAppSharingArtifact.getDownloadUrl());
 				return internalAppSharingArtifact;
 			}
 

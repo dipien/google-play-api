@@ -1,117 +1,100 @@
-package com.dipien.google.play.api;
+package com.dipien.google.play.api
 
-import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
-import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
-import com.google.api.client.googleapis.json.GoogleJsonResponseException;
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.HttpRequestInitializer;
-import com.google.api.client.http.HttpTransport;
-import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.api.services.androidpublisher.AndroidPublisher;
-import com.google.api.services.androidpublisher.AndroidPublisherScopes;
-import com.google.api.services.androidpublisher.model.AppEdit;
-import com.jdroid.java.utils.StringUtils;
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential
+import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport
+import com.google.api.client.googleapis.json.GoogleJsonResponseException
+import com.google.api.client.http.HttpRequestInitializer
+import com.google.api.client.http.HttpTransport
+import com.google.api.client.json.jackson2.JacksonFactory
+import com.google.api.services.androidpublisher.AndroidPublisher
+import com.google.api.services.androidpublisher.AndroidPublisher.Edits
+import com.google.api.services.androidpublisher.AndroidPublisherScopes
+import com.google.api.services.androidpublisher.model.AppEdit
+import java.io.FileInputStream
+import java.io.IOException
+import java.io.InputStream
+import java.security.GeneralSecurityException
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.security.GeneralSecurityException;
-import java.util.Collections;
+internal object GooglePlayHelper {
 
+    /** Global instance of the HTTP transport.  */
+    private val HTTP_TRANSPORT: HttpTransport by lazy { GoogleNetHttpTransport.newTrustedTransport() }
 
-public class AbstractGooglePlayPublisher {
+    /**
+     * Performs all necessary setup steps for running requests against the API.
+     *
+     * @param appContext the [AppContext]
+     * @return the [AndroidPublisher] service
+     */
+    @JvmStatic
+    fun init(appContext: AppContext): AndroidPublisher {
+        if (appContext.applicationId.isNullOrEmpty()) {
+            throw RuntimeException("The application id is required")
+        }
+        return try {
+            // Authorization.
+            var credential = authorizeWithServiceAccount(appContext)
+            credential = setHttpTimeout(appContext, credential)
 
-	/** Global instance of the HTTP transport. */
-	private static HttpTransport HTTP_TRANSPORT;
+            // Set up and return API client.
+            val builder = AndroidPublisher.Builder(HTTP_TRANSPORT, JacksonFactory.getDefaultInstance(), credential)
+            builder.applicationName = appContext.applicationId
+            builder.build()
+        } catch (e: GeneralSecurityException) {
+            throw RuntimeException(e)
+        } catch (e: IOException) {
+            throw RuntimeException(e)
+        }
+    }
 
-	/**
-	 * Performs all necessary setup steps for running requests against the API.
-	 *
-	 * @param appContext the {@link AppContext}
-	 * @return the {@link AndroidPublisher} service
-	 */
-	protected static AndroidPublisher init(AppContext appContext) {
+    private fun setHttpTimeout(appContext: AppContext, requestInitializer: HttpRequestInitializer): HttpRequestInitializer {
+        return HttpRequestInitializer { httpRequest ->
+            requestInitializer.initialize(httpRequest)
+            httpRequest.connectTimeout = appContext.connectTimeout
+            httpRequest.readTimeout = appContext.readTimeout
+        }
+    }
 
-		if (StringUtils.isEmpty(appContext.getApplicationId())) {
-			throw new RuntimeException("The application id is required");
-		}
+    private fun authorizeWithServiceAccount(appContext: AppContext): HttpRequestInitializer {
+        if (appContext.privateKeyJsonFilePath.isNullOrEmpty()) {
+            throw RuntimeException("The private key json file path is required")
+        }
+        return try {
+            val serviceAccountStream: InputStream = FileInputStream(appContext.privateKeyJsonFilePath!!)
+            val credential = GoogleCredential.fromStream(serviceAccountStream, HTTP_TRANSPORT, JacksonFactory.getDefaultInstance())
+            credential.createScoped(setOf(AndroidPublisherScopes.ANDROIDPUBLISHER))
+        } catch (e: IOException) {
+            throw RuntimeException(e)
+        }
+    }
 
-		try {
+    @JvmStatic
+    fun createEdit(app: App, edits: Edits): AppEdit {
+        return try {
+            // Create a new edit to make changes.
+            val edit = edits.insert(app.applicationId, null).execute()
+            LoggerHelper.log(String.format("Created edit with id: %s", edit.id))
+            edit
+        } catch (ex: GoogleJsonResponseException) {
+            throw RuntimeException(if (ex.details != null) ex.details.message else ex.message, ex)
+        } catch (ex: IOException) {
+            throw RuntimeException(ex)
+        }
+    }
 
-			if (HTTP_TRANSPORT == null) {
-				HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-			}
-
-			// Authorization.
-			HttpRequestInitializer credential = authorizeWithServiceAccount(appContext);
-			credential = setHttpTimeout(appContext, credential);
-
-			// Set up and return API client.
-			AndroidPublisher.Builder builder = new AndroidPublisher.Builder(HTTP_TRANSPORT, JacksonFactory.getDefaultInstance(), credential);
-			builder.setApplicationName(appContext.getApplicationId());
-			return builder.build();
-		} catch (GeneralSecurityException | IOException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	private static HttpRequestInitializer setHttpTimeout(AppContext appContext, HttpRequestInitializer requestInitializer) {
-		return new HttpRequestInitializer() {
-			@Override
-			public void initialize(HttpRequest httpRequest) throws IOException {
-				requestInitializer.initialize(httpRequest);
-				httpRequest.setConnectTimeout(appContext.getConnectTimeout());
-				httpRequest.setReadTimeout(appContext.getReadTimeout());
-			}
-		};
-	}
-
-	private static HttpRequestInitializer authorizeWithServiceAccount(AppContext appContext) {
-
-		if (StringUtils.isEmpty(appContext.getPrivateKeyJsonFilePath())) {
-			throw new RuntimeException("The private key json file path is required");
-		}
-
-		try {
-			InputStream serviceAccountStream = new FileInputStream(appContext.getPrivateKeyJsonFilePath());
-			GoogleCredential credential = GoogleCredential.fromStream(serviceAccountStream, HTTP_TRANSPORT, JacksonFactory.getDefaultInstance());
-			return credential.createScoped(Collections.singleton(AndroidPublisherScopes.ANDROIDPUBLISHER));
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-
-	protected static AppEdit createEdit(App app, AndroidPublisher.Edits edits) {
-		try {
-			// Create a new edit to make changes.
-			AppEdit edit = edits.insert(app.getApplicationId(), null).execute();
-			log(String.format("Created edit with id: %s", edit.getId()));
-			return edit;
-		} catch (GoogleJsonResponseException ex) {
-			throw new RuntimeException(ex.getDetails() != null ? ex.getDetails().getMessage() : ex.getMessage(), ex);
-		} catch (IOException ex) {
-			throw new RuntimeException(ex);
-		}
-	}
-
-	protected static void commitEdit(App app, AndroidPublisher.Edits edits, AppEdit edit) {
-		if (app.getAppContext().isDryRun()) {
-			log(String.format("Dry run mode enabled. App edit with id %s NOT comitted", edit.getId()));
-		} else {
-			try {
-				AppEdit appEdit = edits.commit(app.getApplicationId(), edit.getId()).execute();
-				log(String.format("App edit with id %s has been comitted", appEdit.getId()));
-			} catch (GoogleJsonResponseException ex) {
-				throw new RuntimeException(ex.getDetails().getMessage(), ex);
-			} catch (IOException ex) {
-				throw new RuntimeException(ex);
-			}
-		}
-	}
-
-	protected static void log(String message) {
-		// TODO Use a logger
-		System.out.println(message);
-	}
+    @JvmStatic
+    fun commitEdit(app: App, edits: Edits, edit: AppEdit) {
+        if (app.appContext.isDryRun) {
+            LoggerHelper.log(String.format("Dry run mode enabled. App edit with id %s NOT comitted", edit.id))
+        } else {
+            try {
+                val appEdit = edits.commit(app.applicationId, edit.id).execute()
+                LoggerHelper.log(String.format("App edit with id %s has been comitted", appEdit.id))
+            } catch (ex: GoogleJsonResponseException) {
+                throw RuntimeException(ex.details.message, ex)
+            } catch (ex: IOException) {
+                throw RuntimeException(ex)
+            }
+        }
+    }
 }
