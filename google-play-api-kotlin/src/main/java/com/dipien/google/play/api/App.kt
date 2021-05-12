@@ -7,51 +7,53 @@ import java.util.Locale
 class App(val appContext: AppContext) {
 
     val localeListings: MutableList<LocaleListing>
-    private val defaultLocaleListing: LocaleListing
+    private lateinit var defaultLocaleListing: LocaleListing
 
     init {
         localeListings = Lists.newArrayList()
-        for (each in appContext.locales) {
-            val split = each.split("-")
-            val language = split[0]
-            var country = ""
-            if (split.size > 1) {
-                country = split[1]
+        if (appContext.metadataPath != null) {
+            for (each in appContext.locales) {
+                val split = each.split("-")
+                val language = split[0]
+                var country = ""
+                if (split.size > 1) {
+                    country = split[1]
+                }
+                localeListings.add(LocaleListing(Locale(language, country), appContext.metadataPath!!))
             }
-            localeListings.add(LocaleListing(Locale(language, country), appContext.metadataPath))
+            defaultLocaleListing = LocaleListing(null, appContext.metadataPath!!)
         }
-        defaultLocaleListing = LocaleListing(null, appContext.metadataPath)
     }
 
-    fun getTitle(localeListing: LocaleListing): String {
+    fun getTitle(localeListing: LocaleListing): String? {
         return localeListing.getTitle(defaultLocaleListing)
     }
 
-    fun getFullDescription(localeListing: LocaleListing): String {
+    fun getFullDescription(localeListing: LocaleListing): String? {
         return localeListing.getFullDescription(defaultLocaleListing)
     }
 
-    fun getShortDescription(localeListing: LocaleListing): String {
+    fun getShortDescription(localeListing: LocaleListing): String? {
         return localeListing.getShortDescription(defaultLocaleListing)
     }
 
-    fun getVideo(localeListing: LocaleListing): String {
+    fun getVideo(localeListing: LocaleListing): String? {
         return localeListing.getVideo(defaultLocaleListing, appContext.isVideoRequired)
     }
 
-    fun getFeatureGraphic(localeListing: LocaleListing): AbstractInputStreamContent {
+    fun getFeatureGraphic(localeListing: LocaleListing): AbstractInputStreamContent? {
         return localeListing.getFeatureGraphic(defaultLocaleListing)
     }
 
-    fun getPromoGraphic(localeListing: LocaleListing): AbstractInputStreamContent {
+    fun getPromoGraphic(localeListing: LocaleListing): AbstractInputStreamContent? {
         return localeListing.getPromoGraphic(defaultLocaleListing, appContext.isPromoGraphicRequired)
     }
 
-    fun getHighResolutionIcon(localeListing: LocaleListing): AbstractInputStreamContent {
+    fun getHighResolutionIcon(localeListing: LocaleListing): AbstractInputStreamContent? {
         return localeListing.getHighResolutionIcon(defaultLocaleListing)
     }
 
-    fun getTvBanner(localeListing: LocaleListing): AbstractInputStreamContent {
+    fun getTvBanner(localeListing: LocaleListing): AbstractInputStreamContent? {
         return localeListing.getTvBanner(defaultLocaleListing, appContext.isTvBannerRequired)
     }
 
@@ -75,7 +77,7 @@ class App(val appContext: AppContext) {
         return localeListing.getTvScreenshots(defaultLocaleListing, appContext.isTvScreenshotsRequired)
     }
 
-    fun getReleaseNotes(localeListing: LocaleListing, versionCode: Int?): String {
+    fun getReleaseNotes(localeListing: LocaleListing, versionCode: Int): String? {
         return localeListing.getReleaseNotes(versionCode, defaultLocaleListing, appContext.isReleaseNotesRequired)
     }
 

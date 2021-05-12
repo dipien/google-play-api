@@ -1,154 +1,144 @@
-package com.dipien.google.play.api;
+package com.dipien.google.play.api
 
-import com.google.api.client.http.AbstractInputStreamContent;
-import com.google.api.client.http.FileContent;
-import com.google.api.client.util.Lists;
-import com.jdroid.java.exception.UnexpectedException;
-import com.jdroid.java.utils.FileUtils;
+import com.google.api.client.http.AbstractInputStreamContent
+import com.google.api.client.http.FileContent
+import com.google.api.client.util.Lists
+import com.jdroid.java.exception.UnexpectedException
+import com.jdroid.java.utils.FileUtils
+import java.io.File
+import java.util.Locale
 
-import java.io.File;
-import java.util.List;
-import java.util.Locale;
+class LocaleListing(private val locale: Locale?, listingPath: String) {
 
+    private val basePath: String = listingPath + File.separator + "googleplay" + File.separator + (if (locale != null) locale.toLanguageTag() else "default") + File.separator
 
-public class LocaleListing {
-	
-	private Locale locale;
-	private String basePath;
-	
-	public LocaleListing(Locale locale, String listingPath) {
-		this.locale = locale;
-		this.basePath =  listingPath + java.io.File.separator + "googleplay" + java.io.File.separator + (locale != null ? locale.toLanguageTag() : "default") + java.io.File.separator;
-	}
-	
-	public String getLanguageTag() {
-		return locale.toLanguageTag();
-	}
-	
-	public String getTitle(LocaleListing defaultLocaleListing) {
-		return getDetailsContent("title", true, defaultLocaleListing);
-	}
-	
-	public String getShortDescription(LocaleListing defaultLocaleListing) {
-		return getDetailsContent("short_description", true, defaultLocaleListing);
-	}
-	
-	public String getFullDescription(LocaleListing defaultLocaleListing) {
-		return getDetailsContent("full_description", true, defaultLocaleListing);
-	}
-	
-	public String getVideo(LocaleListing defaultLocaleListing, Boolean required) {
-		return getDetailsContent("video", required, defaultLocaleListing);
-	}
-	
-	public String getReleaseNotes(Integer versionCode, LocaleListing defaultLocaleListing, Boolean required) {
-		String releaseNotes = getReleaseNotes(versionCode);
-		if (releaseNotes == null) {
-			releaseNotes = defaultLocaleListing.getReleaseNotes(versionCode);
-		}
-		if (releaseNotes == null && required) {
-			throw new UnexpectedException("Release notes for version code " + versionCode + " were not found for locale " + getLanguageTag());
-		}
-		return releaseNotes;
-	}
-	
-	private String getReleaseNotes(Integer versionCode) {
-		File file = new File(basePath + "release_notes" + java.io.File.separator + versionCode + ".txt");
-		return file.exists() ? FileUtils.toString(file) : getDefaultReleaseNotes();
-	}
-	
-	private String getDefaultReleaseNotes() {
-		File file = new File(basePath + "release_notes" + java.io.File.separator + "default_release_notes.txt");
-		return file.exists() ? FileUtils.toString(file) : null;
-	}
-	
-	public AbstractInputStreamContent getFeatureGraphic(LocaleListing defaultLocaleListing) {
-		return getImageContent("feature_graphic", true, defaultLocaleListing);
-	}
-	
-	public AbstractInputStreamContent getPromoGraphic(LocaleListing defaultLocaleListing, Boolean required) {
-		return getImageContent("promo_graphic", required, defaultLocaleListing);
-	}
-	
-	public AbstractInputStreamContent getHighResolutionIcon(LocaleListing defaultLocaleListing) {
-		return getImageContent("high_resolution_icon", true, defaultLocaleListing);
-	}
-	
-	public List<AbstractInputStreamContent> getPhoneScreenshots(LocaleListing defaultLocaleListing, Boolean required) {
-		return getScreenshots("phone_screenshots", required, defaultLocaleListing);
-	}
-	
-	public List<AbstractInputStreamContent> getSevenInchScreenshots(LocaleListing defaultLocaleListing, Boolean required) {
-		return getScreenshots("seven_inch_screenshots", required, defaultLocaleListing);
-	}
-	
-	public AbstractInputStreamContent getTvBanner(LocaleListing defaultLocaleListing, Boolean required) {
-		return getImageContent("tv_banner", required, defaultLocaleListing);
-	}
-	
-	public List<AbstractInputStreamContent> getTenInchScreenshots(LocaleListing defaultLocaleListing, Boolean required) {
-		return getScreenshots("ten_inch_screenshots", required, defaultLocaleListing);
-	}
-	
-	public List<AbstractInputStreamContent> getTvScreenshots(LocaleListing defaultLocaleListing, Boolean required) {
-		return getScreenshots("tv_screenshots", required, defaultLocaleListing);
-	}
-	
-	public List<AbstractInputStreamContent> getWearScreenshots(LocaleListing defaultLocaleListing, Boolean required) {
-		return getScreenshots("wear_screenshots", required, defaultLocaleListing);
-	}
-	
-	private List<AbstractInputStreamContent> getScreenshots(String screenSize, Boolean required, LocaleListing defaultLocaleListing) {
-		List<AbstractInputStreamContent> abstractInputStreamContents = getScreenshots(screenSize);
-		if (abstractInputStreamContents.isEmpty()) {
-			abstractInputStreamContents = defaultLocaleListing.getScreenshots(screenSize);
-		}
-		if (abstractInputStreamContents.isEmpty() && required) {
-			throw new UnexpectedException("images" + java.io.File.separator + screenSize + " was not found for locale " + getLanguageTag());
-		}
-		return abstractInputStreamContents;
-	}
-	
-	private List<AbstractInputStreamContent> getScreenshots(String screenSize) {
-		List<AbstractInputStreamContent> abstractInputStreamContents = Lists.newArrayList();
-		for (int i = 1; i < 9; i++) {
-			File file = new File(basePath + "images" + java.io.File.separator + screenSize + java.io.File.separator + "screenshot" + i + ".png");
-			if (file.exists()) {
-				abstractInputStreamContents.add(new FileContent("image/png", file));
-			}
-		}
-		return abstractInputStreamContents;
-	}
-	
-	private String getDetailsContent(String item, Boolean required, LocaleListing defaultLocaleListing) {
-		String detailsContent = getDetailsContent(item);
-		if (detailsContent == null) {
-			detailsContent = defaultLocaleListing.getDetailsContent(item);
-		}
-		if (detailsContent == null && required) {
-			throw new UnexpectedException(item + ".txt was not found for locale " + getLanguageTag());
-		}
-		return detailsContent;
-	}
-	
-	private String getDetailsContent(String item) {
-		File file = new File(basePath + item + ".txt");
-		return file.exists() ? FileUtils.toString(file) : null;
-	}
-	
-	private AbstractInputStreamContent getImageContent(String item, Boolean required, LocaleListing defaultLocaleListing) {
-		AbstractInputStreamContent imageContent = getImagesContent(item);
-		if (imageContent == null) {
-			imageContent = defaultLocaleListing.getImagesContent(item);
-		}
-		if (imageContent == null && required) {
-			throw new UnexpectedException("images/" + item + ".png was not found for locale " + getLanguageTag());
-		}
-		return imageContent;
-	}
-	
-	private AbstractInputStreamContent getImagesContent(String item) {
-		File file = new File(basePath + "images" + java.io.File.separator + item + ".png");
-		return file.exists() ? new FileContent("image/png", file) : null;
-	}
+    val languageTag: String
+        get() = locale!!.toLanguageTag()
+
+    fun getTitle(defaultLocaleListing: LocaleListing): String? {
+        return getDetailsContent("title", true, defaultLocaleListing)
+    }
+
+    fun getShortDescription(defaultLocaleListing: LocaleListing): String? {
+        return getDetailsContent("short_description", true, defaultLocaleListing)
+    }
+
+    fun getFullDescription(defaultLocaleListing: LocaleListing): String? {
+        return getDetailsContent("full_description", true, defaultLocaleListing)
+    }
+
+    fun getVideo(defaultLocaleListing: LocaleListing, required: Boolean): String? {
+        return getDetailsContent("video", required, defaultLocaleListing)
+    }
+
+    fun getReleaseNotes(versionCode: Int, defaultLocaleListing: LocaleListing, required: Boolean): String? {
+        var releaseNotes = getReleaseNotes(versionCode)
+        if (releaseNotes == null) {
+            releaseNotes = defaultLocaleListing.getReleaseNotes(versionCode)
+        }
+        if (releaseNotes == null && required) {
+            throw UnexpectedException("Release notes for version code $versionCode were not found for locale $languageTag")
+        }
+        return releaseNotes
+    }
+
+    private fun getReleaseNotes(versionCode: Int): String? {
+        val file = File(basePath + "release_notes" + File.separator + versionCode + ".txt")
+        return if (file.exists()) FileUtils.toString(file) else getDefaultReleaseNotes()
+    }
+
+    private fun getDefaultReleaseNotes(): String? {
+        val file = File(basePath + "release_notes" + File.separator + "default_release_notes.txt")
+        return if (file.exists()) FileUtils.toString(file) else null
+    }
+
+    fun getFeatureGraphic(defaultLocaleListing: LocaleListing): AbstractInputStreamContent? {
+        return getImageContent("feature_graphic", true, defaultLocaleListing)
+    }
+
+    fun getPromoGraphic(defaultLocaleListing: LocaleListing, required: Boolean): AbstractInputStreamContent? {
+        return getImageContent("promo_graphic", required, defaultLocaleListing)
+    }
+
+    fun getHighResolutionIcon(defaultLocaleListing: LocaleListing): AbstractInputStreamContent? {
+        return getImageContent("high_resolution_icon", true, defaultLocaleListing)
+    }
+
+    fun getPhoneScreenshots(defaultLocaleListing: LocaleListing, required: Boolean): List<AbstractInputStreamContent> {
+        return getScreenshots("phone_screenshots", required, defaultLocaleListing)
+    }
+
+    fun getSevenInchScreenshots(defaultLocaleListing: LocaleListing, required: Boolean): List<AbstractInputStreamContent> {
+        return getScreenshots("seven_inch_screenshots", required, defaultLocaleListing)
+    }
+
+    fun getTvBanner(defaultLocaleListing: LocaleListing, required: Boolean): AbstractInputStreamContent? {
+        return getImageContent("tv_banner", required, defaultLocaleListing)
+    }
+
+    fun getTenInchScreenshots(defaultLocaleListing: LocaleListing, required: Boolean): List<AbstractInputStreamContent> {
+        return getScreenshots("ten_inch_screenshots", required, defaultLocaleListing)
+    }
+
+    fun getTvScreenshots(defaultLocaleListing: LocaleListing, required: Boolean): List<AbstractInputStreamContent> {
+        return getScreenshots("tv_screenshots", required, defaultLocaleListing)
+    }
+
+    fun getWearScreenshots(defaultLocaleListing: LocaleListing, required: Boolean): List<AbstractInputStreamContent> {
+        return getScreenshots("wear_screenshots", required, defaultLocaleListing)
+    }
+
+    private fun getScreenshots(screenSize: String, required: Boolean, defaultLocaleListing: LocaleListing): List<AbstractInputStreamContent> {
+        var abstractInputStreamContents = getScreenshots(screenSize)
+        if (abstractInputStreamContents.isEmpty()) {
+            abstractInputStreamContents = defaultLocaleListing.getScreenshots(screenSize)
+        }
+        if (abstractInputStreamContents.isEmpty() && required) {
+            throw UnexpectedException("images" + File.separator + screenSize + " was not found for locale " + languageTag)
+        }
+        return abstractInputStreamContents
+    }
+
+    private fun getScreenshots(screenSize: String): List<AbstractInputStreamContent> {
+        val abstractInputStreamContents: MutableList<AbstractInputStreamContent> = Lists.newArrayList()
+        for (i in 1..8) {
+            val file = File(basePath + "images" + File.separator + screenSize + File.separator + "screenshot" + i + ".png")
+            if (file.exists()) {
+                abstractInputStreamContents.add(FileContent("image/png", file))
+            }
+        }
+        return abstractInputStreamContents
+    }
+
+    private fun getDetailsContent(item: String, required: Boolean, defaultLocaleListing: LocaleListing): String? {
+        var detailsContent = getDetailsContent(item)
+        if (detailsContent == null) {
+            detailsContent = defaultLocaleListing.getDetailsContent(item)
+        }
+        if (detailsContent == null && required) {
+            throw UnexpectedException("$item.txt was not found for locale $languageTag")
+        }
+        return detailsContent
+    }
+
+    private fun getDetailsContent(item: String): String? {
+        val file = File("$basePath$item.txt")
+        return if (file.exists()) FileUtils.toString(file) else null
+    }
+
+    private fun getImageContent(item: String, required: Boolean, defaultLocaleListing: LocaleListing): AbstractInputStreamContent? {
+        var imageContent = getImagesContent(item)
+        if (imageContent == null) {
+            imageContent = defaultLocaleListing.getImagesContent(item)
+        }
+        if (imageContent == null && required) {
+            throw UnexpectedException("images/$item.png was not found for locale $languageTag")
+        }
+        return imageContent
+    }
+
+    private fun getImagesContent(item: String): AbstractInputStreamContent? {
+        val file = File(basePath + "images" + File.separator + item + ".png")
+        return if (file.exists()) FileContent("image/png", file) else null
+    }
 }
