@@ -31,7 +31,7 @@ class AppContext {
     var isWearScreenshotsRequired: Boolean = false
     var isTvScreenshotsRequired: Boolean = false
     var isTvBannerRequired: Boolean = false
-    
+
     var failOnApkUpgradeVersionConflict: Boolean = true
     var readTimeout: Int = 120000
     var connectTimeout: Int = 120000
