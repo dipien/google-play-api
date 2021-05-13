@@ -33,9 +33,9 @@ Setup up your Google Developers Service Account
 
 ## Resources
 
-* https://support.google.com/googleplay/android-developer/answer/1078870
-* https://developer.android.com/distribute/best-practices/launch/store-listing.html
-* https://developer.android.com/distribute/best-practices/launch/feature-graphic.html
+* [https://support.google.com/googleplay/android-developer/answer/1078870](https://support.google.com/googleplay/android-developer/answer/1078870)
+* [https://developer.android.com/distribute/best-practices/launch/store-listing.html](https://developer.android.com/distribute/best-practices/launch/store-listing.html)
+* [https://developer.android.com/distribute/best-practices/launch/feature-graphic.html](https://developer.android.com/distribute/best-practices/launch/feature-graphic.html)
 
 ## Donations
 
