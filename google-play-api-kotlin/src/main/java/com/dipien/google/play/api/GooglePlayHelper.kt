@@ -23,22 +23,22 @@ internal object GooglePlayHelper {
     /**
      * Performs all necessary setup steps for running requests against the API.
      *
-     * @param appContext the [AppContext]
+     * @param app the [App]
      * @return the [AndroidPublisher] service
      */
     @JvmStatic
-    fun init(appContext: AppContext): AndroidPublisher {
-        if (appContext.applicationId.isNullOrEmpty()) {
+    fun init(app: App): AndroidPublisher {
+        if (app.applicationId.isNullOrEmpty()) {
             throw RuntimeException("The application id is required")
         }
         return try {
             // Authorization.
-            var credential = authorizeWithServiceAccount(appContext)
-            credential = setHttpTimeout(appContext, credential)
+            var credential = authorizeWithServiceAccount(app)
+            credential = setHttpTimeout(app, credential)
 
             // Set up and return API client.
             val builder = AndroidPublisher.Builder(HTTP_TRANSPORT, JacksonFactory.getDefaultInstance(), credential)
-            builder.applicationName = appContext.applicationId
+            builder.applicationName = app.applicationId
             builder.build()
         } catch (e: GeneralSecurityException) {
             throw RuntimeException(e)
@@ -47,20 +47,20 @@ internal object GooglePlayHelper {
         }
     }
 
-    private fun setHttpTimeout(appContext: AppContext, requestInitializer: HttpRequestInitializer): HttpRequestInitializer {
+    private fun setHttpTimeout(app: App, requestInitializer: HttpRequestInitializer): HttpRequestInitializer {
         return HttpRequestInitializer { httpRequest ->
             requestInitializer.initialize(httpRequest)
-            httpRequest.connectTimeout = appContext.connectTimeout
-            httpRequest.readTimeout = appContext.readTimeout
+            httpRequest.connectTimeout = app.connectTimeout
+            httpRequest.readTimeout = app.readTimeout
         }
     }
 
-    private fun authorizeWithServiceAccount(appContext: AppContext): HttpRequestInitializer {
-        if (appContext.privateKeyJsonFilePath.isNullOrEmpty()) {
+    private fun authorizeWithServiceAccount(app: App): HttpRequestInitializer {
+        if (app.privateKeyJsonFilePath.isNullOrEmpty()) {
             throw RuntimeException("The private key json file path is required")
         }
         return try {
-            val serviceAccountStream: InputStream = FileInputStream(appContext.privateKeyJsonFilePath!!)
+            val serviceAccountStream: InputStream = FileInputStream(app.privateKeyJsonFilePath!!)
             val credential = GoogleCredential.fromStream(serviceAccountStream, HTTP_TRANSPORT, JacksonFactory.getDefaultInstance())
             credential.createScoped(setOf(AndroidPublisherScopes.ANDROIDPUBLISHER))
         } catch (e: IOException) {
@@ -84,7 +84,7 @@ internal object GooglePlayHelper {
 
     @JvmStatic
     fun commitEdit(app: App, edits: Edits, edit: AppEdit) {
-        if (app.appContext.isDryRun) {
+        if (app.isDryRun) {
             LoggerHelper.log(String.format("Dry run mode enabled. App edit with id %s NOT comitted", edit.id))
         } else {
             try {

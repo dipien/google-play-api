@@ -6,7 +6,7 @@ import com.google.api.services.androidpublisher.model.ReviewsListResponse
 class ReviewsService {
 
     fun getReviews(app: App, maxResults: Long? = null, paginationToken: String? = null, startIndex: Long? = null, translationLanguage: String? = null): ReviewsListResponse {
-        val list = GooglePlayHelper.init(app.appContext).reviews().list(app.applicationId)
+        val list = GooglePlayHelper.init(app).reviews().list(app.applicationId)
         list.maxResults = maxResults
         list.token = paginationToken
         list.startIndex = startIndex

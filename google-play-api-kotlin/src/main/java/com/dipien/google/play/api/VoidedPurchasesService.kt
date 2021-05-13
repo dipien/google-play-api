@@ -5,7 +5,7 @@ import com.google.api.services.androidpublisher.model.VoidedPurchasesListRespons
 class VoidedPurchasesService {
 
     fun getVoidedPurchases(app: App, maxResults: Long? = null, paginationToken: String? = null, startIndex: Long? = null, startTime: Long? = null, endTime: Long? = null, type: Int? = null): VoidedPurchasesListResponse {
-        val list = GooglePlayHelper.init(app.appContext).purchases().voidedpurchases().list(app.applicationId)
+        val list = GooglePlayHelper.init(app).purchases().voidedpurchases().list(app.applicationId)
         list.maxResults = maxResults
         list.token = paginationToken
         list.startIndex = startIndex

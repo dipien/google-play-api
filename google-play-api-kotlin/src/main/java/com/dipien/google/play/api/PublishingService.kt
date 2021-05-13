@@ -44,7 +44,7 @@ class PublishingService {
      */
     fun getApks(app: App): List<Apk> {
         return try {
-            val edits = init(app.appContext).edits()
+            val edits = init(app).edits()
             val edit = createEdit(app, edits)
 
             // Get a list of apks.
@@ -64,7 +64,7 @@ class PublishingService {
      */
     fun getBundles(app: App): List<Bundle> {
         return try {
-            val edits = init(app.appContext).edits()
+            val edits = init(app).edits()
             val edit = createEdit(app, edits)
 
             // Get a list of bundles.
@@ -78,7 +78,7 @@ class PublishingService {
     }
 
     fun verifyMetadata(app: App) {
-        log("Verifying the content to upload to Google Play on " + app.appContext.metadataPath)
+        log("Verifying the content to upload to Google Play on " + app.metadataPath)
         for (each in app.localeListings) {
             log("Verifying locale " + each.languageTag)
             app.getTitle(each)
@@ -102,7 +102,7 @@ class PublishingService {
 
     fun publishMetadata(app: App) {
         try {
-            val edits = init(app.appContext).edits()
+            val edits = init(app).edits()
             val edit = createEdit(app, edits)
 
             // Update listing for each locale of the application.
@@ -216,34 +216,34 @@ class PublishingService {
     }
 
     private fun setDefaultUserFraction(app: App, edits: Edits, editId: String) {
-        if (app.appContext.trackType == TrackType.PRODUCTION) {
-            if (app.appContext.userFraction == null) {
+        if (app.trackType == TrackType.PRODUCTION) {
+            if (app.userFraction == null) {
                 val currentRolloutTrackRelease = getInProgressRollout(app, edits, editId)
                 if (currentRolloutTrackRelease != null) {
-                    app.appContext.userFraction = currentRolloutTrackRelease.userFraction
+                    app.userFraction = currentRolloutTrackRelease.userFraction
                 }
             } else {
-                if (app.appContext.userFraction == 1.0) {
-                    app.appContext.userFraction = null
+                if (app.userFraction == 1.0) {
+                    app.userFraction = null
                 }
             }
         } else {
-            app.appContext.userFraction = null
+            app.userFraction = null
         }
     }
 
     fun publishBundle(app: App) {
         try {
-            if (app.appContext.bundleDir.isNullOrEmpty() && app.appContext.bundlePath.isNullOrEmpty()) {
+            if (app.bundleDir.isNullOrEmpty() && app.bundlePath.isNullOrEmpty()) {
                 throw RuntimeException("bundleDir and bundlePath cannot be both null or empty!")
             }
-            if (app.appContext.trackType == null) {
+            if (app.trackType == null) {
                 throw RuntimeException("trackType cannot be null")
             }
-            if (app.appContext.isDeobfuscationFileUploadEnabled && app.appContext.deobfuscationFilePath == null) {
+            if (app.isDeobfuscationFileUploadEnabled && app.deobfuscationFilePath == null) {
                 throw RuntimeException("deobfuscationFilePath cannot be null")
             }
-            val edits = init(app.appContext).edits()
+            val edits = init(app).edits()
             val edit = createEdit(app, edits)
             val bundleFile = getBundleFile(app)
             val bundle = edits.bundles().upload(app.applicationId, edit.id, bundleFile).execute()
@@ -252,15 +252,15 @@ class PublishingService {
 
             // Assign bundle to track.
             val track = Track()
-            track.track = app.appContext.trackType!!.key
+            track.track = app.trackType!!.key
             val trackRelease = TrackRelease()
-            trackRelease.name = app.appContext.releaseName
+            trackRelease.name = app.releaseName
             trackRelease.versionCodes = listOf(bundle.versionCode.toLong())
             val trackReleaseStatus: TrackReleaseStatus = when {
-                app.appContext.isDraft -> {
+                app.isDraft -> {
                     TrackReleaseStatus.DRAFT
                 }
-                app.appContext.userFraction != null -> {
+                app.userFraction != null -> {
                     TrackReleaseStatus.IN_PROGRESS
                 }
                 else -> {
@@ -268,7 +268,7 @@ class PublishingService {
                 }
             }
             trackRelease.status = trackReleaseStatus.key
-            trackRelease.userFraction = app.appContext.userFraction
+            trackRelease.userFraction = app.userFraction
             val releaseNotes: MutableList<LocalizedText> = Lists.newArrayList()
             for (each in app.localeListings) {
                 val releaseNoteText = app.getReleaseNotes(each, bundle.versionCode)
@@ -286,12 +286,12 @@ class PublishingService {
             log(String.format("Track %s has been updated.", updatedTrack.track))
 
             // Upload deobfuscation file
-            if (app.appContext.isDeobfuscationFileUploadEnabled) {
-                val deobfuscationFilePath = File(app.appContext.deobfuscationFilePath!!)
+            if (app.isDeobfuscationFileUploadEnabled) {
+                val deobfuscationFilePath = File(app.deobfuscationFilePath!!)
                 if (deobfuscationFilePath.exists()) {
                     val deobfuscationFile: AbstractInputStreamContent = FileContent(DEOBFUSCATION_MIME_TYPE, deobfuscationFilePath)
                     edits.deobfuscationfiles().upload(app.applicationId, edit.id, bundle.versionCode, DEOBFUSCATION_FILE_TYPE, deobfuscationFile)
-                    log("Adding deobfuscation file " + app.appContext.deobfuscationFilePath)
+                    log("Adding deobfuscation file " + app.deobfuscationFilePath)
                 } else {
                     throw RuntimeException("$deobfuscationFilePath doesn't exist.")
                 }
@@ -346,14 +346,14 @@ class PublishingService {
 
     fun increaseStagedRollout(app: App) {
         try {
-            if (app.appContext.userFraction == null) {
+            if (app.userFraction == null) {
                 throw RuntimeException("userFraction cannot be null")
             }
-            if (app.appContext.userFraction == 1.0) {
+            if (app.userFraction == 1.0) {
                 completeStagedRollout(app)
             } else {
-                app.appContext.trackType = TrackType.PRODUCTION
-                val edits = init(app.appContext).edits()
+                app.trackType = TrackType.PRODUCTION
+                val edits = init(app).edits()
                 val edit = createEdit(app, edits)
                 val track = Track()
                 track.track = TrackType.PRODUCTION.key
@@ -361,7 +361,7 @@ class PublishingService {
                     ?: throw RuntimeException("No in progress staged rollout release found")
                 val trackRelease = TrackRelease()
                 trackRelease.status = TrackReleaseStatus.IN_PROGRESS.key
-                trackRelease.userFraction = app.appContext.userFraction
+                trackRelease.userFraction = app.userFraction
                 trackRelease.versionCodes = currentRolloutRelease.versionCodes
                 track.releases = listOf(trackRelease)
                 val updatedTrack = edits.tracks().patch(app.applicationId, edit.id, track.track, track).execute()
@@ -379,8 +379,8 @@ class PublishingService {
 
     fun haltStagedRollout(app: App) {
         try {
-            app.appContext.trackType = TrackType.PRODUCTION
-            val edits = init(app.appContext).edits()
+            app.trackType = TrackType.PRODUCTION
+            val edits = init(app).edits()
             val edit = createEdit(app, edits)
             val track = Track()
             track.track = TrackType.PRODUCTION.key
@@ -405,8 +405,8 @@ class PublishingService {
 
     fun resumeStagedRollout(app: App) {
         try {
-            app.appContext.trackType = TrackType.PRODUCTION
-            val edits = init(app.appContext).edits()
+            app.trackType = TrackType.PRODUCTION
+            val edits = init(app).edits()
             val edit = createEdit(app, edits)
             val track = Track()
             track.track = TrackType.PRODUCTION.key
@@ -455,8 +455,8 @@ class PublishingService {
 
     private fun promote(app: App, fromTrackType: TrackType, toTrackType: TrackType) {
         try {
-            app.appContext.trackType = toTrackType
-            val edits = init(app.appContext).edits()
+            app.trackType = toTrackType
+            val edits = init(app).edits()
             val edit = createEdit(app, edits)
             setDefaultUserFraction(app, edits, edit.id)
 
@@ -466,12 +466,12 @@ class PublishingService {
             toTrack.track = toTrackType.key
             val toTrackReleases: MutableList<TrackRelease> = Lists.newArrayList()
             for (fromTrackRelease in fromTrack.releases) {
-                if (app.appContext.releaseName == null || app.appContext.releaseName == fromTrackRelease.name) {
+                if (app.releaseName == null || app.releaseName == fromTrackRelease.name) {
                     val toTrackRelease = TrackRelease()
                     toTrackRelease.name = fromTrackRelease.name
-                    toTrackRelease.userFraction = app.appContext.userFraction
+                    toTrackRelease.userFraction = app.userFraction
                     toTrackRelease.versionCodes = fromTrackRelease.versionCodes
-                    val trackReleaseStatus: TrackReleaseStatus = if (app.appContext.userFraction != null) {
+                    val trackReleaseStatus: TrackReleaseStatus = if (app.userFraction != null) {
                         TrackReleaseStatus.IN_PROGRESS
                     } else {
                         TrackReleaseStatus.COMPLETED
@@ -496,7 +496,7 @@ class PublishingService {
 
     fun completeStagedRollout(app: App) {
         try {
-            val edits = init(app.appContext).edits()
+            val edits = init(app).edits()
             val edit = createEdit(app, edits)
             val currentRolloutRelease = getInProgressRollout(app, edits, edit.id)
                 ?: throw RuntimeException("No in progress staged rollout release found")
@@ -519,7 +519,7 @@ class PublishingService {
 
     fun getTracks(app: App): List<Track> {
         return try {
-            val edits = init(app.appContext).edits()
+            val edits = init(app).edits()
             val edit = createEdit(app, edits)
             edits.tracks().list(app.applicationId, edit.id).execute().tracks
         } catch (ex: GoogleJsonResponseException) {
@@ -530,30 +530,30 @@ class PublishingService {
     }
 
     fun getTrack(app: App): Track? {
-        val edits = init(app.appContext).edits()
+        val edits = init(app).edits()
         val edit = createEdit(app, edits)
-        return getTrack(app, app.appContext.trackType!!, edits, edit.id)
+        return getTrack(app, app.trackType!!, edits, edit.id)
     }
 
     fun getInternalTrackRelease(app: App): TrackRelease? {
-        app.appContext.trackType = TrackType.INTERNAL
+        app.trackType = TrackType.INTERNAL
         val trackReleases = getTrackReleases(app)
         return if (trackReleases.isEmpty()) null else trackReleases[0]
     }
 
     fun getAlphaTrackReleases(app: App): List<TrackRelease?>? {
-        app.appContext.trackType = TrackType.ALPHA
+        app.trackType = TrackType.ALPHA
         return getTrackReleases(app)
     }
 
     fun getBetaTrackRelease(app: App): TrackRelease? {
-        app.appContext.trackType = TrackType.BETA
+        app.trackType = TrackType.BETA
         val trackReleases = getTrackReleases(app)
         return if (trackReleases.isEmpty()) null else trackReleases[0]
     }
 
     fun getCompletedProductionTrackRelease(app: App): TrackRelease? {
-        app.appContext.trackType = TrackType.PRODUCTION
+        app.trackType = TrackType.PRODUCTION
         for (trackRelease in getTrackReleases(app)) {
             if (trackRelease.status == TrackReleaseStatus.COMPLETED.key) {
                 return trackRelease
@@ -563,7 +563,7 @@ class PublishingService {
     }
 
     fun getStagedRolloutTrackRelease(app: App): TrackRelease? {
-        app.appContext.trackType = TrackType.PRODUCTION
+        app.trackType = TrackType.PRODUCTION
         for (trackRelease in getTrackReleases(app)) {
             if (trackRelease.status == TrackReleaseStatus.IN_PROGRESS.key) {
                 return trackRelease
@@ -573,7 +573,7 @@ class PublishingService {
     }
 
     fun getHaltedProductionTrackRelease(app: App): TrackRelease? {
-        app.appContext.trackType = TrackType.PRODUCTION
+        app.trackType = TrackType.PRODUCTION
         for (trackRelease in getTrackReleases(app)) {
             if (trackRelease.status == TrackReleaseStatus.HALTED.key) {
                 return trackRelease
@@ -593,13 +593,13 @@ class PublishingService {
 
     fun uploadBundleToInternalAppSharing(app: App): InternalAppSharingArtifact? {
         return try {
-            if (app.appContext.bundleDir.isNullOrEmpty() && app.appContext.bundleDir.isNullOrEmpty()) {
+            if (app.bundleDir.isNullOrEmpty() && app.bundleDir.isNullOrEmpty()) {
                 throw RuntimeException("bundleDir and bundlePath cannot be both null or empty!")
             }
             val bundleFile = getBundleFile(app)
-            val internalAppSharingArtifacts = init(app.appContext).internalappsharingartifacts()
+            val internalAppSharingArtifacts = init(app).internalappsharingartifacts()
             val uploadBundle = internalAppSharingArtifacts.uploadbundle(app.applicationId, bundleFile)
-            if (app.appContext.isDryRun) {
+            if (app.isDryRun) {
                 log("Dry run mode enabled. Bundle not uploaded to internal app sharing")
                 null
             } else {
@@ -618,9 +618,9 @@ class PublishingService {
 
     private fun getBundleFile(app: App): AbstractInputStreamContent? {
         // Upload new bundle to developer console
-        if (app.appContext.bundlePath.isNullOrEmpty()) {
-            if (!app.appContext.bundleDir.isNullOrEmpty()) {
-                val filter = Files.list(Paths.get(app.appContext.bundleDir!!))
+        if (app.bundlePath.isNullOrEmpty()) {
+            if (!app.bundleDir.isNullOrEmpty()) {
+                val filter = Files.list(Paths.get(app.bundleDir!!))
                     .filter label@{ path ->
                         return@label path.fileName.toString().endsWith(".aab") && !path.fileName.toString()
                             .endsWith("unaligned.aab")
@@ -628,7 +628,7 @@ class PublishingService {
 
                 val count = filter.count()
                 if (count == 1L) {
-                    app.appContext.bundlePath = filter.findAny().get().toAbsolutePath().toString()
+                    app.bundlePath = filter.findAny().get().toAbsolutePath().toString()
                 } else if (count == 0L) {
                     throw RuntimeException("Bundle not found")
                 } else {
@@ -636,6 +636,6 @@ class PublishingService {
                 }
             }
         }
-        return FileContent(BUNDLE_MIME_TYPE, File(app.appContext.bundlePath!!))
+        return FileContent(BUNDLE_MIME_TYPE, File(app.bundlePath!!))
     }
 }
