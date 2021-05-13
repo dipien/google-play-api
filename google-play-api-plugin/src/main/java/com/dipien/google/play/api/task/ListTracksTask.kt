@@ -1,7 +1,7 @@
 package com.dipien.google.play.api.task
 
 import com.dipien.google.play.api.App
-import com.dipien.google.play.api.GooglePlayPublisher
+import com.dipien.google.play.api.PublishingService
 import org.gradle.api.logging.LogLevel
 
 open class ListTracksTask : BaseTask() {
@@ -14,7 +14,7 @@ open class ListTracksTask : BaseTask() {
 
     override fun onExecute(app: App) {
 
-        GooglePlayPublisher.getTracks(app).forEach { track ->
+        PublishingService().getTracks(app).forEach { track ->
             if (track.releases != null) {
                 logger.log(logLevel, "Track: " + track.track)
                 logger.log(logLevel, "-------------------------------")

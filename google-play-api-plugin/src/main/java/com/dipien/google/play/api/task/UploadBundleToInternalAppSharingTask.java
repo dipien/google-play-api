@@ -1,7 +1,7 @@
 package com.dipien.google.play.api.task;
 
 import com.dipien.google.play.api.App;
-import com.dipien.google.play.api.GooglePlayPublisher;
+import com.dipien.google.play.api.PublishingService;
 
 
 public class UploadBundleToInternalAppSharingTask extends BaseTask {
@@ -12,7 +12,7 @@ public class UploadBundleToInternalAppSharingTask extends BaseTask {
 
 	@Override
 	protected void onExecute(App app) {
-		GooglePlayPublisher.uploadBundleToInternalAppSharing(app);
+		new PublishingService().uploadBundleToInternalAppSharing(app);
 	}
 
 }

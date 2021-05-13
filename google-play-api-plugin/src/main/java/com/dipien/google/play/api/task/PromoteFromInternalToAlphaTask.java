@@ -1,7 +1,7 @@
 package com.dipien.google.play.api.task;
 
 import com.dipien.google.play.api.App;
-import com.dipien.google.play.api.GooglePlayPublisher;
+import com.dipien.google.play.api.PublishingService;
 
 public class PromoteFromInternalToAlphaTask extends BaseTask {
 	
@@ -11,7 +11,7 @@ public class PromoteFromInternalToAlphaTask extends BaseTask {
 
 	@Override
 	protected void onExecute(App app) {
-		GooglePlayPublisher.promoteFromInternalToAlpha(app);
+		new PublishingService().promoteFromInternalToAlpha(app);
 	}
 
 }

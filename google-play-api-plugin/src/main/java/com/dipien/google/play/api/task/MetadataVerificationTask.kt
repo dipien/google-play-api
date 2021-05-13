@@ -1,7 +1,7 @@
 package com.dipien.google.play.api.task
 
 import com.dipien.google.play.api.App
-import com.dipien.google.play.api.GooglePlayPublisher
+import com.dipien.google.play.api.PublishingService
 
 open class MetadataVerificationTask : BaseTask() {
 
@@ -10,6 +10,6 @@ open class MetadataVerificationTask : BaseTask() {
     }
 
     override fun onExecute(app: App) {
-        GooglePlayPublisher.verifyMetadata(app)
+        PublishingService().verifyMetadata(app)
     }
 }

@@ -8,7 +8,6 @@ import com.dipien.google.play.api.task.PromoteFromBetaToProductionTask;
 import com.dipien.google.play.api.task.PromoteFromInternalToAlphaTask;
 import com.dipien.google.play.api.task.PromoteFromInternalToBetaTask;
 import com.dipien.google.play.api.task.PromoteFromInternalToProductionTask;
-import com.dipien.google.play.api.task.PublishApkTask;
 import com.dipien.google.play.api.task.PublishBundleTask;
 import com.dipien.google.play.api.task.PublishMetadataTask;
 import com.dipien.google.play.api.task.ResumeStagedRolloutTask;
@@ -36,7 +35,6 @@ public class GooglePlayPublisherPlugin implements Plugin<Project> {
 		project.getTasks().create("googlePlayPublishMetadata", PublishMetadataTask.class);
 		project.getTasks().create("googlePlayListAPKs", ListApksTask.class);
 		project.getTasks().create("googlePlayListBundles", ListBundlesTask.class);
-		project.getTasks().create("googlePlayPublishAPK", PublishApkTask.class);
 		project.getTasks().create("googlePlayPublishBundle", PublishBundleTask.class);
 		project.getTasks().create("googlePlayUploadBundleToInternalAppSharing", UploadBundleToInternalAppSharingTask.class);
 		project.getTasks().create("googlePlayPromoteFromInternalToAlpha", PromoteFromInternalToAlphaTask.class);

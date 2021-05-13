@@ -1,7 +1,7 @@
 package com.dipien.google.play.api.task
 
 import com.dipien.google.play.api.App
-import com.dipien.google.play.api.GooglePlayPublisher
+import com.dipien.google.play.api.PublishingService
 import org.gradle.api.logging.LogLevel
 
 open class ListBundlesTask : BaseTask() {
@@ -11,7 +11,7 @@ open class ListBundlesTask : BaseTask() {
     }
 
     override fun onExecute(app: App) {
-        GooglePlayPublisher.getBundles(app).forEach { bundle ->
+        PublishingService().getBundles(app).forEach { bundle ->
             logger.log(
                 LogLevel.LIFECYCLE,
                 String.format("Version Code: %d - Binary sha1: %s", bundle.versionCode, bundle.sha1)
