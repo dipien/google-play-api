@@ -232,7 +232,7 @@ class PublishingService {
         }
     }
 
-    fun publishBundle(app: App) {
+    fun publishBundle(app: App, inAppUpdatePriority: Int = 0) {
         try {
             if (app.bundleDir.isNullOrEmpty() && app.bundlePath.isNullOrEmpty()) {
                 throw RuntimeException("bundleDir and bundlePath cannot be both null or empty!")
@@ -267,6 +267,7 @@ class PublishingService {
                     TrackReleaseStatus.COMPLETED
                 }
             }
+            trackRelease.inAppUpdatePriority = inAppUpdatePriority
             trackRelease.status = trackReleaseStatus.key
             trackRelease.userFraction = app.userFraction
             val releaseNotes: MutableList<LocalizedText> = Lists.newArrayList()
