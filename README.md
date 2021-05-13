@@ -3,12 +3,6 @@
 # Google Play API
 Gradle Plugin & Kotlin Library for Google Play API
 
-## Continuous Integration
-|Branch|Status|Workflows|Insights|
-| ------------- | ------------- | ------------- | ------------- |
-|master|[![CircleCI](https://circleci.com/gh/dipien/google-play-api/tree/master.svg?style=svg)](https://circleci.com/gh/dipien/google-play-api/tree/master)|[Workflows](https://circleci.com/gh/dipien/workflows/google-play-api/tree/master)|[Insights](https://circleci.com/build-insights/gh/dipien/google-play-api/master)|
-|production|[![CircleCI](https://circleci.com/gh/dipien/google-play-api/tree/production.svg?style=svg)](https://circleci.com/gh/dipien/google-play-api/tree/production)|[Workflows](https://circleci.com/gh/dipien/workflows/google-play-api/tree/production)|[Insights](https://circleci.com/build-insights/gh/dipien/google-play-api/production)|
-
 ## Setup
 
 Setup up your Google Developers Service Account
