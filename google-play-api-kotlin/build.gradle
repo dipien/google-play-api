@@ -11,7 +11,6 @@ buildscript {
 }
 
 dependencies {
-	implementation(Libs.JDROID_JAVA_CORE)
 	api(Libs.ANDROID_PUBLISHER)
 
 	// Testing

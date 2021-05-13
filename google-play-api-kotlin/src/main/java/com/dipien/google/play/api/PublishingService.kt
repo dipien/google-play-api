@@ -16,8 +16,6 @@ import com.google.api.services.androidpublisher.model.Listing
 import com.google.api.services.androidpublisher.model.LocalizedText
 import com.google.api.services.androidpublisher.model.Track
 import com.google.api.services.androidpublisher.model.TrackRelease
-import com.jdroid.java.exception.UnexpectedException
-import com.jdroid.java.utils.StringUtils
 import java.io.File
 import java.io.IOException
 import java.nio.file.Files
@@ -237,13 +235,13 @@ class PublishingService {
     fun publishBundle(app: App) {
         try {
             if (app.appContext.bundleDir.isNullOrEmpty() && app.appContext.bundlePath.isNullOrEmpty()) {
-                throw UnexpectedException("bundleDir and bundlePath cannot be both null or empty!")
+                throw RuntimeException("bundleDir and bundlePath cannot be both null or empty!")
             }
             if (app.appContext.trackType == null) {
-                throw UnexpectedException("trackType cannot be null")
+                throw RuntimeException("trackType cannot be null")
             }
             if (app.appContext.isDeobfuscationFileUploadEnabled && app.appContext.deobfuscationFilePath == null) {
-                throw UnexpectedException("deobfuscationFilePath cannot be null")
+                throw RuntimeException("deobfuscationFilePath cannot be null")
             }
             val edits = init(app.appContext).edits()
             val edit = createEdit(app, edits)
@@ -274,7 +272,7 @@ class PublishingService {
             val releaseNotes: MutableList<LocalizedText> = Lists.newArrayList()
             for (each in app.localeListings) {
                 val releaseNoteText = app.getReleaseNotes(each, bundle.versionCode)
-                if (StringUtils.isNotBlank(releaseNoteText)) {
+                if (!releaseNoteText.isNullOrBlank()) {
                     val releaseNote = LocalizedText()
                     releaseNote.language = each.languageTag
                     releaseNote.text = releaseNoteText
@@ -360,7 +358,7 @@ class PublishingService {
                 val track = Track()
                 track.track = TrackType.PRODUCTION.key
                 val currentRolloutRelease = getInProgressRollout(app, edits, edit.id)
-                    ?: throw UnexpectedException("No in progress staged rollout release found")
+                    ?: throw RuntimeException("No in progress staged rollout release found")
                 val trackRelease = TrackRelease()
                 trackRelease.status = TrackReleaseStatus.IN_PROGRESS.key
                 trackRelease.userFraction = app.appContext.userFraction
@@ -387,7 +385,7 @@ class PublishingService {
             val track = Track()
             track.track = TrackType.PRODUCTION.key
             val currentRolloutRelease = getInProgressRollout(app, edits, edit.id)
-                ?: throw UnexpectedException("No in progress staged rollout release found")
+                ?: throw RuntimeException("No in progress staged rollout release found")
             val trackRelease = TrackRelease()
             trackRelease.status = TrackReleaseStatus.HALTED.key
             trackRelease.versionCodes = currentRolloutRelease.versionCodes
@@ -413,7 +411,7 @@ class PublishingService {
             val track = Track()
             track.track = TrackType.PRODUCTION.key
             val currentRolloutRelease = getHaltedRollout(app, edits, edit.id)
-                ?: throw UnexpectedException("No halted staged rollout release found")
+                ?: throw RuntimeException("No halted staged rollout release found")
             val trackRelease = TrackRelease()
             trackRelease.status = TrackReleaseStatus.IN_PROGRESS.key
             trackRelease.versionCodes = currentRolloutRelease.versionCodes
@@ -501,7 +499,7 @@ class PublishingService {
             val edits = init(app.appContext).edits()
             val edit = createEdit(app, edits)
             val currentRolloutRelease = getInProgressRollout(app, edits, edit.id)
-                ?: throw UnexpectedException("No in progress staged rollout release found")
+                ?: throw RuntimeException("No in progress staged rollout release found")
             currentRolloutRelease.status = TrackReleaseStatus.COMPLETED.key
             currentRolloutRelease.userFraction = null
             val productionTrack = Track()
@@ -596,7 +594,7 @@ class PublishingService {
     fun uploadBundleToInternalAppSharing(app: App): InternalAppSharingArtifact? {
         return try {
             if (app.appContext.bundleDir.isNullOrEmpty() && app.appContext.bundleDir.isNullOrEmpty()) {
-                throw UnexpectedException("bundleDir and bundlePath cannot be both null or empty!")
+                throw RuntimeException("bundleDir and bundlePath cannot be both null or empty!")
             }
             val bundleFile = getBundleFile(app)
             val internalAppSharingArtifacts = init(app.appContext).internalappsharingartifacts()
@@ -632,9 +630,9 @@ class PublishingService {
                 if (count == 1L) {
                     app.appContext.bundlePath = filter.findAny().get().toAbsolutePath().toString()
                 } else if (count == 0L) {
-                    throw UnexpectedException("Bundle not found")
+                    throw RuntimeException("Bundle not found")
                 } else {
-                    throw UnexpectedException("More than one Bundle found at the specified path")
+                    throw RuntimeException("More than one Bundle found at the specified path")
                 }
             }
         }

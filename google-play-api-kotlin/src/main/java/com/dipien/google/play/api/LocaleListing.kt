@@ -3,9 +3,8 @@ package com.dipien.google.play.api
 import com.google.api.client.http.AbstractInputStreamContent
 import com.google.api.client.http.FileContent
 import com.google.api.client.util.Lists
-import com.jdroid.java.exception.UnexpectedException
-import com.jdroid.java.utils.FileUtils
 import java.io.File
+import java.lang.RuntimeException
 import java.util.Locale
 
 class LocaleListing(private val locale: Locale?, listingPath: String) {
@@ -37,19 +36,19 @@ class LocaleListing(private val locale: Locale?, listingPath: String) {
             releaseNotes = defaultLocaleListing.getReleaseNotes(versionCode)
         }
         if (releaseNotes == null && required) {
-            throw UnexpectedException("Release notes for version code $versionCode were not found for locale $languageTag")
+            throw RuntimeException("Release notes for version code $versionCode were not found for locale $languageTag")
         }
         return releaseNotes
     }
 
     private fun getReleaseNotes(versionCode: Int): String? {
         val file = File(basePath + "release_notes" + File.separator + versionCode + ".txt")
-        return if (file.exists()) FileUtils.toString(file) else getDefaultReleaseNotes()
+        return if (file.exists()) file.readText() else getDefaultReleaseNotes()
     }
 
     private fun getDefaultReleaseNotes(): String? {
         val file = File(basePath + "release_notes" + File.separator + "default_release_notes.txt")
-        return if (file.exists()) FileUtils.toString(file) else null
+        return if (file.exists()) file.readText() else null
     }
 
     fun getFeatureGraphic(defaultLocaleListing: LocaleListing): AbstractInputStreamContent? {
@@ -94,7 +93,7 @@ class LocaleListing(private val locale: Locale?, listingPath: String) {
             abstractInputStreamContents = defaultLocaleListing.getScreenshots(screenSize)
         }
         if (abstractInputStreamContents.isEmpty() && required) {
-            throw UnexpectedException("images" + File.separator + screenSize + " was not found for locale " + languageTag)
+            throw RuntimeException("images" + File.separator + screenSize + " was not found for locale " + languageTag)
         }
         return abstractInputStreamContents
     }
@@ -116,14 +115,14 @@ class LocaleListing(private val locale: Locale?, listingPath: String) {
             detailsContent = defaultLocaleListing.getDetailsContent(item)
         }
         if (detailsContent == null && required) {
-            throw UnexpectedException("$item.txt was not found for locale $languageTag")
+            throw RuntimeException("$item.txt was not found for locale $languageTag")
         }
         return detailsContent
     }
 
     private fun getDetailsContent(item: String): String? {
         val file = File("$basePath$item.txt")
-        return if (file.exists()) FileUtils.toString(file) else null
+        return if (file.exists()) file.readText() else null
     }
 
     private fun getImageContent(item: String, required: Boolean, defaultLocaleListing: LocaleListing): AbstractInputStreamContent? {
@@ -132,7 +131,7 @@ class LocaleListing(private val locale: Locale?, listingPath: String) {
             imageContent = defaultLocaleListing.getImagesContent(item)
         }
         if (imageContent == null && required) {
-            throw UnexpectedException("images/$item.png was not found for locale $languageTag")
+            throw RuntimeException("images/$item.png was not found for locale $languageTag")
         }
         return imageContent
     }
