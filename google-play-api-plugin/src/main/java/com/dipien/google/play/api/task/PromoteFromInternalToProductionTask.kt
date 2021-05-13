@@ -1,17 +1,14 @@
-package com.dipien.google.play.api.task;
+package com.dipien.google.play.api.task
 
-import com.dipien.google.play.api.App;
-import com.dipien.google.play.api.PublishingService;
+import com.dipien.google.play.api.App
+import com.dipien.google.play.api.PublishingService
 
-public class PromoteFromInternalToProductionTask extends BaseTask {
-	
-	public PromoteFromInternalToProductionTask() {
-		setDescription("Promote a current internal to production");
-	}
+class PromoteFromInternalToProductionTask : BaseTask() {
+    override fun onExecute(app: App) {
+        PublishingService().promoteFromInternalToProduction(app)
+    }
 
-	@Override
-	protected void onExecute(App app) {
-		new PublishingService().promoteFromInternalToProduction(app);
-	}
-
+    init {
+        description = "Promote a current internal to production"
+    }
 }

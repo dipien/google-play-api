@@ -1,17 +1,14 @@
-package com.dipien.google.play.api.task;
+package com.dipien.google.play.api.task
 
-import com.dipien.google.play.api.App;
-import com.dipien.google.play.api.PublishingService;
+import com.dipien.google.play.api.App
+import com.dipien.google.play.api.PublishingService
 
-public class IncreaseStagedRolloutTask extends BaseTask {
-	
-	public IncreaseStagedRolloutTask() {
-		setDescription("Increase the fraction of users who should get the current staged rollout");
-	}
-	
-	@Override
-	protected void onExecute(App app) {
-		new PublishingService().increaseStagedRollout(app);
-	}
-	
+class IncreaseStagedRolloutTask : BaseTask() {
+    override fun onExecute(app: App) {
+        PublishingService().increaseStagedRollout(app)
+    }
+
+    init {
+        description = "Increase the fraction of users who should get the current staged rollout"
+    }
 }

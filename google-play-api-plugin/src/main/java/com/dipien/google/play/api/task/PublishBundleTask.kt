@@ -1,17 +1,14 @@
-package com.dipien.google.play.api.task;
+package com.dipien.google.play.api.task
 
-import com.dipien.google.play.api.App;
-import com.dipien.google.play.api.PublishingService;
+import com.dipien.google.play.api.App
+import com.dipien.google.play.api.PublishingService
 
-public class PublishBundleTask extends BaseTask {
-	
-	public PublishBundleTask() {
-		setDescription("Publish Bundle to Google Play");
-	}
+class PublishBundleTask : BaseTask() {
+    override fun onExecute(app: App) {
+        PublishingService().publishBundle(app)
+    }
 
-	@Override
-	protected void onExecute(App app) {
-		new PublishingService().publishBundle(app);
-	}
-
+    init {
+        description = "Publish Bundle to Google Play"
+    }
 }
