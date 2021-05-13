@@ -1,1 +1,1 @@
-Jdroid Publisher Sample
+Dipien Google Play API Sample

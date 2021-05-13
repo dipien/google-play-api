@@ -29,8 +29,6 @@ abstract class BaseTask : AbstractTask() {
         app.isTenInchScreenshotsRequired = extension.tenInchScreenshotsRequired
         app.isTvScreenshotsRequired = extension.tvScreenshotsRequired
         app.isWearScreenshotsRequired = extension.wearScreenshotsRequired
-        app.apkPath = extension.apkPath
-        app.apkDir = extension.apkDir
         app.bundlePath = extension.bundlePath
         app.bundleDir = extension.bundleDir
         app.trackType = TrackType.findByKey(extension.track!!)

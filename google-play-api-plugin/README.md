@@ -201,13 +201,9 @@ List all the historical Bundles uploaded.
 
     ./gradlew googlePlayListBundles
 
-#### Publish APK / Bundle
+#### Publish Bundle
 
-Upload new APK / Bundle for your app and assign it to a release track.
-
-    ./gradlew googlePlayPublishAPK
-
-    // or
+Upload new Bundle for your app and assign it to a release track.
 
     ./gradlew googlePlayPublishBundle
 
@@ -229,16 +225,13 @@ Whether the release should be created on draft mode. Default value: false
 
     draft = true
     
-###### APK path/dir or Bundle path/dir
+###### Bundle path/dir
 
-The path to the APK / Bundle to publish.
-The default value for the APK dir is the '/build/outputs/apk/release' directory of the gradle project where the plugin is applied.
+The path to the Bundle to publish.
 The default value for the Bundle dir is the '/build/outputs/bundle/release' directory of the gradle project where the plugin is applied.
 
-    apkPath = /path/to/apk/file.apk
-    // apkDir = /path/to/bundle/
-    // bundlePath = /path/to/bundle/file.aab
-    // bundleDir = /path/to/bundle/
+    bundlePath = /path/to/bundle/file.aab
+    bundleDir = /path/to/bundle/
 
 ###### Track
 

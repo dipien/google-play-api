@@ -4,7 +4,7 @@ android {
 	compileSdkVersion 28
 
 	defaultConfig {
-		applicationId "com.jdroid.googleplay.publisher.sample"
+		applicationId "com.dipien.googleplay.api.sample"
 		minSdkVersion 19
 		targetSdkVersion 28
 		versionCode 190060922

@@ -1,4 +1,4 @@
-<manifest package="com.jdroid.googleplay.publisher.sample"
+<manifest package="com.dipien.googleplay.api.sample"
 		  xmlns:android="http://schemas.android.com/apk/res/android">
 
 	<application android:allowBackup="true"

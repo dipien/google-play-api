@@ -12,11 +12,6 @@ open class GooglePlayPublisherPluginExtension(project: Project) {
     var privateKeyJsonFilePath: String? = propertyResolver.getStringProp("privateKeyJsonFilePath")
     var metadataPath: String? = propertyResolver.getStringProp("metadataPath", project.projectDir.absolutePath)
     var locales: String? = propertyResolver.getStringProp("locales")
-    var apkPath: String? = propertyResolver.getStringProp("apkPath")
-    var apkDir: String? = propertyResolver.getStringProp(
-        "apkDir", project.projectDir.absolutePath + File.separator + "app" + File.separator + "build" +
-            File.separator + "outputs" + File.separator + "apk" + File.separator + "release"
-    )
     var bundlePath: String? = propertyResolver.getStringProp("bundlePath")
     var bundleDir: String? = propertyResolver.getStringProp(
         "bundleDir", project.projectDir.absolutePath + File.separator + "app" + File.separator + "build" +

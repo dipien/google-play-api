@@ -32,7 +32,7 @@ allprojects {
 apply plugin: 'com.dipien.googleplay.api'
 
 googlePlay {
-	applicationId "com.jdroid.googleplay.publisher.sample"
+	applicationId "com.dipien.googleplay.api.sample"
 	locales 'en-US'
 	releaseNotesRequired true
 }

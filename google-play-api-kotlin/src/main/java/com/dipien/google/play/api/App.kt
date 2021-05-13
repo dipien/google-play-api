@@ -12,8 +12,6 @@ class App {
     var privateKeyJsonFilePath: String? = null
     var metadataPath: String? = null
     var locales: List<String> = emptyList()
-    var apkPath: String? = null
-    var apkDir: String? = null
     var bundlePath: String? = null
     var bundleDir: String? = null
     var deobfuscationFilePath: String? = null
