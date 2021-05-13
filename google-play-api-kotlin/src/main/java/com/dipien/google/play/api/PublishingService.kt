@@ -592,7 +592,7 @@ class PublishingService {
         }
     }
 
-    fun uploadBundleToInternalAppSharing(app: App): InternalAppSharingArtifact? {
+    fun uploadBundleToInternalAppSharing(app: App): InternalAppSharingArtifact {
         return try {
             if (app.bundleDir.isNullOrEmpty() && app.bundleDir.isNullOrEmpty()) {
                 throw RuntimeException("bundleDir and bundlePath cannot be both null or empty!")
@@ -602,7 +602,7 @@ class PublishingService {
             val uploadBundle = internalAppSharingArtifacts.uploadbundle(app.applicationId, bundleFile)
             if (app.isDryRun) {
                 log("Dry run mode enabled. Bundle not uploaded to internal app sharing")
-                null
+                InternalAppSharingArtifact()
             } else {
                 val internalAppSharingArtifact = uploadBundle.execute()
                 log("Bundle uploaded to internal app sharing:")
