@@ -3,7 +3,7 @@ package com.dipien.google.play.api.task
 import com.dipien.google.play.api.App
 import com.dipien.google.play.api.PublishingService
 
-class PromoteFromInternalToProductionTask : BaseTask() {
+open class PromoteFromInternalToProductionTask : BaseTask() {
     override fun onExecute(app: App) {
         PublishingService().promoteFromInternalToProduction(app)
     }

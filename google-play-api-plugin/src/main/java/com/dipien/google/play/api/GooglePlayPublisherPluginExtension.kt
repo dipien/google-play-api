@@ -14,16 +14,16 @@ open class GooglePlayPublisherPluginExtension(project: Project) {
     var locales: String? = propertyResolver.getStringProp("locales")
     var apkPath: String? = propertyResolver.getStringProp("apkPath")
     var apkDir: String? = propertyResolver.getStringProp(
-        "apkDir", project.projectDir.absolutePath + File.separator + "build" +
+        "apkDir", project.projectDir.absolutePath + File.separator + "app" + File.separator + "build" +
             File.separator + "outputs" + File.separator + "apk" + File.separator + "release"
     )
     var bundlePath: String? = propertyResolver.getStringProp("bundlePath")
     var bundleDir: String? = propertyResolver.getStringProp(
-        "bundleDir", project.projectDir.absolutePath + File.separator + "build" +
+        "bundleDir", project.projectDir.absolutePath + File.separator + "app" + File.separator + "build" +
             File.separator + "outputs" + File.separator + "bundle" + File.separator + "release"
     )
     var deobfuscationFilePath: String? = propertyResolver.getStringProp(
-        "deobfuscationFilePath", project.projectDir.absolutePath + File.separator + "build" +
+        "deobfuscationFilePath", project.projectDir.absolutePath + File.separator + "app" + File.separator + "build" +
             File.separator + "outputs" + File.separator + "mapping" + File.separator + "release" + File.separator + "mapping.txt"
     )
     var isDeobfuscationFileUploadEnabled: Boolean = propertyResolver.getRequiredBooleanProp("deobfuscationFileUploadEnabled", false)

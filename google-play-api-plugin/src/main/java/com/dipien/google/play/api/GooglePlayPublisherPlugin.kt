@@ -1,6 +1,6 @@
 package com.dipien.google.play.api
 
-import com.dipien.google.play.api.task.CompleteStagedRollout
+import com.dipien.google.play.api.task.CompleteStagedRolloutTask
 import com.dipien.google.play.api.task.HaltStagedRolloutTask
 import com.dipien.google.play.api.task.IncreaseStagedRolloutTask
 import com.dipien.google.play.api.task.ListApksTask
@@ -43,7 +43,7 @@ class GooglePlayPublisherPlugin : Plugin<Project> {
         project.tasks.create("googlePlayIncreaseStagedRollout", IncreaseStagedRolloutTask::class.java)
         project.tasks.create("googlePlayHaltStagedRollout", HaltStagedRolloutTask::class.java)
         project.tasks.create("googlePlayResumeStagedRollout", ResumeStagedRolloutTask::class.java)
-        project.tasks.create("googlePlayCompleteStagedRollout", CompleteStagedRollout::class.java)
+        project.tasks.create("googlePlayCompleteStagedRollout", CompleteStagedRolloutTask::class.java)
         project.tasks.create("googlePlayListTracks", ListTracksTask::class.java)
     }
 }

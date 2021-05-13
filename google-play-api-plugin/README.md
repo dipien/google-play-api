@@ -5,7 +5,7 @@ Gradle Plugin to publish android APKs/bundles and listings on Google Play
 
 ## Setup
 
-Add the following configuration to your `build.gradle`, replacing X.Y.Z by the [latest version](https://github.com/dipien/google-play-api/releases/latest)
+Add the following configuration to your root `build.gradle`, replacing X.Y.Z by the [latest version](https://github.com/dipien/google-play-api/releases/latest)
 
 
     buildscript {

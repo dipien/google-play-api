@@ -3,7 +3,7 @@ package com.dipien.google.play.api.task
 import com.dipien.google.play.api.App
 import com.dipien.google.play.api.PublishingService
 
-class HaltStagedRolloutTask : BaseTask() {
+open class HaltStagedRolloutTask : BaseTask() {
     override fun onExecute(app: App) {
         PublishingService().haltStagedRollout(app)
     }

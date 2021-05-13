@@ -1,11 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.jdroid.googleplay.publisher'
-
-buildscript {
-	dependencies {
-		classpath 'com.jdroidtools:jdroid-gradle-googleplay-publisher-plugin:3.8.0-SNAPSHOT'
-	}
-}
 
 android {
 	compileSdkVersion 28
@@ -42,8 +35,3 @@ dependencies {
 	implementation 'com.android.support:appcompat-v7:28.0.0'
 }
 
-googlePlay {
-	applicationId "com.jdroid.googleplay.publisher.sample"
-	locales 'en-US'
-	releaseNotesRequired true
-}
