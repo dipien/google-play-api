@@ -594,7 +594,7 @@ class PublishingService {
 
     fun uploadBundleToInternalAppSharing(app: App): InternalAppSharingArtifact {
         return try {
-            if (app.bundleDir.isNullOrEmpty() && app.bundleDir.isNullOrEmpty()) {
+            if (app.bundleDir.isNullOrEmpty() && app.bundlePath.isNullOrEmpty()) {
                 throw RuntimeException("bundleDir and bundlePath cannot be both null or empty!")
             }
             val bundleFile = getBundleFile(app)
