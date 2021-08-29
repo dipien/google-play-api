@@ -6,5 +6,4 @@ object Libs {
     const val ANDROID_PUBLISHER = "com.google.apis:google-api-services-androidpublisher:v3-rev142-1.25.0"
 
     const val JUNIT = "junit:junit:4.13.2"
-
 }
