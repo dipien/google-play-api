@@ -1,6 +1,6 @@
 [![Dipien](https://raw.githubusercontent.com/dipien/dipien-component-builder/master/.github/dipien_logo.png)](http://www.dipien.com)
 
-# Kotlin Client fot Google Play API
+# Kotlin Client for Google Play API
 Koltin Library to publish android APKs/bundles and listings on Google Play
 
 ## Setup
