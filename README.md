@@ -20,7 +20,7 @@ Setup up your Google Developers Service Account
 13. The JSON with the key was downloaded to your computer
 14. Back on the `Google Play developer` console, click on `Grant Access` for the newly added service account
 16. Check all the permissions under the `Releases` & `Store presence` categories
-17. Click on **Invite user** and then on `Send invite`
+17. Click on `Invite user` and then on `Send invite`
 
 ## Components
 
