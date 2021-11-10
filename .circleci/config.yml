@@ -1,5 +1,11 @@
 version: 2.1
 
+parameters:
+
+  api:
+    type: boolean
+    default: false
+
 references:
 
   working_dir: &working_dir
@@ -9,44 +15,52 @@ executors:
   jdk_executor:
     working_directory: *working_dir
     docker:
-      - image: circleci/openjdk:11-jdk
+      - image: cimg/openjdk:11.0
+        auth:
+          username: $DOCKERHUB_USER
+          password: $DOCKERHUB_PASSWORD
     environment:
       JVM_OPTS: -Xmx3200m
-      GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.caching=false
+      GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.caching=true
+
+orbs:
+  # https://circleci.com/developer/orbs/orb/eddiewebb/queue
+  queue: eddiewebb/queue@1.5.0
 
 commands:
-  restore_gradle_cache:
-    steps:
-      - restore_cache:
-          keys:
-            - v2-gradle_cache-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}-{{ .Branch }}-{{ checksum "buildSrc/src/main/kotlin/Libs.kt" }}-{{ checksum "buildSrc/src/main/kotlin/BuildLibs.kt" }}
-            - v2-gradle_cache-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}-{{ .Branch }}
-            - v2-gradle_cache-
 
-  save_gradle_cache:
+  attach_to_workspace:
     steps:
-      - save_cache:
-          key: v2-gradle_cache-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}-{{ .Branch }}-{{ checksum "buildSrc/src/main/kotlin/Libs.kt" }}-{{ checksum "buildSrc/src/main/kotlin/BuildLibs.kt" }}
+      - attach_workspace:
+          at: ~/
+
+  persist_gradle_build_cache:
+    steps:
+      - persist_to_workspace:
+          root: ~/
           paths:
-            - ~/.gradle
+            - gradle-build-cache
 
-jobs:
-
-  gradleCache:
-    executor: jdk_executor
+  custom_checkout:
+    parameters:
+      switchToGradleBinaryDistributionEnabled:
+        type: boolean
+        default: true
     steps:
       - checkout
-      - restore_gradle_cache
-      - run:
-          name: Download dependencies
-          command: ./gradlew dependencies --stacktrace
-      - save_gradle_cache
+      - when:
+          condition: << parameters.switchToGradleBinaryDistributionEnabled >>
+          steps:
+            - run:
+                name: Switch to Gradle Binary Distribution
+                command: sed -i -e 's/-all.zip/-bin.zip/' gradle/wrapper/gradle-wrapper.properties
+
+jobs:
 
   ktlint:
     executor: jdk_executor
     steps:
-      - checkout
-      - restore_gradle_cache
+      - custom_checkout
       - run:
           name: Ktlint
           command: ./gradlew ktlint --stacktrace
@@ -54,8 +68,7 @@ jobs:
   security:
     executor: jdk_executor
     steps:
-      - checkout
-      - restore_gradle_cache
+      - custom_checkout
       - run:
           name: Verify the integrity of the Gradle Wrapper JAR
           command: |
@@ -69,31 +82,26 @@ jobs:
   build:
     executor: jdk_executor
     steps:
-      - checkout
-      - restore_gradle_cache
+      - custom_checkout
+      - attach_to_workspace
       - run:
-          name: Assembling
+          name: Assemble
           command: ./gradlew assemble --stacktrace
-      - run:
-          name: Saving jars
-          command: |
-            mkdir -p ~/jars/
-            find . -type f -regex ".*/build/libs/.*jar" -exec cp {} ~/jars/ \;
-          when: always
+      - persist_gradle_build_cache
       - store_artifacts:
-          path: ~/jars
+          path: ./build/libs
           destination: jars
 
-  verify:
+  test:
     executor: jdk_executor
     steps:
-      - checkout
-      - restore_gradle_cache
+      - custom_checkout
+      - attach_to_workspace
       - run:
-          name: Verifying
-          command: ./gradlew check --stacktrace
+          name: Run tests
+          command: ./gradlew test --stacktrace
       - run:
-          name: Saving test results
+          name: Save test results
           command: |
             mkdir -p ~/junit/
             find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} ~/junit/ \;
@@ -101,43 +109,41 @@ jobs:
       - store_test_results:
           path: ~/junit
       - store_artifacts:
-          path: ./jdroid-gradle-googleplay-publisher-plugin/build/reports/tests/test
-          destination: jdroid-gradle-googleplay-publisher-plugin/tests
+          path: ./build/reports/tests/test
+          destination: tests
 
-      - store_artifacts:
-          path: ./jdroid-java-googleplay-publisher/build/reports/tests/test
-          destination: jdroid-java-googleplay-publisher/tests
+  validatePlugins:
+    executor: jdk_executor
+    steps:
+      - custom_checkout
+      - attach_to_workspace
+      - run:
+          name: Validate plugins
+          command: ./gradlew validatePlugins --stacktrace
 
   publish:
     executor: jdk_executor
     steps:
-      - checkout
-      - restore_gradle_cache
+      - custom_checkout
+      - attach_to_workspace
+      - queue/until_front_of_line:
+          block-workflow: true
+          only-on-branch: master
       - run:
           name: Uploading to Nexus Sonatype
-          command: ./gradlew uploadArchives -PLOCAL_UPLOAD=false --stacktrace
-
-  upgradeDependencies:
-    executor: jdk_executor
-    steps:
-      - checkout
-      - restore_gradle_cache
-      - run:
-          name: Upgrade Dependencies
-          command: ./gradlew upgradeDependencies -PpullRequestEnabled=true --stacktrace
+          command: ./gradlew publish -PLOCAL_UPLOAD=false --refresh-dependencies --stacktrace
 
 workflows:
   commit:
+    unless: << pipeline.parameters.api >>
     jobs:
-      - gradleCache
       - security
-      - build:
-          requires:
-            - gradleCache
-      - ktlint:
+      - ktlint
+      - build
+      - test:
           requires:
             - build
-      - verify:
+      - validatePlugins:
           requires:
             - build
       - publish:
@@ -145,17 +151,9 @@ workflows:
             branches:
               only:
                 - master
+                - production
           requires:
-            - verify
             - ktlint
+            - test
+            - validatePlugins
             - security
-  weekly:
-    triggers:
-      - schedule:
-          cron: "0 0 * * 0"
-          filters:
-            branches:
-              only:
-                - master
-    jobs:
-      - upgradeDependencies

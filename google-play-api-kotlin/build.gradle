@@ -1,0 +1,18 @@
+ext.PROJECT_NAME = 'Google Play API Kotlin Client'
+description = 'Kotlin Client for Google Play API'
+ext.ARTIFACT_ID = 'google-play-api-kotlin'
+
+apply plugin: 'com.jdroidtools.java.library'
+
+buildscript {
+	dependencies {
+		classpath(BuildLibs.JDROID_GRADLE_JAVA_PLUGIN)
+	}
+}
+
+dependencies {
+	api(Libs.ANDROID_PUBLISHER)
+
+	// Testing
+	testImplementation(Libs.JUNIT)
+}

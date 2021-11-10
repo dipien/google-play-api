@@ -1,6 +1,8 @@
 plugins {
-    id("com.gradle.enterprise").version("3.1.1")
+    id("com.gradle.enterprise").version("3.3.4")
 }
 
-include(":jdroid-gradle-googleplay-publisher-plugin")
-include(":jdroid-java-googleplay-publisher")
+include(":google-play-api-plugin")
+include(":google-play-api-kotlin")
+
+apply(from = java.io.File(settingsDir, "buildCacheSettings.gradle"))
