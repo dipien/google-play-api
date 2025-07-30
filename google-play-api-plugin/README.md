@@ -1,4 +1,4 @@
-[![Dipien](https://raw.githubusercontent.com/dipien/dipien-component-builder/master/.github/dipien_logo.png)](http://www.dipien.com)
+[![Dipien](https://raw.githubusercontent.com/dipien/dipien-component-builder/master/.github/dipien_logo.png)](https://medium.com/dipien)
 
 # Google Play API Gradle Plugin
 Gradle Plugin to publish android APKs/bundles and listings on Google Play
@@ -404,19 +404,3 @@ Rollout the release to 100% of users
 List all the assigned APKs for each release track
 
     ./gradlew googlePlayListTracks
-
-## Donations
-
-Donations are greatly appreciated. You can help us to pay for our domain and this project development.
-
-* [Donate cryptocurrency](http://coinbase.dipien.com/)
-* [Donate with PayPal](http://paypal.dipien.com/)
-* [Donate on Patreon](http://patreon.dipien.com/)
-
-## Follow us
-* [Twitter](http://twitter.dipien.com)
-* [Medium](http://medium.dipien.com)
-* [Instagram](http://instagram.dipien.com)
-* [Pinterest](http://pinterest.dipien.com)
-* [GitHub](http://github.dipien.com)
-* [Blog](http://blog.dipien.com)
